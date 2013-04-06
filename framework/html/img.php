@@ -1,8 +1,9 @@
 <?php
 namespace framework\html; 
+	use framework\app;
 	class img extends element {
-		function __construct($icon,$controller) {
-			parent::__construct("img",array("src" => $controller->getAppRoot()."img/$icon"));
+		function __construct($icon) {
+			parent::__construct("img",array("src" => app::root()."img/$icon"));
 		}
 	}	
 

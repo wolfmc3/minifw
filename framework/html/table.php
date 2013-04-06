@@ -1,5 +1,6 @@
 <?php
 namespace framework\html; 
+	use framework\app;
 	class table extends element {
 		function __construct($cols,$rows, $controller ,$useidkey = FALSE,$options = array()) {
 			parent::__construct("table",$options,array());
@@ -28,7 +29,7 @@ namespace framework\html;
 						list($null,$obj,$action,$item) = explode("/", $colname);
 						$id = $row[$item]; 
 						$tr->addElement(new element("td",array("style"=>"text-align:center;"),
-							new anchor($controller->getAppRoot()."$obj/$action/$item/$id", new icon("Search", $controller))
+							new anchor(app::root()."$obj/$action/$item/$id", new icon("Search", $controller))
 						));
 					} else {
 						$tr->addElement(new element("td",array(),$row[$colname]));						

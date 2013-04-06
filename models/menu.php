@@ -1,9 +1,9 @@
 <?php 
 use framework\html\dotlist;
 use framework\html\anchor;
-use framework\system;
+use framework\app;
 $menu = new dotlist("");
-$apppath = system::getController()->getAppRoot();
+$apppath = app::root();
 $menu->addElement(new anchor($apppath, "Home"));
 $menu->addElement(new anchor($apppath."customers/", "Clienti"));
 $menu->addElement(new anchor($apppath."employees/", "Dipendenti"));

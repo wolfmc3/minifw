@@ -8,7 +8,8 @@ namespace framework\db {
 	use framework\html\anchor;
 	use framework\html\icon;
 	use framework\html\form\paging;
-	class dbcontent extends contentBase {
+use framework\app;
+		class dbcontent extends contentBase {
 		protected $table;
 		protected $fields;
 		protected $idkey = "id";
@@ -22,7 +23,7 @@ namespace framework\db {
 
 		function init() {
 			parent::init();
-			$this->addJavascript($this->controller->getAppRoot()."js/dbcontents.js");
+			$this->addJavascript(app::root()."js/dbcontents.js");
 			if (isset($this->extra[0])) {
 				$this->defaultBlock = $this->extra[0];
 			}
@@ -33,8 +34,8 @@ namespace framework\db {
 			$ret = $db->read($this->table,$this->item*$this->defaultBlock,$this->defaultBlock);
 			$rows = $ret->rows;
 			$options = array(
-					"data-openurl" => $this->controller->getAppRoot().$this->obj."/edit/",
-					"data-delurl" => $this->controller->getAppRoot().$this->obj."/remove/",
+					"data-openurl" => app::root().$this->obj."/edit/",
+					"data-delurl" => app::root().$this->obj."/remove/",
 					"id" => $this->table,
 					"class" => "datatable"
 			);
@@ -48,12 +49,12 @@ namespace framework\db {
 			if ($this->deleteRecord) {
 				$columns = array_merge($columns,array(":DELETE:"=>"Cancella"));
 			}
-			$table = new table($columns, $rows, $this->controller, $this->idkey,$options);
+			$table = new table($columns, $rows, $this->idkey,$options);
 			$container->addElement($table);
 				
 			$container->addElement(new paging($this->obj, "table", $ret->page(), $ret->pages(), $ret->block));
 			$container->addElement(new element("hr"));
-			if ($this->addRecord) $container->addElement(new anchor($this->controller->getAppRoot().$this->obj."/add", array(new icon("Plus", $this->controller)," Nuovo"),array("class"=>"button")) );
+			if ($this->addRecord) $container->addElement(new anchor(app::root().$this->obj."/add", array(new icon("Plus", $this->controller)," Nuovo"),array("class"=>"button")) );
 			return $container;
 		}
 
@@ -61,7 +62,7 @@ namespace framework\db {
 			$db = new database();
 			$row = $db->row($this->table, $this->item,$this->idkey);
 			$options = array(
-					"action" => $this->controller->getAppRoot().$this->obj."/save/".$this->item,
+					"action" => app::root().$this->obj."/save/".$this->item,
 					"method" => "POST"
 			);
 			$table = new edittable($row,$this->columnnames,$options);
@@ -75,7 +76,7 @@ namespace framework\db {
 			//$row = $db->row($this->table, $this->item);
 			$row = array_fill_keys(array_keys($this->columnnames), '');
 			$options = array(
-					"action" => $this->controller->getAppRoot().$this->obj."/save",
+					"action" => app::root().$this->obj."/save",
 					"method" => "POST"
 			);
 			$table = new edittable($row,$this->columnnames, $this->idkey,$options);
@@ -98,7 +99,7 @@ namespace framework\db {
 			if ($this->item) $data[":".$this->idkey] = $this->item;
 			$db = new database();
 			$db->write($this->table, $data, $this->columnnames,$this->idkey);
-			header("location: ". $this->controller->getAppRoot().$this->obj."/");
+			header("location: ". app::root().$this->obj."/");
 			exit();
 		}
 

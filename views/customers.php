@@ -1,6 +1,7 @@
 <?php 
+namespace views;
 use framework\db\dbcontent;
-class content extends dbcontent {
+class customers extends dbcontent {
 	protected $table = "customers";
 	protected $columnnames = array (
 			'customerName' => 'Ragione sociale',

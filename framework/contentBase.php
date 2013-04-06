@@ -30,7 +30,7 @@ class contentBase {
 	}
 	
 	function init() {
-		$this->addJavascript($this->controller->getAppRoot()."js/jquery-1.9.1.min.js");
+		$this->addJavascript(app::root()."js/jquery-1.9.1.min.js");
 	}
 		
 	function title() {

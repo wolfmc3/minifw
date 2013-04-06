@@ -2,12 +2,12 @@
 namespace framework\html\form;
 use framework\html\element;
 use framework\html\anchor;
-use framework\system;
+use framework\app;
 class paging extends element {
 	function __construct($object,$action,$page,$pages,$block) {
 		parent::__construct("div");
 		$this->addAttr("class", "paging");
-		$basepath = system::getController()->getAppRoot();
+		$basepath = app::root();
 		$this->addElement("Pagine:");
 		if ($pages == 0) $pages = 1;
 		for ($i = 0;$i < $pages;$i++) {

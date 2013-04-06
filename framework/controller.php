@@ -3,11 +3,9 @@ namespace framework;
 
 class controller {
 	private $page;
-	private $approot;
 	
 	function __construct() {
-		$this->approot = str_replace("index.php", "", $_SERVER['SCRIPT_NAME']);
-		$req = str_replace($this->approot, "", $_SERVER['REQUEST_URI']);
+		$req = str_replace(app::root(), "", $_SERVER['REQUEST_URI']);
 		//echo $req;
 		if ($req == "" || $req == "index.php") $req = "index";
 		$req = explode("/", $req);
@@ -16,12 +14,12 @@ class controller {
 		if (file_exists($library)) {
 			require $library;
 			//echo "\n***\n".$library."\n***\n";
-			$this->page = new \content($req, $this);
+			$class = "\\views\\$obj";
+			$this->page = new $class($req, $this);
 		} else {
 			header("HTTP/1.0 404 Not Found");
 			exit;
 		}
-		system::setController($this);
 	}
 	
 	function getPage() {
@@ -37,13 +35,5 @@ class controller {
 	}
 }
 
-final class system {
-	private static $controller;
-	public static function setController(controller $controller) {
-		self::$controller = $controller;
-	}
-	public static function getController() {
-		return self::$controller;
-	}
-}
+
 
