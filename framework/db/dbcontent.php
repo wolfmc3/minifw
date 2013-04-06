@@ -41,7 +41,9 @@ namespace framework\db {
 			$container = new element("");
 			$columns = $this->columnnames;
 			foreach ($this->columnsettings as $key => $value) {
-				if (!$value['ontable']) unset($columns[$key]);
+				if (!$value['ontable']) {
+					unset($columns[$key]);
+				}
 			}
 			if ($this->deleteRecord) {
 				$columns = array_merge($columns,array(":DELETE:"=>"Cancella"));
@@ -115,6 +117,7 @@ namespace framework\db {
 				}
 				$coldefs[$col['Field']] = "Colonna ".$col['Field'];
 				$datatype = ""; $len = "";
+				if (strpos($col['Type'], "(") === FALSE ) $col['Type'] .= "(0)"; 
 				list($datatype,$len) = explode("(", $col['Type']);
 				$len = substr($len, 0,-1);
 				$setting =  array(

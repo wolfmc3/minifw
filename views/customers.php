@@ -15,6 +15,7 @@ class content extends dbcontent {
 			'country' => 'Nazione',
 			'salesRepEmployeeNumber' => 'Codice Venditore',
 			'creditLimit' => 'Limite credito',
+			'/orders/table/customerNumber' => 'Ordini'
 	);
 	
 	

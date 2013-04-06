@@ -16,17 +16,22 @@ namespace framework\html;
 				if ($useidkey !== FALSE) {
 					$tr->addAttr("data-id", $row[$useidkey]);
 				}
-				
 				foreach ($cols as $colname => $label) {
-					if ($colname != ":DELETE:") {
-						$tr->addElement(new element("td",array(),$row[$colname]));						
-					} else {
+					if ($colname == ":DELETE:") {
 						if ($useidkey !== FALSE) {
 							$tr->addElement(new element("td",array(),
 									new anchor("#remove", new icon("Trash", $controller))
 							));
 								
 						}
+					} elseif (substr($colname,0,1) == "/") {
+						list($null,$obj,$action,$item) = explode("/", $colname);
+						$id = $row[$item]; 
+						$tr->addElement(new element("td",array("style"=>"text-align:center;"),
+							new anchor($controller->getAppRoot()."$obj/$action/$item/$id", new icon("Search", $controller))
+						));
+					} else {
+						$tr->addElement(new element("td",array(),$row[$colname]));						
 					}
 
 				}
