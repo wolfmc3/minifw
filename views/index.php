@@ -19,8 +19,7 @@ class content extends \framework\contentBase {
 		$cont->addElement(new element("p",array(), file_get_contents(__DIR__."/../lib/home.txt")));
 		$cont->addElement(new anchor("orders", "Vedi Ordini",array("class"=>"button")));
 		$cont->addElement(new element("p",array(), file_get_contents(__DIR__."/../lib/home.txt")));
-		
-		echo $cont;
+		return $cont;
 	}
 
 }
