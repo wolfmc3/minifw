@@ -1,0 +1,103 @@
+body {
+ font-size: 12pt;
+}
+
+html, body {
+	min-height: 100%; /* real browsers */
+	height: auto !important; /* real browsers */
+	height: 100%; /* IE6: treated as min-height*/
+}
+
+#view {
+	margin: 0px;
+	padding: 0px;
+	height: 100%;	
+}
+
+#contents {
+	margin: 25px;
+}
+
+.paging {
+	line-height: 42px;
+	position: fixed;
+	bottom: 0px;
+	left:0px;
+	right: 0px;
+	background-color: #121212;
+	line-height: 32px;
+	color: #818181;
+	font-size: 90%;
+	font-weight: bold;
+}
+
+.paging a {
+	display: inline-block;
+	color: #C1C1C1;
+	border: 1px solid #121212;
+	border-radius: 4pt;
+	width: 32px;
+	margin: 3px;
+	text-align: center;
+}
+
+.paging span {
+	width: 32px;
+	margin: 3px;
+	text-align: center;
+	display: inline-block;
+	border: 1px solid #818181;
+	border-radius: 4pt;
+}
+
+
+.paging a:hover {
+	border: 1px solid #c1c1c1;
+	border-radius: 4pt;
+}
+
+table { 
+  border-spacing:0;
+  border-collapse:collapse;
+}
+
+th {
+	border-bottom: 1pt solid #DDDDDD;
+	border-left: 1pt dotted #DDDDDD;
+	border-right: 1pt dotted #DDDDDD;
+	color:#808080;
+	font-weight: bold;
+	font-size: 75%;
+	text-align: center;
+	padding-left:10pt;
+	padding-right:10pt;
+}
+
+td {
+	border-bottom: 1px solid #DDDDDD;
+	font-size: 12pt;
+	text-align: left;
+	padding-left:5pt;
+	padding-right:5pt;
+}
+
+.highlight {
+	background-color:  #FFFFD6;
+}
+
+a {
+	text-decoration: none;
+}
+
+a.button {
+	text-decoration: none;
+	border: 1px solid #FF5555;
+	border-radius: 4pt;
+	display: inline-block;
+	font-size: 85%;
+	padding: 4pt;
+}
+
+a img {
+	vertical-align: middle;
+}

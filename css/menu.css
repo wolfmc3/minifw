@@ -1,0 +1,40 @@
+#menu {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	background-color: #121212;
+	line-height: 32px;
+}
+#menu ul li {
+	list-style-type: none;
+	display: inline-block;
+	height: 32px;
+	vertical-align: middle;
+}
+
+#menu ul {
+	padding: 0px;
+	margin: 0px;
+	margin-left: 0px;
+	display: inline-block;
+}
+
+#menu ul li a {
+	display: inline-block;
+	text-decoration: none;
+	color: #C1C1C1;
+	font-weight: bold;
+	padding-left: 10px;
+	vertical-align: middle;
+}
+
+#menu ul li a:hover {
+	/*display: block;*/
+	color: #FFFFFF;
+}
+
+#contents {
+	margin-top: 45px;
+	
+}
