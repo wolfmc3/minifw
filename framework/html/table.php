@@ -2,7 +2,7 @@
 namespace framework\html; 
 	use framework\app;
 	class table extends element {
-		function __construct($cols,$rows, $controller ,$useidkey = FALSE,$options = array()) {
+		function __construct($cols,$rows,$useidkey = FALSE,$options = array()) {
 			parent::__construct("table",$options,array());
 
 			$head = new element("tr",array(),array());
@@ -21,7 +21,7 @@ namespace framework\html;
 					if ($colname == ":DELETE:") {
 						if ($useidkey !== FALSE) {
 							$tr->addElement(new element("td",array(),
-									new anchor("#remove", new icon("Trash", $controller))
+									new anchor("#remove", new icon("Trash"))
 							));
 								
 						}
@@ -29,7 +29,7 @@ namespace framework\html;
 						list($null,$obj,$action,$item) = explode("/", $colname);
 						$id = $row[$item]; 
 						$tr->addElement(new element("td",array("style"=>"text-align:center;"),
-							new anchor(app::root()."$obj/$action/$item/$id", new icon("Search", $controller))
+							new anchor(app::root()."$obj/$action/$item/$id", new icon("Search"))
 						));
 					} else {
 						$tr->addElement(new element("td",array(),$row[$colname]));						

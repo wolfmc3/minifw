@@ -54,7 +54,7 @@ use framework\app;
 				
 			$container->addElement(new paging($this->obj, "table", $ret->page(), $ret->pages(), $ret->block));
 			$container->addElement(new element("hr"));
-			if ($this->addRecord) $container->addElement(new anchor(app::root().$this->obj."/add", array(new icon("Plus", $this->controller)," Nuovo"),array("class"=>"button")) );
+			if ($this->addRecord) $container->addElement(new anchor(app::root().$this->obj."/add", array(new icon("Plus")," Nuovo"),array("class"=>"button")) );
 			return $container;
 		}
 
