@@ -11,7 +11,7 @@ class index extends \framework\contentBase {
 		return "Indice";
 	}
 	
-	function def() {
+	function action_def() {
 		$cont = new element("");
 		$cont->addElement(new img("minifwlogo.jpg", app::Controller()));
 		$cont->addElement(new element("h1",array(),"Ciao!!" ));		

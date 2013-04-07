@@ -32,6 +32,7 @@ namespace framework\html;
 		
 		function __toString() {
 			$html = "";
+				
 			if ($this->tag) $html = "<".$this->tag;
 			foreach ($this->attr as $key => $value) {
 				$html .= " ".$key."='".htmlspecialchars($value)."' ";
@@ -54,6 +55,7 @@ namespace framework\html;
 			} else {
 				$html .= "/>";				
 			}
+							
 			return $html;
 		}
 	}	

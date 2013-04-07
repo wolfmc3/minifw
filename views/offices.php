@@ -14,10 +14,13 @@ class offices extends dbcontent {
 			'country' => 'Nazione',
 			'postalCode' => 'Codice postale',
 			'territory' => 'Territorio',
+			'/employees/table/officeCode' => "Dipendenti"
 	);
 	
 	
 	protected $idkey = "officeCode";
+	
+	protected $shortFields = "city";
 	
 	/** OPTIONAL **/
 	protected $columnsettings = array (

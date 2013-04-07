@@ -1,24 +1,28 @@
 <?php
 namespace framework;
 
+use framework\views\HTTP404;
 class controller {
 	private $page;
 	
 	function __construct() {
 		$req = str_replace(app::root(), "", $_SERVER['REQUEST_URI']);
-		//echo $req;
 		if ($req == "" || $req == "index.php") $req = "index";
+		if (substr($req, -1) == "/") $req = substr($req, 0,-1);
 		$req = explode("/", $req);
 		$obj = $req[0];
-		$library = __DIR__."/../views/$obj.php";
-		if (file_exists($library)) {
-			require $library;
+		//echo $req;
+		//echo PHP_EOL.__DIR__."/../views/$obj.php".PHP_EOL;
+		$class = "\\views\\$obj";
+		if (class_exists($class,true)) {
+			//require $library;
 			//echo "\n***\n".$library."\n***\n";
-			$class = "\\views\\$obj";
 			$this->page = new $class($req, $this);
 		} else {
-			header("HTTP/1.0 404 Not Found");
-			exit;
+			//header("HTTP/1.0 404 Not Found");
+			//$class = "\\framework\\views\\HTTP404";
+			$this->page = new HTTP404($req, $this);
+			//exit;
 		}
 	}
 	

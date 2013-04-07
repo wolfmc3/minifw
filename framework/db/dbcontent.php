@@ -20,6 +20,7 @@ use framework\app;
 		protected $deleteRecord = TRUE;
 		protected $viewRecord = TRUE;
 		protected $defaultBlock = 25;
+		protected $shortFields = "";
 
 		function init() {
 			parent::init();
@@ -29,9 +30,16 @@ use framework\app;
 			}
 		}
 
-		function table() {
+		function action_table() {
 			$db = new database();
-			$ret = $db->read($this->table,$this->item*$this->defaultBlock,$this->defaultBlock);
+			$where = NULL;
+			$whereArgs = array();
+			//echo print_r($this->extra);
+			if (count($this->extra) == 3) {
+				$where = $this->extra[1]." = ?";
+				$whereArgs[] = $this->extra[2]; 
+			}
+			$ret = $db->read($this->table,$this->item*$this->defaultBlock,$this->defaultBlock,$where,$whereArgs);
 			$rows = $ret->rows;
 			$options = array(
 					"data-openurl" => app::root().$this->obj."/edit/",
@@ -58,7 +66,7 @@ use framework\app;
 			return $container;
 		}
 
-		function edit() {
+		function action_edit() {
 			$db = new database();
 			$row = $db->row($this->table, $this->item,$this->idkey);
 			$options = array(
@@ -71,7 +79,7 @@ use framework\app;
 			return $form;
 		}
 
-		function add() {
+		function action_add() {
 			$db = new database();
 			//$row = $db->row($this->table, $this->item);
 			$row = array_fill_keys(array_keys($this->columnnames), '');
@@ -85,63 +93,48 @@ use framework\app;
 			return $form;
 		}
 
-		function remove() {
+		function action_remove() {
 			$db = new database();
 			$row = $db->delete($this->table, $this->item,$this->idkey);
 			header("location: ". $_SERVER['HTTP_REFERER']);
 		}
 
-		function save() {
+		function action_save() {
+			print_r($_POST);
 			$data = array();
+			$realcolumns = array();
 			foreach ($this->columnnames as $key => $value) {
-				$data[":".$key] = $_POST[$key];
+				if (isset($_POST[$key])) {
+					$data[":".$key] = $_POST[$key];
+					$realcolumns[$key] = $value;
+				}
 			}
 			if ($this->item) $data[":".$this->idkey] = $this->item;
 			$db = new database();
-			$db->write($this->table, $data, $this->columnnames,$this->idkey);
+			$db->write($this->table, $data, $realcolumns,$this->idkey);
 			header("location: ". app::root().$this->obj."/");
 			exit();
 		}
-
-		function showColumnInfo() {
-			if ($this->columnnames) return "Only for init";
-			$db = new database();
-			$cols = $db->columnInfo($this->table, $this->item);
-			$show = new element("pre");
-			$coldefs = array();
-			$colsetting = array();
-				
-			$colids = PHP_EOL.'protected $idkey = "';
-			foreach ($cols as $col) {
-				if ($col['Key'] == "PRI") {
-					$colids .= $col['Field'];
-				}
-				$coldefs[$col['Field']] = "Colonna ".$col['Field'];
-				$datatype = ""; $len = "";
-				if (strpos($col['Type'], "(") === FALSE ) $col['Type'] .= "(0)"; 
-				list($datatype,$len) = explode("(", $col['Type']);
-				$len = substr($len, 0,-1);
-				$setting =  array(
-						"datatype" => $datatype,
-						"len" => $len,
-						"null" => $col['Null'] == "YES",
-						"ontable" => true);
-				$colsetting[$col['Field']] = $setting;
-			}
-				
-			$coldefs = 'protected $columnnames = '.var_export($coldefs,TRUE).";".PHP_EOL.PHP_EOL;
-			$colsetting = '/** OPTIONAL **/'.PHP_EOL.'protected $columnsettings = '.var_export($colsetting,TRUE).";".PHP_EOL.PHP_EOL;
-			$colids .= '";'.PHP_EOL.PHP_EOL;
-			$show->addElement(array($coldefs,$colids,$colsetting));
-			return $show;
+		
+		function link($id) {
+			if (!$id) return "-";
+			return new anchor(app::root().$this->obj."/edit/$id", $this->label($id));
 		}
-
-		function def() {
-			if (!$this->columnnames) {
-				return $this->showColumnInfo();
-			} else {
-				return $this->table();
+		
+		function label($id) {
+			if (!$id) return "-";
+			if (!$this->shortFields) {
+				$this->shortFields = $this->idkey;
 			}
+			$db = new database();
+			$row = $db->row($this->table, $id, $this->idkey);
+			//print_r($row);
+			return $row[$this->shortFields];
+		}
+		
+
+		function action_def() {
+			return $this->action_table();
 		}
 	}
 

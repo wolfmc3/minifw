@@ -25,14 +25,19 @@ namespace framework\db {
 			return $res;
 		}
 
-		function read($table,$start = 0,$count = NULL) {
+		function read($table,$start = 0,$count = 0,$filter = NULL,$filterargs = array()) {
 			$this->init();
-			$sql = "SELECT * FROM $table";
+			$where = "";
+			if ($filter) {
+				$where = " WHERE $filter";
+			}
+			$sql = "SELECT * FROM $table $where";
 			$ret = new resultset();
 			
 			if ($count) {
-				$sqlcount = "SELECT count(*) FROM $table";
-				$sth = $this::$db->query($sqlcount);
+				$sqlcount = "SELECT count(*) FROM $table $where";
+				$sth = $this::$db->prepare($sqlcount);
+				$sth->execute($filterargs);				
 				$row = $sth->fetch(\PDO::FETCH_NUM);
 				$ret->count = $row[0]-$start;
 				$ret->start = $start;
@@ -40,7 +45,9 @@ namespace framework\db {
 				$sql .= " LIMIT $start,$count"; 
 			}
 			$res = array();
-			$sth = $this::$db->query($sql);
+			$sth = $this::$db->prepare($sql);
+			$sth->execute($filterargs);
+			//$sth->debugDumpParams();
 			while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
 				$res[] = $row;	
 			}
@@ -56,6 +63,7 @@ namespace framework\db {
 			$sth->execute($id);
 			//$sth->debugDumpParams();
 			$row = $sth->fetch(\PDO::FETCH_ASSOC);
+			//print_r($row);
 			return $row;
 		}
 		
@@ -83,10 +91,10 @@ namespace framework\db {
 				$sql = substr($sql, 0, -1);
 			}
 			echo $sql.PHP_EOL;
-			var_dump($data);
+			//var_dump($data);
 			$this->init();
 			$sth = $this::$db->prepare($sql);
-			var_dump($sth);
+			//var_dump($sth);
 			return $sth->execute($data);
 			//$sth->debugDumpParams();
 		}

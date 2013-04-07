@@ -16,11 +16,13 @@ class customers extends dbcontent {
 			'country' => 'Nazione',
 			'salesRepEmployeeNumber' => 'Codice Venditore',
 			'creditLimit' => 'Limite credito',
-			'/orders/table/customerNumber' => 'Ordini'
+			'/orders/table/customerNumber' => 'Ordini',
+			'/payments/table/customerNumber' => 'Pagamenti'
 	);
 	
 	
 	protected $idkey = "customerNumber";
+	protected $shortFields = "customerName";
 	
 	/** OPTIONAL **/
 	protected $columnsettings = array (

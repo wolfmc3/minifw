@@ -8,13 +8,14 @@ class products extends dbcontent {
 	protected $columnnames = array (
 			'productCode' => 'Codice',
 			'productName' => 'Nome',
-			'productLine' => 'Linea',
+			'?productLines/productLine' => 'Linea',
 			'productScale' => 'Scala',
 			'productVendor' => 'Colonna productVendor',
 			'productDescription' => 'Descrizione',
 			'quantityInStock' => 'Giacenza',
 			'buyPrice' => 'Prezzo acquisto',
 			'MSRP' => 'Listino',
+			'/orderdetails/table/productCode' => 'Ordini',
 	);
 	
 	

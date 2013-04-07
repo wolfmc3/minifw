@@ -3,20 +3,25 @@ namespace views;
 use framework\db\dbcontent;
 class employees extends dbcontent {
 	protected $title = "Dipendenti";
+	
 	protected $table = "employees";
+	
 	protected $columnnames = array (
 			'employeeNumber' => 'Matricola',
 			'lastName' => 'Cognome',
 			'firstName' => 'Nome',
 			'extension' => 'Interno',
 			'email' => 'Email',
-			'officeCode' => 'Sede',
-			'reportsTo' => 'Responsabile',
+			'?offices/officeCode' => 'Sede',
+			'!employees/reportsTo' => 'Responsabile',
 			'jobTitle' => 'Mansione',
 	);
 	
 	
 	protected $idkey = "employeeNumber";
+	
+	protected $shortFields = "lastName";
+	
 	
 	/** OPTIONAL **/
 	protected $columnsettings = array (

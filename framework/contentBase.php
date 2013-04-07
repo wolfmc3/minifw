@@ -13,8 +13,9 @@ class contentBase {
 	protected $menu = FALSE;
 	protected $title = "";
 	
-	function __construct($args, &$controller) {
+	function __construct($args = array(), $controller = null) {
 		//var_dump($args);
+		if (!$controller) $controller = app::Controller();  
 		$this->obj = $args[0];
 		if (count($args) > 1) {
 			$this->action = $args[1];
@@ -37,7 +38,7 @@ class contentBase {
 		return $this->title;
 	}
 	
-	function def() {
+	function action_def() {
 		echo "NO CONTENTS";
 	}
 	
@@ -74,12 +75,13 @@ class contentBase {
 	
 	function action() {
 		if ($this->action == "") {
-			return $this->def();
+			return $this->action_def();
 		} else {
-			if (method_exists($this, $this->action)) {
-				return call_user_func(array($this,$this->action));
+				
+			if (method_exists($this, "action_".$this->action)) {
+				return call_user_func(array($this,"action_".$this->action));
 			} else {
-				return "ERRORE NELLA RICHIESTA";
+				return "ERRORE NELLA RICHIESTA: <b>".$this->action."</b>";
 			}
 		}
 	}

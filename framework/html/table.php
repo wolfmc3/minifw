@@ -25,11 +25,29 @@ namespace framework\html;
 							));
 								
 						}
-					} elseif (substr($colname,0,1) == "/") {
+					} elseif (substr($colname,0,1) == "/") { //OPEN LIST
 						list($null,$obj,$action,$item) = explode("/", $colname);
 						$id = $row[$item]; 
 						$tr->addElement(new element("td",array("style"=>"text-align:center;"),
-							new anchor(app::root()."$obj/$action/$item/$id", new icon("Search"))
+							new anchor(app::root()."$obj/$action/0/0/$item/$id", new icon("Search"))
+						));
+					} elseif (substr($colname,0,1) == "?") { //EDIT SINGLE
+						$colname = str_replace("?", "", $colname);
+						list($obj,$linkid) = explode("/", $colname) ;
+						$id = $row[$linkid];
+						$class = "\\views\\$obj";
+						$obj = new $class(array($obj)); 
+						$tr->addElement(new element("td",array(),
+							$obj->link($id)		
+						));
+					} elseif (substr($colname,0,1) == "!") { //Label OTHER VIEW
+						$colname = str_replace("!", "", $colname);
+						list($obj,$linkid) = explode("/", $colname) ;
+						$id = $row[$linkid];
+						$class = "\\views\\$obj";
+						$obj = new $class(array($obj)); 
+						$tr->addElement(new element("td",array(),
+							new element("b",NULL,$obj->label($id))		
 						));
 					} else {
 						$tr->addElement(new element("td",array(),$row[$colname]));						

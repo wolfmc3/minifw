@@ -12,7 +12,8 @@ class orders extends dbcontent {
 			'shippedDate' => 'Colonna shippedDate',
 			'status' => 'Colonna status',
 			'comments' => 'Colonna comments',
-			'?customerNumber/customers/customerNumber/customerName' => 'Colonna customerNumber',
+			'?customers/customerNumber' => 'Cliente',
+			'/orderdetails/table/orderNumber' => 'Righe'
 	);
 	
 	
