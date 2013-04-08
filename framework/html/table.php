@@ -4,6 +4,7 @@ namespace framework\html;
 	class table extends element {
 		function __construct($cols,$rows,$useidkey = FALSE,$options = array()) {
 			parent::__construct("table",$options,array());
+			$this->addAttr("style", "width: 100%;");
 
 			$head = new element("tr",array(),array());
 			//print_r($cols);
@@ -30,6 +31,13 @@ namespace framework\html;
 						$id = $row[$item]; 
 						$tr->add(new element("td",array("style"=>"text-align:center;"),
 							new anchor(app::root()."$obj/$action/0/0/$item/$id", new icon("Search"))
+						));
+					} elseif (substr($colname,0,1) == "+") { //OPEN LIST INLINE
+						$colname = str_replace("+", "/", $colname);
+						list($null,$obj,$action,$item) = explode("/", $colname);
+						$id = $row[$item]; 
+						$tr->add(new element("td",array("style"=>"text-align:center;"),
+							new anchor(app::root()."$obj/$action/0/0/$item/$id", new icon("Arrow2-Down"),array("class"=>"inlinedetail rotate"))
 						));
 					} elseif (substr($colname,0,1) == "?") { //EDIT SINGLE
 						$colname = str_replace("?", "", $colname);

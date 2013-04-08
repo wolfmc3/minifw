@@ -100,7 +100,7 @@ use framework\app;
 		}
 
 		function action_save() {
-			print_r($_POST);
+			//print_r($_POST);
 			$data = array();
 			$realcolumns = array();
 			foreach ($this->columnnames as $key => $value) {

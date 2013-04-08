@@ -47,9 +47,17 @@ class viewdesign extends dbcontent {
 namespace views;
 use framework\\db\\dbcontent;
 class $table extends dbcontent {
+//TABELLA
 protected \$table = '$table';
+
 //CHIAVE PRIMARIA
 protected \$idkey = '$idkey';
+
+//PERMESSI
+protected \$addRecord = TRUE;
+protected \$editRecord = TRUE;
+protected \$deleteRecord = TRUE;
+protected \$viewRecord = TRUE;
 
 //LISTA COLONNE
 protected \$columnnames = $columnnames;
@@ -78,8 +86,9 @@ CODE;
 		$show = new element("form",array("id"=>"addform"));
 		$show->add("Tipo: ");
 		$show->append(new select("type", array(
-				"/"=>"Ricerca 1 a molti",
-				"?"=>"Apri modifica in modifica il singolo",
+				"/"=>"Visualizza tabella collegata",
+				"+"=>"Visualizza tabella in linea",
+				"?"=>"Modifica record collegato",
 				"!"=>"Visualizza info",
 		), "/",array("id"=>"addtype")));
 		$views = app::getViews();

@@ -13,7 +13,7 @@ class employees extends dbcontent {
 			'extension' => 'Interno',
 			'email' => 'Email',
 			'?offices/officeCode' => 'Sede',
-			'!employees/reportsTo' => 'Responsabile',
+			'+employees/table/reportsTo' => 'Responsabile',
 			'jobTitle' => 'Mansione',
 	);
 	

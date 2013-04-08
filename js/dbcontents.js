@@ -19,4 +19,21 @@ $(document).ready(
 				})
 				
 			})
+			$(".inlinedetail").click(function(event){
+				var tr = $(this).closest("tr");
+				var next = tr.next("tr"); 
+				if (next && !next.hasClass("refline")) {
+					var cols = tr.children("td").length;
+					var newtr = $("<tr>").append("<td>Dettagli</td><td colspan="+(cols-1)+">"+tr.data("id")+"</td>");
+					newtr.addClass("refline");
+					tr.after(newtr);
+					newtr.children("td:last").addClass("border").load($(this).attr("href")+" table");
+					$(this).addClass("rotateDown");
+				} else {
+					$(this).removeClass("rotateDown");
+					next.remove();
+				}
+				event.preventDefault();
+				event.stopPropagation();
+			});
 		})

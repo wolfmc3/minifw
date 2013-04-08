@@ -82,7 +82,7 @@ class contentBase {
 		switch ($this->type) {
 			case self::TYPE_HTML:
 				header('Content-type: text/html');
-				require __DIR__."/../models/".$this->template.".php";
+				require __DIR__."/../templates/".$this->template.".php";
 			break;
 			case self::TYPE_AJAX:
 				header('Content-type: text/html');
@@ -101,7 +101,7 @@ class contentBase {
 	
 	function menu() {
 		if ($this->menu) {
-			require __DIR__."/../models/".$this->menu.".php";			
+			require __DIR__."/../templates/".$this->menu.".php";			
 		}
 	}
 	

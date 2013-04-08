@@ -13,7 +13,8 @@ class orders extends dbcontent {
 			'status' => 'Colonna status',
 			'comments' => 'Colonna comments',
 			'?customers/customerNumber' => 'Cliente',
-			'/orderdetails/table/orderNumber' => 'Righe'
+			'/orderdetails/table/orderNumber' => 'Righe',
+			'+orderdetails/table/orderNumber' => 'Righe'
 	);
 	
 	

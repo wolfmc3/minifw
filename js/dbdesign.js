@@ -3,7 +3,7 @@ $(document).ready(function() {
 	$(".addspecial").click(function() {
 		$("<div></div>").attr("title", $(this).text()).load($(this).attr("href"), function() {
 			$(this).find("#addtype").change(function(){
-				if ($(this).val() == "/") {
+				if ($(this).val() == "/" || $(this).val() == "+") {
 					$("#viewcont").show();
 					$("#viewcont").find("selaction").attr("disabled","1");
 				} else {

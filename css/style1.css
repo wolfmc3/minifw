@@ -88,6 +88,13 @@ td {
 	padding-right:5pt;
 }
 
+td.border {
+	border: 1px solid #DDDDDD;
+	/*background-color: #EEEEEE;
+	padding: 5px;*/
+	opacity: 0.75
+}
+
 .highlight {
 	background-color:  #FFFFD6;
 }
@@ -107,4 +114,36 @@ a.linkbutton {
 
 a img {
 	vertical-align: middle;
+}
+
+.rotate {
+	display: inline-block;
+	-ms-transform:rotate(0deg); /* IE 9 */
+	-moz-transform:rotate(0deg); /* Firefox */
+	-webkit-transform:rotate(0deg); /* Safari and Chrome */
+	-o-transform:rotate(0deg); /* Opera */
+	transform:rotate(0deg);
+	transition-property:transform;
+	transition-duration:600ms;
+	transition-timing-function:ease;
+	/* Firefox 4 */
+	-moz-transition-property:transform;
+	-moz-transition-duration:600ms;
+	-moz-transition-timing-function:ease;
+	/* Safari and Chrome */
+	-webkit-transition-property:transform;
+	-webkit-transition-duration:600ms;
+	-webkit-transition-timing-function:ease;
+	/* Opera */
+	-o-transition-property:transform;
+	-o-transition-duration:600ms;
+	-o-transition-timing-function:ease;
+}
+
+.rotateDown {
+	-ms-transform:rotate(530deg); /* IE 9 */
+	-moz-transform:rotate(530deg); /* Firefox */
+	-webkit-transform:rotate(530deg); /* Safari and Chrome */
+	-o-transform:rotate(530deg); /* Opera */
+	transform:rotate(530deg);
 }
