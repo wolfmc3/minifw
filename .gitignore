@@ -1,1 +1,2 @@
-config/db.ini
+config/*.ini
+!config/sample_*.ini

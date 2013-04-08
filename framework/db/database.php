@@ -1,15 +1,16 @@
 <?php 
 namespace framework\db {
 
+	use framework\app;
 	class database {
 		private static $db;
 		function init() {
 			if (!$this::$db) {
-				$config = parse_ini_file(__DIR__."/../../config/db.ini");
-				$dsn = $config['driver'].":";
-				$dsn .= "host=".$config['host'].";";
-				$dsn .= "dbname=".$config['database'];
-				$this::$db = new \PDO($dsn, $config['user'], $config['password'],array(\PDO::ERRMODE_EXCEPTION));
+				$config = app::conf()->database;
+				$dsn = $config->driver.":";
+				$dsn .= "host=".$config->host.";";
+				$dsn .= "dbname=".$config->database;
+				$this::$db = new \PDO($dsn, $config->user, $config->password,array(\PDO::ERRMODE_EXCEPTION));
 				$this::$db->exec("set names utf8");
 			}
 		}
