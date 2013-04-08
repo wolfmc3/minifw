@@ -21,4 +21,14 @@ final class app {
 	public static function Controller() {
 		return self::$controller;
 	}
+	
+	public static function getViews() {
+		$views = array();
+		chdir("views");
+		$list = glob('*.php',GLOB_BRACE);
+		chdir("..");
+		$list = explode("/", str_replace(".php", "", implode("/", $list))); 
+		return $list;
+	}
+	
 }

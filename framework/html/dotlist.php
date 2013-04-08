@@ -5,9 +5,9 @@ class dotlist extends element {
 		parent::__construct("ul");
 	}
 	
-	function addElement($el, $attr = array()) {
+	function add($el, $attr = array()) {
 		$ul = new element("li",$attr);
-		$ul->addElement($el);
-		parent::addElement($ul);
+		$ul->add($el);
+		parent::add($ul);
 	}
 } 

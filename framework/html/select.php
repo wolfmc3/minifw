@@ -3,13 +3,12 @@ namespace framework\html;
 	class select extends element {
 		function __construct($name, $data, $cur, $options = array()) {
 			parent::__construct("select", array_merge(array("name" => $name),$options));
-			foreach ($array_expression as $key => $value) {
-				$el = new element("option",array(
-						"selected"=> ($cur == $key)?1:0,
-						"value" => $key
-				));
-				$el->addElement($value);
-				$this->addElement($el);
+			foreach ($data as $key => $value) {
+				$options = array("value" => $key);
+				if ($cur == $key) $options["selected"] = "1";
+				$el = new element("option",$options);
+				$el->add($value);
+				$this->add($el);
 			}
 			
 		}

@@ -1,11 +1,18 @@
 body {
  font-size: 12pt;
+ font-family:sans-serif;
+}
+
+input, select, textarea {
+ font-size: 12pt;
+ font-family:sans-serif;
+ vertical-align:top;
 }
 
 html, body {
-	min-height: 100%; /* real browsers */
-	height: auto !important; /* real browsers */
-	height: 100%; /* IE6: treated as min-height*/
+	min-height: 100%; 
+	height: auto !important; 
+	height: 100%; 
 }
 
 #view {
@@ -89,7 +96,7 @@ a {
 	text-decoration: none;
 }
 
-a.button {
+a.linkbutton {
 	text-decoration: none;
 	border: 1px solid #FF5555;
 	border-radius: 4pt;

@@ -4,26 +4,34 @@ namespace framework\html;
 		protected $tag;
 		protected $attr;
 		protected $inner;
+		protected $html = FALSE;
 		
-		function __construct($tag, $attr = array(), $inner = NULL) {
+		function __construct($tag="", $attr = array(), $inner = NULL) {
 			$this->tag = $tag;
 			if (is_null($attr)) $attr = array();
 			$this->attr = $attr;
-			if (!is_null($inner)) $this->addElement($inner);
+			if (!is_null($inner)) $this->add($inner);
 		}
 		
-		function addElement($el) {
+		function add($el) {
 			if (is_array($el)) {
 				foreach ($el as $sel) {
-					$this->addElement($sel);
+					$this->add($sel);
 				}
 			} else {
-				if (is_string($el)) {
+				if (is_string($el)&&!$this->html) {
 					$this->inner[] = htmlentities($el);					
 				} else {
 					$this->inner[] = $el;
+					return $el;
 				}
 			}
+			
+		}
+		
+		function &append($element) {
+			$this->inner[] = $element;
+			return $element;
 		}
 		
 		function addAttr($key,$value) {

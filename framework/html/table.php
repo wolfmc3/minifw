@@ -8,9 +8,9 @@ namespace framework\html;
 			$head = new element("tr",array(),array());
 			//print_r($cols);
 			foreach ($cols as $colname => $label) {
-				$head->addElement(new element("th",NULL,$label));
+				$head->add(new element("th",NULL,$label));
 			}
-			$this->addElement($head);
+			$this->add($head);
 			foreach ($rows as $row) {
 				
 				$tr = new element("tr");
@@ -20,7 +20,7 @@ namespace framework\html;
 				foreach ($cols as $colname => $label) {
 					if ($colname == ":DELETE:") {
 						if ($useidkey !== FALSE) {
-							$tr->addElement(new element("td",array(),
+							$tr->add(new element("td",array(),
 									new anchor("#remove", new icon("Trash"))
 							));
 								
@@ -28,7 +28,7 @@ namespace framework\html;
 					} elseif (substr($colname,0,1) == "/") { //OPEN LIST
 						list($null,$obj,$action,$item) = explode("/", $colname);
 						$id = $row[$item]; 
-						$tr->addElement(new element("td",array("style"=>"text-align:center;"),
+						$tr->add(new element("td",array("style"=>"text-align:center;"),
 							new anchor(app::root()."$obj/$action/0/0/$item/$id", new icon("Search"))
 						));
 					} elseif (substr($colname,0,1) == "?") { //EDIT SINGLE
@@ -37,7 +37,7 @@ namespace framework\html;
 						$id = $row[$linkid];
 						$class = "\\views\\$obj";
 						$obj = new $class(array($obj)); 
-						$tr->addElement(new element("td",array(),
+						$tr->add(new element("td",array(),
 							$obj->link($id)		
 						));
 					} elseif (substr($colname,0,1) == "!") { //Label OTHER VIEW
@@ -46,15 +46,15 @@ namespace framework\html;
 						$id = $row[$linkid];
 						$class = "\\views\\$obj";
 						$obj = new $class(array($obj)); 
-						$tr->addElement(new element("td",array(),
+						$tr->add(new element("td",array(),
 							new element("b",NULL,$obj->label($id))		
 						));
 					} else {
-						$tr->addElement(new element("td",array(),$row[$colname]));						
+						$tr->add(new element("td",array(),$row[$colname]));						
 					}
 
 				}
-				$this->addElement($tr);
+				$this->add($tr);
 			}
 		}
 	}	

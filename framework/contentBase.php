@@ -9,6 +9,11 @@ class contentBase {
 	protected $javascripts = array();
 	protected $css = array();
 	protected $template = "html";
+	const TYPE_HTML = 0;
+	const TYPE_AJAX = 1;
+	const TYPE_JSON = 2;
+	const TYPE_CUSTOM = 3;
+	protected $type = self::TYPE_HTML; //json, ajax, html
 	protected $controller;
 	protected $menu = FALSE;
 	protected $title = "";
@@ -30,8 +35,15 @@ class contentBase {
 		$this->init();
 	}
 	
+	function typeByAction($action,$type) {
+		if ($action == $this->action) {
+			$this->type = $type;
+		}
+	}
+	
 	function init() {
 		$this->addJavascript(app::root()."js/jquery-1.9.1.min.js");
+		if (isset($_POST["resp_ajax"])) $this->type = self::TYPE_AJAX; 
 	}
 		
 	function title() {
@@ -50,6 +62,11 @@ class contentBase {
 		$this->css[] = $css;
 	}
 	
+	function url($action = "") {
+		if (!$action) $action .= "/";
+		return app::root().$this->obj."/".$action;
+	}
+	
 	function scripts() {
 		foreach ($this->javascripts as $script ) {
 			echo "<script src='$script'></script>";
@@ -60,7 +77,26 @@ class contentBase {
 	}
 	
 	function render() {
-		require __DIR__."/../models/".$this->template.".php";
+		header('Cache-Control: no-cache, must-revalidate');
+		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+		switch ($this->type) {
+			case self::TYPE_HTML:
+				header('Content-type: text/html');
+				require __DIR__."/../models/".$this->template.".php";
+			break;
+			case self::TYPE_AJAX:
+				header('Content-type: text/html');
+				echo $this->action();
+			break;
+			case self::TYPE_CUSTOM:
+				echo $this->action();
+			break;
+			case self::TYPE_JSON:
+				header('Content-type: application/json');
+				echo json_encode($this->action());
+			break;
+		}
+
 	}
 	
 	function menu() {
@@ -77,7 +113,6 @@ class contentBase {
 		if ($this->action == "") {
 			return $this->action_def();
 		} else {
-				
 			if (method_exists($this, "action_".$this->action)) {
 				return call_user_func(array($this,"action_".$this->action));
 			} else {

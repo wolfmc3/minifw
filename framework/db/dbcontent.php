@@ -58,11 +58,11 @@ use framework\app;
 				$columns = array_merge($columns,array(":DELETE:"=>"Cancella"));
 			}
 			$table = new table($columns, $rows, $this->idkey,$options);
-			$container->addElement($table);
+			$container->add($table);
 				
-			$container->addElement(new paging($this->obj, "table", $ret->page(), $ret->pages(), $ret->block));
-			$container->addElement(new element("hr"));
-			if ($this->addRecord) $container->addElement(new anchor(app::root().$this->obj."/add", array(new icon("Plus")," Nuovo"),array("class"=>"button")) );
+			$container->add(new paging($this->obj, "table", $ret->page(), $ret->pages(), $ret->block));
+			$container->add(new element("hr"));
+			if ($this->addRecord) $container->add(new anchor(app::root().$this->obj."/add", array(new icon("Plus")," Nuovo"),array("class"=>"button")) );
 			return $container;
 		}
 
@@ -75,7 +75,7 @@ use framework\app;
 			);
 			$table = new edittable($row,$this->columnnames,$options);
 			$form = new element("form",$options);
-			$form->addElement($table);
+			$form->add($table);
 			return $form;
 		}
 
@@ -89,7 +89,7 @@ use framework\app;
 			);
 			$table = new edittable($row,$this->columnnames, $this->idkey,$options);
 			$form = new element("form",$options);
-			$form->addElement($table);
+			$form->add($table);
 			return $form;
 		}
 
