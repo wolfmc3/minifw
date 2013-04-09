@@ -28,17 +28,22 @@ use framework\app;
 			if (isset($this->extra[0])) {
 				$this->defaultBlock = $this->extra[0];
 			}
+			$this->fields = array_unique(array_merge(explode(",", $this->idkey), array_keys($this->columnnames)));
 		}
 
 		function action_table() {
 			$db = new database();
 			$where = NULL;
 			$whereArgs = array();
-			//echo print_r($this->extra);
-			if (count($this->extra) == 3) {
-				$where = $this->extra[1]." = ?";
-				$whereArgs[] = $this->extra[2]; 
+			//echo "fileds:";print_r($this->fields);
+			foreach ($this->fields as $key) {
+				//echo " $key \n";
+				if (array_key_exists($key, $this->extra)) {
+					$where = ($where?" AND ":"").$key." = ?";
+					$whereArgs[] = $this->extra[$key];
+				}
 			}
+
 			$ret = $db->read($this->table,$this->item*$this->defaultBlock,$this->defaultBlock,$where,$whereArgs);
 			$rows = $ret->rows;
 			$options = array(
@@ -116,9 +121,20 @@ use framework\app;
 			exit();
 		}
 		
-		function link($id) {
+		function uri($id, $action= "table",$extra = array()) {
+			$uri = app::root().$this->obj;
+			if ($action) $uri .= "/$action"; 			
+			if ($action && $id) $uri .= "/$id"; 
+			return app::root().$this->obj."/$action/$id";
+		}
+		
+		function key() {
+			return str_replace(",", "|", $this->idkey);
+		}
+		
+		function link($id,$action = "table") {
 			if (!$id) return "-";
-			return new anchor(app::root().$this->obj."/edit/$id", $this->label($id));
+			return new anchor($this->uri($id,$action) , $this->label($id));
 		}
 		
 		function label($id) {

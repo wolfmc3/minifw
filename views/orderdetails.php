@@ -13,7 +13,7 @@ class orderdetails extends viewdesign {
 			'orderLineNumber' => 'Linea',
 	);
 		
-	protected $idkey = "orderNumber";
+	protected $idkey = "orderNumber,productCode";
 	
 	/** OPTIONAL **/
 	protected $columnsettings = array (

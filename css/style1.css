@@ -141,9 +141,9 @@ a img {
 }
 
 .rotateDown {
-	-ms-transform:rotate(530deg); /* IE 9 */
-	-moz-transform:rotate(530deg); /* Firefox */
-	-webkit-transform:rotate(530deg); /* Safari and Chrome */
-	-o-transform:rotate(530deg); /* Opera */
-	transform:rotate(530deg);
+	-ms-transform:rotate(540deg); /* IE 9 */
+	-moz-transform:rotate(540deg); /* Firefox */
+	-webkit-transform:rotate(540deg); /* Safari and Chrome */
+	-o-transform:rotate(540deg); /* Opera */
+	transform:rotate(540deg);
 }

@@ -4,7 +4,7 @@ error_reporting(E_ALL);
 ini_set('error_reporting', E_ALL);
 
 spl_autoload_register(function($className) {
-	//echo "Search class:$className\n";
+	//echo "\nSearch class: $className = ";
 	if($className[0] == '\\') {
 		$className = substr($className, 1);
 	}
@@ -13,9 +13,12 @@ spl_autoload_register(function($className) {
 	$classPath = str_replace("\\", "/", $className) .'.php';
 
 	$file = __DIR__ . "/$classPath";
+	//echo "$file";
 	if (file_exists($file)) {
+		//echo " OK ";
 		require($file);
 	}
+	//echo "\n";
 	/*echo $className.":";
 	print_r(get_class_methods($className));*/
 	

@@ -29,6 +29,11 @@ namespace framework\html;
 			
 		}
 		
+		function html($html) {
+			$this->inner = array();
+			$this->add($html);
+		}
+		
 		function &append($element) {
 			$this->inner[] = $element;
 			return $element;

@@ -26,6 +26,7 @@ final class app {
 	}
 	
 	public static function &Controller() {
+		if (!self::$controller) throw new \Exception("Controller non found!!!");
 		return self::$controller;
 	}
 	

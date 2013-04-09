@@ -16,7 +16,9 @@ namespace framework\html;
 				
 				$tr = new element("tr");
 				if ($useidkey !== FALSE) {
-					$tr->addAttr("data-id", $row[$useidkey]);
+					$id = preg_replace("/([\w]+)/e", "\$row['\\1']", $useidkey);
+					//$id = implode("-", array_map(function($val){$row[$val];}, explode(",", $useidkey)));
+					$tr->addAttr("data-id", $id);
 				}
 				foreach ($cols as $colname => $label) {
 					if ($colname == ":DELETE:") {
@@ -29,33 +31,32 @@ namespace framework\html;
 					} elseif (substr($colname,0,1) == "/") { //OPEN LIST
 						list($null,$obj,$action,$item) = explode("/", $colname);
 						$id = $row[$item]; 
-						$tr->add(new element("td",array("style"=>"text-align:center;"),
-							new anchor(app::root()."$obj/$action/0/0/$item/$id", new icon("Search"))
-						));
+						$callkey = app::Controller()->$obj->key(); 
+						if ($id) $tr->add(new element("td",array("style"=>"text-align:center;"),
+							new anchor(app::root()."$obj/$action/0/0/$callkey,$id", new icon("Search"))
+						)); else $tr->add(new element("td",array("style"=>"text-align:center;"),"-"));
 					} elseif (substr($colname,0,1) == "+") { //OPEN LIST INLINE
 						$colname = str_replace("+", "/", $colname);
 						list($null,$obj,$action,$item) = explode("/", $colname);
-						$id = $row[$item]; 
-						$tr->add(new element("td",array("style"=>"text-align:center;"),
-							new anchor(app::root()."$obj/$action/0/0/$item/$id", new icon("Arrow2-Down"),array("class"=>"inlinedetail rotate"))
-						));
+						$id = $row[$item];
+						$callkey = app::Controller()->$obj->key(); 
+						if ($id) $tr->add(new element("td",array("style"=>"text-align:center;"),
+							new anchor(app::root()."$obj/$action/0/0/$callkey,$id", new icon("Arrow2-Down"),array("class"=>"inlinedetail rotate"))
+						)); else $tr->add(new element("td",array("style"=>"text-align:center;"),"-"));
+							
 					} elseif (substr($colname,0,1) == "?") { //EDIT SINGLE
 						$colname = str_replace("?", "", $colname);
 						list($obj,$linkid) = explode("/", $colname) ;
 						$id = $row[$linkid];
-						$class = "\\views\\$obj";
-						$obj = new $class(array($obj)); 
 						$tr->add(new element("td",array(),
-							$obj->link($id)		
+							app::Controller()->$obj->link($id)		
 						));
 					} elseif (substr($colname,0,1) == "!") { //Label OTHER VIEW
 						$colname = str_replace("!", "", $colname);
 						list($obj,$linkid) = explode("/", $colname) ;
 						$id = $row[$linkid];
-						$class = "\\views\\$obj";
-						$obj = new $class(array($obj)); 
 						$tr->add(new element("td",array(),
-							new element("b",NULL,$obj->label($id))		
+							new element("b",NULL,app::Controller()->$obj->label($id))		
 						));
 					} else {
 						$tr->add(new element("td",array(),$row[$colname]));						

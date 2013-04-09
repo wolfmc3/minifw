@@ -15,6 +15,14 @@ namespace framework\db {
 			}
 		}
 		
+		function compileid($id) {
+			if (strpos($id, ",") === FALSE) {
+				return $id;
+			} else {
+				return "CONCAT(".str_replace(",", ", ',' ,", $id).")";
+			}
+		}
+		
 		function columnInfo($table) {
 			$this->init();
 			$sql = "SHOW COLUMNS FROM $table";
@@ -58,6 +66,7 @@ namespace framework\db {
 		
 		function row($table,$id,$idkey = "id") {
 			$this->init();
+			$idkey = $this->compileid($idkey);
 			$sql = "SELECT * FROM $table WHERE $idkey = ?";
 			$id = array($id);
 			$sth = $this::$db->prepare($sql);
@@ -70,6 +79,7 @@ namespace framework\db {
 		
 		function delete($table,$id,$idkey = "id") {
 			$this->init();
+			$idkey = $this->compileid($idkey);
 			$sql = "DELETE FROM $table WHERE $idkey = ?";
 			$id = array($id);
 			$sth = $this::$db->prepare($sql);
@@ -77,6 +87,7 @@ namespace framework\db {
 		}
 		
 		function write($table,$data,$fields,$idkey = "id") {
+			throw new \Exception("Manca azione per id multiplo");
 			if (isset($data[":".$idkey])) { //aggiornamento
 				$sql = "UPDATE $table SET ";
 				foreach ($fields as $key => $value) {
