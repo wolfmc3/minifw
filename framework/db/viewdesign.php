@@ -155,7 +155,7 @@ CODE;
 		$show->add(new jsondata("cols", $colsettings));
 		$show->add(array(new br(),"Colonna ID:", new select("id[]", $prikey, "",array("id"=>"id", "multiple"=>1,"size"=>count($prikey)))));
 		$show->add(array(new br(),"Colonna descrizione:", new select("name", $colnames, "",array())));
-		
+		$colnames = array_merge($colnames, array_combine(array_keys($this->columnnames), array_keys($this->columnnames)));
 		$select = new select("cols[]", $colnames, "",array("id"=>"cols", "multiple"=>1,"size"=>count($colnames)+1));
 		$show->add(array(new element("hr"),"Colonne disponibili:",new br(), $select));
 		$addformlink = new anchor($this->url("addform"),"Aggiungi...",array("class"=>"button addspecial"));
@@ -163,7 +163,7 @@ CODE;
 		$show->add(new element("h3",NULL,"Impostazioni"));
 		$table = new element("table",array("id"=>"settings")," ");
 		$head = $table->append(new element("thead"))->append(new element("tr"));
-		$heads = array("Nome", "Descrizione","In lista","Tipo","Lunghezza","Consenti null");
+		$heads = array("Nome", "Descrizione","In lista","Tratta come","Validazione", "Tipo","Lunghezza","Consenti null");
 		foreach ($heads as $value) {
 			$head->append(new element("th",NULL,$value));
 		}

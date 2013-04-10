@@ -19,7 +19,7 @@ namespace framework\db {
 			if (strpos($id, ",") === FALSE) {
 				return $id;
 			} else {
-				return "CONCAT(".str_replace(",", ", ',' ,", $id).")";
+				return "CONCAT(".str_replace(",", ", '~' ,", $id).")";
 			}
 		}
 		
@@ -86,15 +86,15 @@ namespace framework\db {
 			return $sth->execute($id);
 		}
 		
-		function write($table,$data,$fields,$idkey = "id") {
-			throw new \Exception("Manca azione per id multiplo");
-			if (isset($data[":".$idkey])) { //aggiornamento
+		function write($table,$data,$fields,$id = NULL,$idkey = "id") {
+			if ($id) { //aggiornamento
 				$sql = "UPDATE $table SET ";
 				foreach ($fields as $key => $value) {
 					$sql .= "$key = :$key ,";
 				}
 				$sql = substr($sql, 0, -1);
-				$sql .= " WHERE $idkey = :$idkey";
+				$where = $this->compileid($idkey) . " = $id";
+				$sql .= " WHERE $where";
 			} else {
 				$sql = "INSERT INTO $table SET ";
 				foreach ($fields as $key => $value) {
@@ -103,7 +103,6 @@ namespace framework\db {
 				$sql = substr($sql, 0, -1);
 			}
 			echo $sql.PHP_EOL;
-			//var_dump($data);
 			$this->init();
 			$sth = $this::$db->prepare($sql);
 			//var_dump($sth);

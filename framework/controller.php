@@ -24,7 +24,7 @@ class controller {
 		//echo "$url\n";
 		$querystring = trim($urlparts[1]);
 		$url = $url?explode("/", $url):[];
-		$def = ["index","def","*"];
+		$def = ["index","def",""];
 		for ($i = count($url); $i < count($def); $i++) {
 			$url[$i] = $def[$i];
 		}

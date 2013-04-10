@@ -78,7 +78,7 @@ use framework\app;
 					"action" => app::root().$this->obj."/save/".$this->item,
 					"method" => "POST"
 			);
-			$table = new edittable($row,$this->columnnames,$options);
+			$table = new edittable($row,$this->columnnames,$this->columnsettings,$options);
 			$form = new element("form",$options);
 			$form->add($table);
 			return $form;
@@ -114,9 +114,8 @@ use framework\app;
 					$realcolumns[$key] = $value;
 				}
 			}
-			if ($this->item) $data[":".$this->idkey] = $this->item;
 			$db = new database();
-			$db->write($this->table, $data, $realcolumns,$this->idkey);
+			$db->write($this->table, $data, $realcolumns,$this->item,$this->idkey);
 			header("location: ". app::root().$this->obj."/");
 			exit();
 		}

@@ -2,13 +2,14 @@
 namespace framework\html\form;
 use framework\html\element;
 class edittable extends element {
-	function __construct($row, $labels, $options = array()) {
+
+	function __construct($row, $labels,$settings, $options = array()) {
 		parent::__construct("table",$options,array());
 		foreach ($labels as $colname => $value) {
 			if (isset($row[$colname])) {
 				$tr = new element("tr");
 				$tr->add(new element("th",array(),$value)); //LABEL
-				$input = new text($colname, $row[$colname]);
+				$input = new text($colname, $row[$colname],array_key_exists($colname, $settings)?$settings[$colname]:array());
 				$tr->add(new element("td",array(),$input)); //INPUT
 				$this->add($tr);
 			}
@@ -16,10 +17,11 @@ class edittable extends element {
 		$tr = new element("tr");
 		$td = new element("td",array("colspan"=>"2"),new submit("Salva"));
 		$td->addAttr("style", "text-align: center;");
-		$tr->add($td); 
+		$tr->add($td);
 		$this->add($tr);
-		
-		
+
+
 	}
+
 }
 

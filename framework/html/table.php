@@ -16,6 +16,7 @@ namespace framework\html;
 				
 				$tr = new element("tr");
 				if ($useidkey !== FALSE) {
+					$useidkey = str_replace(",", "~", $useidkey);
 					$id = preg_replace("/([\w]+)/e", "\$row['\\1']", $useidkey);
 					//$id = implode("-", array_map(function($val){$row[$val];}, explode(",", $useidkey)));
 					$tr->addAttr("data-id", $id);
@@ -46,7 +47,7 @@ namespace framework\html;
 							
 					} elseif (substr($colname,0,1) == "?") { //EDIT SINGLE
 						$colname = str_replace("?", "", $colname);
-						list($obj,$linkid) = explode("/", $colname) ;
+						list($obj,$linkid) = explode("/", $colname);
 						$id = $row[$linkid];
 						$tr->add(new element("td",array(),
 							app::Controller()->$obj->link($id)		
