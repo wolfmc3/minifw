@@ -11,9 +11,18 @@ $(document).ready(function() {
 					$("#viewcont").find("selaction").attr("disabled","0");
 				}
 			});
+			$(this).find("#selectviews").change(function(){ 
+				var dest = $("#target");
+				var view = $(this).val();
+				var url = document.location.href.replace("design","viewinfo")
+				$.getJSON(url, function(data) {
+					var v = data[view];
+					$(dest).addOptions(v.fields);
+				});
+			})
 			$(this).dialog({
 				height : 300,
-				width : 480,
+				width : 550,
 				resizable : false,
 				modal : true,
 				buttons : {
@@ -117,6 +126,7 @@ var formtypes = {"text":"Testo","readonly":"Visualizza","longtext":"Testo multir
 
 jQuery.fn.addOptions = function(options) { 
 	var element = this;
+	$(element).html("");
 	$.each(options, function(key, value) {   
      $(element)
          .append($("<option></option>")
@@ -124,6 +134,7 @@ jQuery.fn.addOptions = function(options) {
          .text(value)); 
 	})
 ;}  
+
 
 function addTd(cont, el, text) {
 	td = $("<td>").append(el)

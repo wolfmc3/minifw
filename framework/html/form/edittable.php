@@ -5,11 +5,12 @@ class edittable extends element {
 
 	function __construct($row, $labels,$settings, $options = array()) {
 		parent::__construct("table",$options,array());
+		$this->addAttr("style", "width: 100%;");
 		foreach ($labels as $colname => $value) {
 			if (isset($row[$colname])) {
 				$tr = new element("tr");
 				$tr->add(new element("th",array(),$value)); //LABEL
-				$input = new text($colname, $row[$colname],array_key_exists($colname, $settings)?$settings[$colname]:array());
+				$input = new dyninput($colname, $row[$colname],array_key_exists($colname, $settings)?$settings[$colname]:array());
 				$tr->add(new element("td",array(),$input)); //INPUT
 				$this->add($tr);
 			}

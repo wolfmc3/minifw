@@ -25,9 +25,13 @@ use framework\app;
 		function init() {
 			parent::init();
 			$this->addJavascript(app::root()."js/dbcontents.js");
+			$this->addJavascript(app::root()."js/jquery-ui.js");
+			$this->addCss(app::root()."css/black-tie/jquery-ui.css");
+			$this->addJavascript(app::root()."js/dyninput.js");
 			if (isset($this->extra[0])) {
 				$this->defaultBlock = $this->extra[0];
 			}
+			//print_r(array_keys($this->columnnames));
 			$this->fields = array_unique(array_merge(explode(",", $this->idkey), array_keys($this->columnnames)));
 		}
 
@@ -55,7 +59,7 @@ use framework\app;
 			$container = new element("");
 			$columns = $this->columnnames;
 			foreach ($this->columnsettings as $key => $value) {
-				if (!$value['ontable']) {
+				if (isset($value['ontable']) && $value['ontable'] == 'true') {
 					unset($columns[$key]);
 				}
 			}
@@ -147,6 +151,18 @@ use framework\app;
 			return $row[$this->shortFields];
 		}
 		
+		function fields() {
+			$cols = [];
+			$db = new database();
+			$dbcol = $db->columnInfo($this->table);
+			foreach ($dbcol as $vals) {
+				$col = $vals['Field'];
+				if (ctype_alpha(substr($col, 0,1))) {
+					$cols[$col] = array_key_exists($col, $this->columnnames)?$this->columnnames[$col]:$col;
+				}
+			}
+			return $cols;
+		}
 
 		function action_def() {
 			return $this->action_table();

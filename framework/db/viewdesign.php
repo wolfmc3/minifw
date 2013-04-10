@@ -17,6 +17,7 @@ class viewdesign extends dbcontent {
 		$this->addCss(app::root()."css/black-tie/jquery-ui.css");
 		$this->typeByAction("addform", self::TYPE_AJAX);
 		$this->typeByAction("coldata", self::TYPE_JSON);
+		$this->typeByAction("viewinfo", self::TYPE_JSON);
 	}
 	
 
@@ -93,11 +94,9 @@ CODE;
 		), "/",array("id"=>"addtype")));
 		$views = app::getViews();
 		$views = array_combine($views, $views);
-		$show->add(array(new br(),"Vista: ", new select("view", $views, "") ));
+		$show->add(array(new br(),"Vista: ", new select("view", $views, "",array("id"=>"selectviews")) ));
 		$viewcontainer = new element("span",array("id"=>"viewcont"),"");
-		$show->append($viewcontainer)->add(array(new br(),"Azione: ", new select("action",array(
-				"table"=>"Lista"
-		),"",array("id"=>"selaction") )));
+		$show->append($viewcontainer)->add(array(new br(),"Azione: ", new select("action",array("table"=>"Lista"),"",array("id"=>"selaction") )));
 		$db = new database();
 		$cols = $db->columnInfo($this->table);
 		$colnames = array();
@@ -114,7 +113,20 @@ CODE;
 		}
 		
 		$show->add(array(new br(),"Campo id: ", new select("field",$colnames,"")));
+		$show->add(array(new br(),"Colonna target: ", new select("target",array(),"",array("id"=>"target"))));
 		return $show;
+	}
+	
+	function action_viewinfo() {
+		$views = app::getViews();
+		$res = [];
+		foreach ($views as $value) {
+			$obj = app::Controller()->$value;
+			if (method_exists($obj, "fields")) {
+				$res[$value] = ["keys" => $obj->key(),"fields"=>$obj->fields()]; 
+			}
+		}
+		return $res;
 	}
 	
 	function action_coldata() {

@@ -1,9 +1,23 @@
-<?php 
+<?php
 namespace views;
 use framework\db\dbcontent;
-class customers extends dbcontent {
-	protected $table = "customers";
+use framework\db\viewdesign;
+class customers extends viewdesign {
+	//TABELLA
+	protected $table = 'customers';
+
+	//CHIAVE PRIMARIA
+	protected $idkey = 'customerNumber';
+
+	//PERMESSI
+	protected $addRecord = TRUE;
+	protected $editRecord = TRUE;
+	protected $deleteRecord = TRUE;
+	protected $viewRecord = TRUE;
+
+	//LISTA COLONNE
 	protected $columnnames = array (
+			'customerNumber' => 'Codice cliente',
 			'customerName' => 'Ragione sociale',
 			'contactLastName' => 'Cognome',
 			'contactFirstName' => 'Nome',
@@ -12,108 +26,140 @@ class customers extends dbcontent {
 			'addressLine2' => 'Indirizzo 2',
 			'city' => 'Città',
 			'state' => 'Stato',
-			'postalCode' => 'CAP',
+			'postalCode' => 'Codice postale',
 			'country' => 'Nazione',
-			'salesRepEmployeeNumber' => 'Codice Venditore',
+			'salesRepEmployeeNumber' => 'Venditore',
 			'creditLimit' => 'Limite credito',
-			'/orders/table/customerNumber' => 'Ordini',
-			'/payments/table/customerNumber' => 'Pagamenti'
+			'/orders/table/customerNumber/customerNumber' => 'Ordini',
+			'/payments/table/customerNumber/customerNumber' => 'Pagamenti',
 	);
-	
-	
-	protected $idkey = "customerNumber";
-	protected $shortFields = "customerName";
-	
-	/** OPTIONAL **/
+
+	//CAMPO DESCRIZIONE
+	protected $shortFields = 'customerNumber';
+
+	//IMPOSTAZIONI
 	protected $columnsettings = array (
+			'customerNumber' =>
+			array (
+					'ontable' => 'true',
+					'inputtype' => 'readonly',
+					'regexpr' => '',
+					'datatype' => 'int',
+					'len' => '11',
+					'null' => 'false',
+			),
 			'customerName' =>
 			array (
+					'ontable' => 'false',
+					'inputtype' => 'text',
+					'regexpr' => '',
 					'datatype' => 'varchar',
 					'len' => '50',
-					'null' => false,
-					'ontable' => true,
+					'null' => 'false',
 			),
 			'contactLastName' =>
 			array (
+					'ontable' => 'false',
+					'inputtype' => 'text',
+					'regexpr' => '',
 					'datatype' => 'varchar',
 					'len' => '50',
-					'null' => false,
-					'ontable' => false,
+					'null' => 'false',
 			),
 			'contactFirstName' =>
 			array (
+					'ontable' => 'true',
+					'inputtype' => 'text',
+					'regexpr' => '',
 					'datatype' => 'varchar',
 					'len' => '50',
-					'null' => false,
-					'ontable' => false,
+					'null' => 'false',
 			),
 			'phone' =>
 			array (
+					'ontable' => 'false',
+					'inputtype' => 'text',
+					'regexpr' => '^[0-9\-\s\,\.]*$',
 					'datatype' => 'varchar',
 					'len' => '50',
-					'null' => false,
-					'ontable' => false,
+					'null' => 'false',
 			),
 			'addressLine1' =>
 			array (
-					'datatype' => 'varchar',
-					'len' => '50',
-					'null' => false,
-					'ontable' => false,
+			'ontable' => 'false',
+			'inputtype' => 'text',
+			'regexpr' => '',
+			'datatype' => 'varchar',
+			'len' => '50',
+			'null' => 'false',
 			),
 			'addressLine2' =>
 			array (
-					'datatype' => 'varchar',
-					'len' => '50',
-					'null' => true,
-					'ontable' => false,
+			'ontable' => 'false',
+			'inputtype' => 'text',
+			'regexpr' => '',
+			'datatype' => 'varchar',
+			'len' => '50',
+			'null' => 'true',
 			),
 			'city' =>
 			array (
-					'datatype' => 'varchar',
-					'len' => '50',
-					'null' => false,
-					'ontable' => true,
+			'ontable' => 'true',
+			'inputtype' => 'text',
+			'regexpr' => '',
+			'datatype' => 'varchar',
+			'len' => '50',
+			'null' => 'false',
 			),
 			'state' =>
 			array (
-					'datatype' => 'varchar',
-					'len' => '50',
-					'null' => true,
-					'ontable' => true,
+			'ontable' => 'true',
+			'inputtype' => 'text',
+			'regexpr' => '',
+			'datatype' => 'varchar',
+			'len' => '50',
+			'null' => 'true',
 			),
 			'postalCode' =>
 			array (
+			'ontable' => 'true',
+			'inputtype' => 'text',
+			'regexpr' => '^[0-9]{5,15}$',
 			'datatype' => 'varchar',
 			'len' => '15',
-			'null' => true,
-			'ontable' => false,
+			'null' => 'true',
 			),
 			'country' =>
 			array (
+			'ontable' => 'true',
+			'inputtype' => 'text',
+			'regexpr' => '',
 			'datatype' => 'varchar',
 			'len' => '50',
-			'null' => false,
-			'ontable' => true,
+			'null' => 'false',
 			),
 			'salesRepEmployeeNumber' =>
 			array (
+			'ontable' => 'true',
+			'inputtype' => 'text',
+			'regexpr' => '',
 			'datatype' => 'int',
 			'len' => '11',
-			'null' => true,
-			'ontable' => false,
+			'null' => 'true',
 			),
 			'creditLimit' =>
 			array (
+			'ontable' => 'false',
+			'inputtype' => 'currency',
+			'regexpr' => '',
 			'datatype' => 'double',
-			'len' => false,
-			'null' => true,
-			'ontable' => false,
+			'len' => '0',
+			'null' => 'true',
 			),
 	);
-	
+
+	//TITOLO VISUALIZZATO NEL BROWSER
 	function title() {
-		return "Clienti";
+		return 'customers';
 	}
-	
 }

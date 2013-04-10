@@ -30,17 +30,17 @@ namespace framework\html;
 								
 						}
 					} elseif (substr($colname,0,1) == "/") { //OPEN LIST
-						list($null,$obj,$action,$item) = explode("/", $colname);
+						list($null,$obj,$action,$item,$idtarget) = explode("/", $colname);
 						$id = $row[$item]; 
-						$callkey = app::Controller()->$obj->key(); 
+						$callkey = $idtarget; 
 						if ($id) $tr->add(new element("td",array("style"=>"text-align:center;"),
 							new anchor(app::root()."$obj/$action/0/0/$callkey,$id", new icon("Search"))
 						)); else $tr->add(new element("td",array("style"=>"text-align:center;"),"-"));
 					} elseif (substr($colname,0,1) == "+") { //OPEN LIST INLINE
 						$colname = str_replace("+", "/", $colname);
-						list($null,$obj,$action,$item) = explode("/", $colname);
+						list($null,$obj,$action,$item,$idtarget) = explode("/", $colname);
 						$id = $row[$item];
-						$callkey = app::Controller()->$obj->key(); 
+						$callkey = $idtarget; 
 						if ($id) $tr->add(new element("td",array("style"=>"text-align:center;"),
 							new anchor(app::root()."$obj/$action/0/0/$callkey,$id", new icon("Arrow2-Down"),array("class"=>"inlinedetail rotate"))
 						)); else $tr->add(new element("td",array("style"=>"text-align:center;"),"-"));

@@ -40,7 +40,11 @@ namespace framework\html;
 		}
 		
 		function addAttr($key,$value) {
-			$this->attr[$key] = $value;
+			if (array_key_exists($key,$this->attr)) {
+				$this->attr[$key] .= " ".$value;
+			} else {
+				$this->attr[$key] = $value;
+			}
 		}
 		
 		function __toString() {

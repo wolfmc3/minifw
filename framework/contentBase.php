@@ -41,8 +41,8 @@ class contentBase {
 				}
 				//print_r($this->extra);
 			}
-			$this->init();
 		}
+		$this->init();
 	}
 
 	function typeByAction($action,$type) {
