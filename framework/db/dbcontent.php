@@ -1,4 +1,31 @@
 <?php 
+/*
+ * Formato variabile [dbcontents]$columns
+ * Array associativo
+ * [Nome campo db] = array(
+ * 		name: Descrizione Campo 
+ * 		ontable: 1= Visualizza nella tabella     
+ * 		inputtype: tipo di campo
+ * 			valori possibili: 
+ * 				text : Testo semplice,
+ *				readonly : Solo visualizzazione (indicato per campi ID)
+ *				longtext : Testo di dimensioni oltre 40 caratteri (indicativo)
+ *				numeric : Numero
+ *				currency : Valuta
+ *				date : Data
+ *				datetime : Data e ora
+ *				time : Orario
+ *				bool : Si/no
+ *
+ * 		relation: indica a quale vista può essere associato questo valore (tramite campo id),    
+ * 		required: se impostato a 1 nella modalità edit non può essere vuoto      
+ * 		regexpr: espressione regolare per verificare la correttezza del campo    
+ * 		datatype: legato al tipo di dato usato nel database    
+ * 		len: lunghezza campo (per i campi di testo incide sulla quantità di caratteri inseribili nella input    
+ * 		null: se a 1 indica che nel database il campo può essere null (requred a 1 se il campo non può essere null)
+ * 
+ *  
+ * */
 namespace framework\db {
 	use framework\contentBase;
 	use framework\html\table;
@@ -13,13 +40,13 @@ use framework\app;
 		protected $table;
 		protected $fields;
 		protected $idkey = "id";
-		protected $columnnames = array();
-		protected $columnsettings = array();
+		protected $columns = array();
 		protected $addRecord = TRUE;
 		protected $editRecord = TRUE;
 		protected $deleteRecord = TRUE;
 		protected $viewRecord = TRUE;
 		protected $defaultBlock = 25;
+		protected $DescriptionKeys = "";
 		protected $shortFields = "";
 
 		function init() {
@@ -31,8 +58,6 @@ use framework\app;
 			if (isset($this->extra[0])) {
 				$this->defaultBlock = $this->extra[0];
 			}
-			//print_r(array_keys($this->columnnames));
-			$this->fields = array_unique(array_merge(explode(",", $this->idkey), array_keys($this->columnnames)));
 		}
 
 		function action_table() {
@@ -40,7 +65,7 @@ use framework\app;
 			$where = NULL;
 			$whereArgs = array();
 			//echo "fileds:";print_r($this->fields);
-			foreach ($this->fields as $key) {
+			foreach ($this->columns as $key => $value) {
 				//echo " $key \n";
 				if (array_key_exists($key, $this->extra)) {
 					$where = ($where?" AND ":"").$key." = ?";
@@ -57,14 +82,9 @@ use framework\app;
 					"class" => "datatable"
 			);
 			$container = new element("");
-			$columns = $this->columnnames;
-			foreach ($this->columnsettings as $key => $value) {
-				if (isset($value['ontable']) && $value['ontable'] == 'true') {
-					unset($columns[$key]);
-				}
-			}
+			$columns = $this->columns;
 			if ($this->deleteRecord) {
-				$columns = array_merge($columns,array(":DELETE:"=>"Cancella"));
+				$columns = array_merge($columns,array(":DELETE:"=>["name"=>"Cancella","ontable"=>1]));
 			}
 			$table = new table($columns, $rows, $this->idkey,$options);
 			$container->add($table);
@@ -82,7 +102,7 @@ use framework\app;
 					"action" => app::root().$this->obj."/save/".$this->item,
 					"method" => "POST"
 			);
-			$table = new edittable($row,$this->columnnames,$this->columnsettings,$options);
+			$table = new edittable($row,$this->columns,$options);
 			$form = new element("form",$options);
 			$form->add($table);
 			return $form;
@@ -112,12 +132,15 @@ use framework\app;
 			//print_r($_POST);
 			$data = array();
 			$realcolumns = array();
-			foreach ($this->columnnames as $key => $value) {
+			//TODO: Controlli di sicurazza lato server
+			//TODO: Indicazione in caso di errore 
+			foreach ($this->columns as $key => $value) {
 				if (isset($_POST[$key])) {
 					$data[":".$key] = $_POST[$key];
 					$realcolumns[$key] = $value;
 				}
 			}
+			print_r($data);
 			$db = new database();
 			$db->write($this->table, $data, $realcolumns,$this->item,$this->idkey);
 			header("location: ". app::root().$this->obj."/");
@@ -137,18 +160,24 @@ use framework\app;
 		
 		function link($id,$action = "table") {
 			if (!$id) return "-";
-			return new anchor($this->uri($id,$action) , $this->label($id));
+			return new anchor($this->uri($id,"edit") , $this->label($id));
 		}
 		
 		function label($id) {
 			if (!$id) return "-";
-			if (!$this->shortFields) {
-				$this->shortFields = $this->idkey;
+			if (!$this->DescriptionKeys) {
+				$this->DescriptionKeys = $this->idkey;
 			}
+			
 			$db = new database();
 			$row = $db->row($this->table, $id, $this->idkey);
 			//print_r($row);
-			return $row[$this->shortFields];
+			$label = "";
+			$keys = explode(",", $this->DescriptionKeys);
+			foreach ($keys as $key) {
+				$label .= $row[$key]." ";
+			}
+			return trim($label);
 		}
 		
 		function fields() {
@@ -158,7 +187,7 @@ use framework\app;
 			foreach ($dbcol as $vals) {
 				$col = $vals['Field'];
 				if (ctype_alpha(substr($col, 0,1))) {
-					$cols[$col] = array_key_exists($col, $this->columnnames)?$this->columnnames[$col]:$col;
+					$cols[$col] = "(".$this->obj.") ".(array_key_exists($col, $this->columns)?$this->columns[$col]['name']:$col);
 				}
 			}
 			return $cols;
@@ -166,6 +195,10 @@ use framework\app;
 
 		function action_def() {
 			return $this->action_table();
+		}
+		
+		function columnInfo($column,$key) {
+			
 		}
 	}
 

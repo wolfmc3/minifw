@@ -1,51 +1,36 @@
-<?php 
+<?php
 namespace views;
-
 use framework\db\dbcontent;
 class payments extends dbcontent {
-	protected $title = "Pagamenti";
-	protected $table = "payments";
+//TABELLA
+protected $table = 'payments';
+
+//CHIAVE PRIMARIA
+protected $idkey = 'customerNumber,checkNumber';
+
+//PERMESSI
+protected $addRecord = TRUE;
+protected $editRecord = TRUE;
+protected $deleteRecord = TRUE;
+protected $viewRecord = TRUE;
+
+//LISTA COLONNE e IMPOSTAZIONI
+protected $columns = array(
+  'customerNumber' =>   array(
+    'name' => 'Cliente',    'ontable' => 1,    'inputtype' => 'readonly',    'relation' => '',    'required' => 1,    'regexpr' => '',    'datatype' => 'int',    'len' => 11,    'null' => 0,  ),
+  'checkNumber' =>   array(
+    'name' => 'Numero',    'ontable' => 1,    'inputtype' => 'readonly',    'relation' => '',    'required' => 1,    'regexpr' => '',    'datatype' => 'varchar',    'len' => 50,    'null' => 0,  ),
+  'paymentDate' =>   array(
+    'name' => 'Data',    'ontable' => 1,    'inputtype' => 'date',    'relation' => '',    'required' => 1,    'regexpr' => '',    'datatype' => 'datetime',    'len' => 0,    'null' => 0,  ),
+  'amount' =>   array(
+    'name' => 'Importo',    'ontable' => 1,    'inputtype' => 'currency',    'relation' => '',    'required' => 1,    'regexpr' => '',    'datatype' => 'double',    'len' => 0,    'null' => 0,  ),
+);
 	
-	protected $columnnames = array (
-			'?customers/customerNumber' => 'Cliente',
-			'checkNumber' => 'ID pagamento',
-			'paymentDate' => 'Data',
-			'amount' => 'Importo',
-	);
-	
-	
-	protected $idkey = "checkNumber";
-	
-	/** OPTIONAL **/
-	protected $columnsettings = array (
-			'customerNumber' =>
-			array (
-					'datatype' => 'int',
-					'len' => '11',
-					'null' => false,
-					'ontable' => true,
-			),
-			'checkNumber' =>
-			array (
-					'datatype' => 'varchar',
-					'len' => '50',
-					'null' => false,
-					'ontable' => true,
-			),
-			'paymentDate' =>
-			array (
-					'datatype' => 'datetime',
-					'len' => '0',
-					'null' => false,
-					'ontable' => true,
-			),
-			'amount' =>
-			array (
-					'datatype' => 'double',
-					'len' => '0',
-					'null' => false,
-					'ontable' => true,
-			),
-	);
-	
+//CAMPO DESCRIZIONE
+protected $DescriptionKeys = 'checkNumber';
+				 	
+//TITOLO VISUALIZZATO NEL BROWSER
+function title() {
+	return 'payments';
+}
 }

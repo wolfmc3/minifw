@@ -1,79 +1,46 @@
-<?php 
+<?php
 namespace views;
 use framework\db\dbcontent;
 class employees extends dbcontent {
-	protected $title = "Dipendenti";
+//TABELLA
+protected $table = 'employees';
+
+//CHIAVE PRIMARIA
+protected $idkey = 'employeeNumber';
+
+//PERMESSI
+protected $addRecord = TRUE;
+protected $editRecord = TRUE;
+protected $deleteRecord = TRUE;
+protected $viewRecord = TRUE;
+
+//LISTA COLONNE e IMPOSTAZIONI
+protected $columns = array(
+  'employeeNumber' =>   array(
+    'name' => 'Matricola',    'ontable' => 1,    'inputtype' => 'readonly',    'relation' => '',    'required' => 1,    'regexpr' => '',    'datatype' => 'int',    'len' => 11,    'null' => 0,  ),
+  'lastName' =>   array(
+    'name' => 'Cognome',    'ontable' => 1,    'inputtype' => 'text',    'relation' => '',    'required' => 1,    'regexpr' => '',    'datatype' => 'varchar',    'len' => 50,    'null' => 0,  ),
+  'firstName' =>   array(
+    'name' => 'Nome',    'ontable' => 1,    'inputtype' => 'text',    'relation' => '',    'required' => 1,    'regexpr' => '',    'datatype' => 'varchar',    'len' => 50,    'null' => 0,  ),
+  'extension' =>   array(
+    'name' => 'Interno',    'ontable' => 1,    'inputtype' => 'text',    'relation' => '',    'required' => 1,    'regexpr' => '',    'datatype' => 'varchar',    'len' => 10,    'null' => 0,  ),
+  'email' =>   array(
+    'name' => 'Email',    'ontable' => 1,    'inputtype' => 'text',    'relation' => '',    'required' => 1,    'regexpr' => '',    'datatype' => 'varchar',    'len' => 100,    'null' => 0,  ),
+  'officeCode' =>   array(
+    'name' => 'Ufficio',    'inputtype' => 'text',    'relation' => 'offices',    'required' => 1,    'regexpr' => '',    'datatype' => 'varchar',    'len' => 10,    'null' => 0,  ),
+  'reportsTo' =>   array(
+    'name' => 'Responsabile',    'ontable' => 1,    'inputtype' => 'text',    'relation' => 'employees',    'regexpr' => '',    'datatype' => 'int',    'len' => 11,    'null' => 1,  ),
+  'jobTitle' =>   array(
+    'name' => 'Mansione',    'ontable' => 1,    'inputtype' => 'text',    'relation' => '',    'required' => 1,    'regexpr' => '',    'datatype' => 'varchar',    'len' => 50,    'null' => 0,  ),
+  '!offices/officeCode/' =>   array(
+    'name' => 'Ufficio',    'ontable' => 1,  ),
+);
 	
-	protected $table = "employees";
-	
-	protected $columnnames = array (
-			'employeeNumber' => 'Matricola',
-			'lastName' => 'Cognome',
-			'firstName' => 'Nome',
-			'extension' => 'Interno',
-			'email' => 'Email',
-			'?offices/officeCode' => 'Sede',
-			'+employees/table/reportsTo' => 'Responsabile',
-			'jobTitle' => 'Mansione',
-	);
-	
-	
-	protected $idkey = "employeeNumber";
-	
-	protected $shortFields = "lastName";
-	
-	
-	/** OPTIONAL **/
-	protected $columnsettings = array (
-			'lastName' =>
-			array (
-					'datatype' => 'varchar',
-					'len' => '50',
-					'null' => false,
-					'ontable' => true,
-			),
-			'firstName' =>
-			array (
-					'datatype' => 'varchar',
-					'len' => '50',
-					'null' => false,
-					'ontable' => true,
-			),
-			'extension' =>
-			array (
-					'datatype' => 'varchar',
-					'len' => '10',
-					'null' => false,
-					'ontable' => true,
-			),
-			'email' =>
-			array (
-					'datatype' => 'varchar',
-					'len' => '100',
-					'null' => false,
-					'ontable' => true,
-			),
-			'officeCode' =>
-			array (
-					'datatype' => 'varchar',
-					'len' => '10',
-					'null' => false,
-					'ontable' => true,
-			),
-			'reportsTo' =>
-			array (
-					'datatype' => 'int',
-					'len' => '11',
-					'null' => true,
-					'ontable' => true,
-			),
-			'jobTitle' =>
-			array (
-					'datatype' => 'varchar',
-					'len' => '50',
-					'null' => false,
-					'ontable' => true,
-			),
-	);
-	
+//CAMPO DESCRIZIONE
+protected $DescriptionKeys = 'lastName,firstName';
+				 	
+//TITOLO VISUALIZZATO NEL BROWSER
+function title() {
+	return 'Dipendenti';
+}
 }

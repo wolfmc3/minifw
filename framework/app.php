@@ -10,6 +10,8 @@ final class app {
 		self::$root = str_replace("index.php", "", $_SERVER['SCRIPT_NAME']);
 		self::$controller = new controller();
 		self::$config = new config(__DIR__."/../config/config.ini");
+		setlocale(LC_ALL, self::conf()->format->locale);
+		date_default_timezone_set(self::conf()->locale->timezone);
 		//print_r(self::$config);
 	}
 	

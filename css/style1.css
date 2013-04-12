@@ -4,7 +4,6 @@ body {
 }
 
 input, select, textarea {
- font-size: 12pt;
  font-family:sans-serif;
  vertical-align:top;
 }
@@ -157,4 +156,8 @@ a img {
 	-webkit-transform:rotate(540deg); /* Safari and Chrome */
 	-o-transform:rotate(540deg); /* Opera */
 	transform:rotate(540deg);
+}
+
+.center {
+	text-align: center !IMPORTANT;
 }

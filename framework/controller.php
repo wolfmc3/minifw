@@ -9,6 +9,7 @@ class controller {
 	private $viewscalled = array();
 	
 	static function resolveUrl($req) {
+		$req = urldecode($req);
 		$req = str_replace(app::root(), "", $req);
 		$req = str_replace("//", "/", $req);
 		if (strpos($req,"?") === FALSE) $req .= "?";
@@ -22,6 +23,7 @@ class controller {
 		//print_r($uriqs);
 		$url = preg_replace($qsregex, "", $url);
 		//echo "$url\n";
+		//TODO: Controllo di sicurezza su oggetto e azione (html injection)
 		$querystring = trim($urlparts[1]);
 		$url = $url?explode("/", $url):[];
 		$def = ["index","def",""];

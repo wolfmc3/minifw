@@ -99,7 +99,7 @@ class contentBase {
 				echo $this->action();
 				break;
 			case self::TYPE_CUSTOM:
-				echo $this->action();
+				$this->action();
 				break;
 			case self::TYPE_JSON:
 				header('Content-type: application/json');

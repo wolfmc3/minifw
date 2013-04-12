@@ -67,6 +67,7 @@ namespace framework\db {
 		function row($table,$id,$idkey = "id") {
 			$this->init();
 			$idkey = $this->compileid($idkey);
+			//echo "IDKEY:".$idkey." ID:$id";
 			$sql = "SELECT * FROM $table WHERE $idkey = ?";
 			$id = array($id);
 			$sth = $this::$db->prepare($sql);
@@ -93,7 +94,8 @@ namespace framework\db {
 					$sql .= "$key = :$key ,";
 				}
 				$sql = substr($sql, 0, -1);
-				$where = $this->compileid($idkey) . " = $id";
+				$data[":tempid"] = $id;
+				$where = $this->compileid($idkey) . " = :tempid";
 				$sql .= " WHERE $where";
 			} else {
 				$sql = "INSERT INTO $table SET ";

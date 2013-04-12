@@ -7,9 +7,17 @@ namespace framework\html;
 			$this->addAttr("style", "width: 100%;");
 
 			$head = new element("tr",array(),array());
-			//print_r($cols);
-			foreach ($cols as $colname => $label) {
-				$head->add(new element("th",NULL,$label));
+
+			foreach ($cols as $colname => $setting) {
+				if (!array_key_exists("ontable",$setting)) {
+					$cols[$colname]['ontable'] = 0;
+				}
+			}
+			foreach ($cols as $colname => $setting) {
+				if ($setting['ontable']) {
+					$head->add(new element("th",NULL,$setting['name']));
+				} 
+					
 			}
 			$this->add($head);
 			foreach ($rows as $row) {
@@ -21,13 +29,13 @@ namespace framework\html;
 					//$id = implode("-", array_map(function($val){$row[$val];}, explode(",", $useidkey)));
 					$tr->addAttr("data-id", $id);
 				}
-				foreach ($cols as $colname => $label) {
+				foreach ($cols as $colname => $setting) {
+					if (!$setting['ontable']) continue;
 					if ($colname == ":DELETE:") {
 						if ($useidkey !== FALSE) {
 							$tr->add(new element("td",array(),
 									new anchor("#remove", new icon("Trash"))
 							));
-								
 						}
 					} elseif (substr($colname,0,1) == "/") { //OPEN LIST
 						list($null,$obj,$action,$item,$idtarget) = explode("/", $colname);
@@ -58,6 +66,16 @@ namespace framework\html;
 						$id = $row[$linkid];
 						$tr->add(new element("td",array(),
 							new element("b",NULL,app::Controller()->$obj->label($id))		
+						));
+					} elseif (substr($colname,0,1) == "=") { //Calculated view
+						$colname = str_replace("=", "", $colname);
+						$colname = substr($colname, 0,-1);
+						$item_pattern = "/{(\w+)}/e";
+						$colname = preg_replace($item_pattern, "\$row['\\1']", $colname);
+						//echo $colname;
+						$colname = eval("return $colname;");
+						$tr->add(new element("td",array(),
+							new element("b",NULL,$colname)		
 						));
 					} else {
 						$tr->add(new element("td",array(),$row[$colname]));						

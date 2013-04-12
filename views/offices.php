@@ -1,85 +1,48 @@
-<?php 
+<?php
 namespace views;
-
 use framework\db\dbcontent;
 class offices extends dbcontent {
-	protected $title = "Sedi";
-	protected $table = "offices";
-	protected $columnnames = array (
-			'city' => 'Città',
-			'phone' => 'Telefono',
-			'addressLine1' => 'Indirizzo 1',
-			'addressLine2' => 'Indirizzo 2',
-			'state' => 'Stato',
-			'country' => 'Nazione',
-			'postalCode' => 'Codice postale',
-			'territory' => 'Territorio',
-			'/employees/table/officeCode' => "Dipendenti"
-	);
+//TABELLA
+protected $table = 'offices';
+
+//CHIAVE PRIMARIA
+protected $idkey = 'officeCode';
+
+//PERMESSI
+protected $addRecord = TRUE;
+protected $editRecord = TRUE;
+protected $deleteRecord = TRUE;
+protected $viewRecord = TRUE;
+
+//LISTA COLONNE e IMPOSTAZIONI
+protected $columns = array(
+  'officeCode' =>   array(
+    'name' => 'Codice',    'ontable' => 1,    'inputtype' => 'readonly',    'relation' => '',    'required' => 1,    'regexpr' => '',    'datatype' => 'varchar',    'len' => 10,    'null' => 0,  ),
+  'city' =>   array(
+    'name' => 'Città',    'ontable' => 1,    'inputtype' => 'text',    'relation' => '',    'required' => 1,    'regexpr' => '',    'datatype' => 'varchar',    'len' => 50,    'null' => 0,  ),
+  'phone' =>   array(
+    'name' => 'Telefono',    'ontable' => 1,    'inputtype' => 'text',    'relation' => '',    'required' => 1,    'regexpr' => '',    'datatype' => 'varchar',    'len' => 50,    'null' => 0,  ),
+  'addressLine1' =>   array(
+    'name' => 'Indirizzo 1',    'inputtype' => 'text',    'relation' => '',    'required' => 1,    'regexpr' => '',    'datatype' => 'varchar',    'len' => 50,    'null' => 0,  ),
+  'addressLine2' =>   array(
+    'name' => 'Indirizzo 2',    'inputtype' => 'text',    'relation' => '',    'regexpr' => '',    'datatype' => 'varchar',    'len' => 50,    'null' => 1,  ),
+  'state' =>   array(
+    'name' => 'Stato',    'ontable' => 1,    'inputtype' => 'text',    'relation' => '',    'regexpr' => '',    'datatype' => 'varchar',    'len' => 50,    'null' => 1,  ),
+  'country' =>   array(
+    'name' => 'Nazione',    'ontable' => 1,    'inputtype' => 'text',    'relation' => '',    'required' => 1,    'regexpr' => '',    'datatype' => 'varchar',    'len' => 50,    'null' => 0,  ),
+  'postalCode' =>   array(
+    'name' => 'Codice postale',    'inputtype' => 'text',    'relation' => '',    'required' => 1,    'regexpr' => '',    'datatype' => 'varchar',    'len' => 15,    'null' => 0,  ),
+  'territory' =>   array(
+    'name' => 'Area',    'ontable' => 1,    'inputtype' => 'text',    'relation' => '',    'required' => 1,    'regexpr' => '',    'datatype' => 'varchar',    'len' => 10,    'null' => 0,  ),
+  '/employees/table/officeCode/officeCode/' =>   array(
+    'name' => 'Dipendenti',    'ontable' => 1,  ),
+);
 	
-	
-	protected $idkey = "officeCode";
-	
-	protected $shortFields = "city";
-	
-	/** OPTIONAL **/
-	protected $columnsettings = array (
-			'city' =>
-			array (
-					'datatype' => 'varchar',
-					'len' => '50',
-					'null' => false,
-					'ontable' => true,
-			),
-			'phone' =>
-			array (
-					'datatype' => 'varchar',
-					'len' => '50',
-					'null' => false,
-					'ontable' => true,
-			),
-			'addressLine1' =>
-			array (
-					'datatype' => 'varchar',
-					'len' => '50',
-					'null' => false,
-					'ontable' => true,
-			),
-			'addressLine2' =>
-			array (
-					'datatype' => 'varchar',
-					'len' => '50',
-					'null' => true,
-					'ontable' => true,
-			),
-			'state' =>
-			array (
-					'datatype' => 'varchar',
-					'len' => '50',
-					'null' => true,
-					'ontable' => true,
-			),
-			'country' =>
-			array (
-					'datatype' => 'varchar',
-					'len' => '50',
-					'null' => false,
-					'ontable' => true,
-			),
-			'postalCode' =>
-			array (
-					'datatype' => 'varchar',
-					'len' => '15',
-					'null' => false,
-					'ontable' => true,
-			),
-			'territory' =>
-			array (
-					'datatype' => 'varchar',
-					'len' => '10',
-					'null' => false,
-					'ontable' => true,
-			),
-	);
-	
+//CAMPO DESCRIZIONE
+protected $DescriptionKeys = 'officeCode,city';
+				 	
+//TITOLO VISUALIZZATO NEL BROWSER
+function title() {
+	return 'Sedi';
+}
 }
