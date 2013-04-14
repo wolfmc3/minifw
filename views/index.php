@@ -5,10 +5,8 @@ use framework\html\element;
 use framework\html\img;
 use framework\app;
 class index extends \framework\contentBase {
-	protected $menu = "menu";
-	
 	function title() {
-		return "Indice";
+		return "Home";
 	}
 	
 	function action_def() {

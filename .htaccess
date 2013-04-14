@@ -1,6 +1,6 @@
 <IfModule mod_rewrite.c>
 # Rewrite rules
 	RewriteEngine on
-	RewriteCond $1 !^(index\.php|css|ajax|js|pages|img|robots\.txt)
+	RewriteCond $1 !^(index\.php|css|ajax|js|img|docs)
 	RewriteRule (.*) ./index.php
 </IfModule>

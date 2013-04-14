@@ -12,9 +12,43 @@ use framework\html\form\text;
 use framework\html\table;
 use framework\html\template;
 use framework\html\dotlist;
+
+/**
+ * Interfaccia viewdesign
+ * 
+ * Questa classe è l'interfaccia per disegnare classi <var>\framework\dbcontents</var> <br>
+ * Questa classe aggiunge l'azione design che permette di disegnare la classe finale dbcontents<br>
+ * Per motivi di sicurezza non utilizzare questa classe durante il normale funzionamento<br>
+ * <br>
+ * Per utilizzare la modalità design <code>http://host/[nomeclasse]/design/</code><br>
+ * <br>
+ * Esempio: Codice necessario per creare la classe "<b>clienti</b>" che legge la tabella "<i>customers</i>":<br>
+ * <code>
+ * namespace views;
+ * use framework\db\viewdesign;
+ * class <b>clienti</b> extends viewdesign {
+ * 		protected $table = '<i>customers</i>';
+ * }
+ * </code> 
+ * il file generato avrà nome <b>clienti</b>.php e dovrà essere salvato nella cartella /views<br>
+ * per richiamare il design:<br>
+ * <code>http://[nomehost]/<b>clienti</b>/design/</code>
+ * <br><br>
+ * @author Marco Camplese <info@wolfmc3.com>
+ * @package minifw/database
+ * @see \framework\db\dbcontent
+ *
+ */
+
 class viewdesign extends dbcontent {
+	/**
+	 * @ignore 
+	 */
 	protected $columns = array("1");
 	
+	/**
+	 * @see \framework\db\dbcontent::init()
+	 */
 	function init() {
 		parent::init();
 		$this->addJavascript(app::root()."js/dbdesign.js");
@@ -25,7 +59,14 @@ class viewdesign extends dbcontent {
 		$this->typeByAction("viewinfo", self::TYPE_JSON);
 		$this->typeByAction("download", self::TYPE_CUSTOM);
 	}
-	
+
+	/**
+	 * Azione download
+	 * 
+	 * Utilizzato da action_export per scaricare il file php contentente la classe generata
+	 * 
+	 * @see action_export() 
+	 */
 	function action_download() {
 		header("Cache-Control: public");
 		header("Content-Description: File Transfer");
@@ -34,6 +75,16 @@ class viewdesign extends dbcontent {
 		echo $_POST["source"];
 	}
 
+	/**
+	 * Azione export
+	 * 
+	 * Utilizzato da action_design per presentare il code php contentente la classe generata
+	 * 
+	 * Contiene un link per scaricare il file
+	 * 
+	 * @return \framework\html\element
+	 * @see action_design()
+	 */
 	function action_export() {
 		//print_r($_POST);
 		$table = $this->table;
@@ -89,6 +140,14 @@ CODE;
 		return $show;
 	}
 	
+	/**
+	 * Azione addform
+	 * 
+	 * Genera un blocco html per l'utilizzo via ajax da {@see action_design()}
+	 * 
+	 * @return \framework\html\element
+	 * @see action_design()
+	 */
 	function action_addform() {
 		$db = new database();
 		$cols = $db->columnInfo($this->table);
@@ -138,6 +197,14 @@ CODE;
 		return $show;
 	}
 	
+	/**
+	 * Azione viewinfo
+	 * 
+	 * Genera un blocco json per l'utilizzo via ajax da {@see action_design()}
+	 * 
+	 * @return string[]
+	 * @see action_design()
+	 */
 	function action_viewinfo() {
 		$views = app::getViews();
 		$res = [];
@@ -150,12 +217,26 @@ CODE;
 		return $res;
 	}
 	
+	/**
+	 * Azione coldata
+	 *
+	 * Genera un blocco json per l'utilizzo via ajax da {@see action_design()}
+	 *
+	 * @return string[]
+	 * @see action_design()
+	 */
 	function action_coldata() {
 		$db = new database();
 		return $db->columnInfo($this->table);
 	}
 	
-	
+	/**
+	 * Azione table
+	 * 
+	 * Esegue l'override dell'azione table di dbcontents per aggiungere un link che riporta al design della tabella
+	 * 
+	 * @see \framework\db\dbcontent::action_table()
+	 */
 	function action_table() {
 		$ret = new element();
 		$ret->add(new element("h3",null,"Attenzione!! Vista in modalità design: "));
@@ -165,6 +246,13 @@ CODE;
 		return $ret;
 	}
 	
+	/**
+	 * Azione design
+	 * 
+	 * Visualizza la pagina che genera le impostazioni della classe da creare
+	 * 
+	 * @return \framework\html\element
+	 */
 	function action_design() {
 		$db = new database();
 		$cols = $db->columnInfo($this->table);

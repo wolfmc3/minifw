@@ -21,7 +21,7 @@ protected $columns = array(
   'productName' =>   array(
     'name' => 'Nome',    'ontable' => 1,    'inputtype' => 'text',    'relation' => '',    'required' => 1,    'regexpr' => '',    'datatype' => 'varchar',    'len' => 70,    'null' => 0,  ),
   'productLine' =>   array(
-    'name' => 'Linea',    'ontable' => 1,    'inputtype' => 'text',    'relation' => 'productLines',    'required' => 1,    'regexpr' => '',    'datatype' => 'varchar',    'len' => 50,    'null' => 0,  ),
+    'name' => 'Linea',    'ontable' => 1,    'inputtype' => 'text',    'relation' => 'productlines',    'required' => 1,    'regexpr' => '',    'datatype' => 'varchar',    'len' => 50,    'null' => 0,  ),
   'productScale' =>   array(
     'name' => 'Scala',    'inputtype' => 'text',    'relation' => '',    'required' => 1,    'regexpr' => '',    'datatype' => 'varchar',    'len' => 10,    'null' => 0,  ),
   'productVendor' =>   array(
@@ -34,7 +34,7 @@ protected $columns = array(
     'name' => 'Acquisto',    'inputtype' => 'currency',    'relation' => '',    'required' => 1,    'regexpr' => '',    'datatype' => 'double',    'len' => 0,    'null' => 0,  ),
   'MSRP' =>   array(
     'name' => 'Listino',    'inputtype' => 'currency',    'relation' => '',    'required' => 1,    'regexpr' => '',    'datatype' => 'double',    'len' => 0,    'null' => 0,  ),
-  '?productLines/productLine' =>   array(
+  '?productlines/productLine' =>   array(
     'name' => 'Linea Prodotto',    'ontable' => 1,  ),
   '/orderdetails/table/productCode/productCode' =>   array(
     'name' => 'Ordini',    'ontable' => 1,  ),

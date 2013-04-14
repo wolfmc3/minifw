@@ -27,7 +27,7 @@ protected $columns = array(
   'status' =>   array(
     'name' => 'Stato',    'ontable' => 1,    'inputtype' => 'text',    'required' => 1,    'regexpr' => '',    'datatype' => 'varchar',    'len' => 15,    'null' => 0,  ),
   'comments' =>   array(
-    'name' => 'Commenti',    'ontable' => 1,    'inputtype' => 'text',    'regexpr' => '',    'datatype' => 'text',    'len' => 0,    'null' => 1,  ),
+    'name' => 'Commenti',    'ontable' => 1,    'inputtype' => 'longtext',    'regexpr' => '',    'datatype' => 'text',    'len' => 0,    'null' => 1,  ),
   'customerNumber' =>   array(
     'name' => 'Cliente',    'ontable' => 1,    'inputtype' => 'text',  'relation'=>"customers",  'required' => 1,    'regexpr' => '',    'datatype' => 'int',    'len' => 11,    'null' => 0,  ),
   '?customers/customerNumber' =>   array(

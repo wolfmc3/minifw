@@ -3,7 +3,29 @@ namespace framework\html\form;
 use framework\html\element;
 use framework\html\anchor;
 use framework\app;
+/**
+ * paging
+ *
+ * Genera un blocco html utile per visualizzare la paginazione
+ * NOTA: Utilizzato da dbcontents
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ * @package minifw/html
+ * 
+ * @see \framework\db\dbcontent
+ * @see \framework\db\resultset
+ *
+ */
+
 class paging extends element {
+	/**
+	 * Costruttore
+	 * @param string $object View
+	 * @param string $action Azione
+	 * @param number $page Pagina visualizzata
+	 * @param number $pages Pagine totali
+	 * @param number $block Righe per pagina
+	 */
 	function __construct($object,$action,$page,$pages,$block) {
 		parent::__construct("div");
 		$this->addAttr("class", "paging");

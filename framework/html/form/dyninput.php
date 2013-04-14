@@ -4,8 +4,26 @@ namespace framework\html\form;
 use framework\html\anchor;
 use framework\app;
 use framework\html\icon;
+/**
+ * dyninput
+ *
+ * Genera un campo input in base alle impostazioni
+ * NOTA: questo oggetto è utilizzato dall'oggetto dbcontents
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ * @package minifw/html
+ *
+ * @see \framework\db\dbcontent
+ *
+ */
+
 class dyninput extends element {
-		
+		/**
+		 * Costruttore 
+		 * @param string $key Nome del tag nel form (attributo name)
+		 * @param string $text Valore attuale (attributo value)
+		 * @param string[] $setting Impostazioni
+		 */
 		function __construct($key, $text, $setting = array()) {
 			parent::__construct("span");
 			if (count($setting) && array_key_exists("inputtype", $setting)) {
@@ -26,7 +44,7 @@ class dyninput extends element {
 					if (strpos($dt, "time") !== FALSE) {
 						$input = $this->append(new element("input",array("type" => "time","value"=>$time, "class" => "time","data-ref"=>$key)));
 					}					
-					$input = $this->append(new element("input",array("type" => "text","value"=> $text,"id" => $key,"name" => $key)));
+					$input = $this->append(new element("input",array("type" => "hidden","value"=> $text,"id" => $key,"name" => $key)));
 				} elseif ($dt == "text") {
 					$input = $this->append(new element("input",array("type" => "text","value"=> $text,"name" => $key)));
 					if (is_numeric($len) && $len > 0) {

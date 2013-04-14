@@ -1,7 +1,28 @@
 <?php
 namespace framework\html; 
 	use framework\app;
+	/**
+	 * table
+	 *
+	 * Genera una tabella HTML completa<br>
+	 * NOTA: questo oggetto table è utilizzato dall'oggetto dbcontents
+	 *
+	 * @author Marco Camplese <info@wolfmc3.com>
+	 * @package minifw/html
+	 *
+	 * @see element
+	 * @see \framework\db\dbcontent
+	 *
+	 */
 	class table extends element {
+		/**
+		 * Costruttore 
+		 * 
+		 * @param string[] $cols Array associativo contenente le chiavi e i nomi di colonna
+		 * @param string[] $rows Array associativo contenente le righe
+		 * @param string $useidkey Riservato per l'utilizzo come tabella associata a dati
+		 * @param string[] $options attributi del tag table
+		 */
 		function __construct($cols,$rows,$useidkey = FALSE,$options = array()) {
 			parent::__construct("table",$options,array());
 			$this->addAttr("style", "width: 100%;");

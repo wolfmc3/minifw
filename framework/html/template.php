@@ -1,11 +1,71 @@
 <?php 
 namespace framework\html;
+/**
+ * template
+ *
+ * Genera codice HTML partendo da un template<br>
+ * NOTA: questo oggetto table è utilizzato dall'oggetto dbcontents
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ * @package minifw/html
+ *
+ * @see element
+ *
+ */
+
 class template extends element {
+	/**
+	 * @var string[] array associativo contenete i dati
+	 */
 	private $data;
+	/**
+	 * @ignore
+	 * @var unknown
+	 */
 	private $loadedtemplate=[];
+	/**
+	 * @var string Template corrente
+	 */
 	private $template;	
+	/**
+	 * @var boolean Indica che il tag utilizza codice html
+	 */
 	protected $html = TRUE;
-	
+	/**
+	 * Costruttore
+	 * 
+	 * Esempio di template:<br>
+	 * <code>
+	 * &lt;h1&gt;{titolo}&lt;/h1&gt;
+	 * {paragrafi:
+	 * &lt;p&gt;{testo}&lt;/p&gt;
+	 * :}
+	 * </code>
+	 * 
+	 * Esempio dati<br>
+	 * <code>
+	 * $data = array(
+	 * "titolo"=>"questo è il titolo",
+	 * 		"paragrafi"=> array(
+	 * 			["testo"=>"Paragrafo 1, ciao"],
+	 * 			["testo"=>"Paragrafo 2, ciao"],
+	 * 			["testo"=>"Paragrafo 3, ciao"],
+	 * 		)
+	 * );
+	 * </code>
+	 * 
+	 * Risultato<br>
+	 * <code>
+	 * <b>questo è il titolo</b>
+	 * <p>Paragrafo 1, ciao</p>
+	 * <p>Paragrafo 2, ciao</p>
+	 * <p>Paragrafo 3, ciao</p>
+	 * </code> 
+	 * 
+	 * @param string $file Nome del template presente nella cartella /templates/*.tmpl.htm
+	 * @param string[] $data Array associativo contenente chiavi e valori da sostituire nel template
+	 * @param string $folder
+	 */
 	function __construct($file,$data, $folder = "") {
 		parent::__construct("");
 		if ($folder == "") $folder = __DIR__."/../../templates/";
@@ -14,10 +74,15 @@ class template extends element {
 		$this->data = $data;
 	}
 	
+	/**
+	 * @see \framework\html\element::__toString()
+	 */
 	function __toString() {
 		return  $this->renderPart($this->template, $this->data);
 	}
-
+	/**
+	 * @internal
+	 */
 	private function renderPart($html, $data) {
 		$group_pattern = "/{(\w+):(.*?):}/sm";
 		$item_pattern = "/{(\w+)}/";

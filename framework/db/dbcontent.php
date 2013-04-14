@@ -1,12 +1,27 @@
 <?php 
-/*
+namespace framework\db {
+	use framework\contentBase;
+	use framework\html\table;
+	use framework\html\form\edittable;
+	use framework\html\element;
+	use framework\html\form\submit;
+	use framework\html\anchor;
+	use framework\html\icon;
+	use framework\html\form\paging;
+	use framework\app;
+/**
+ * Classe dbcontent
+ * 
+ * Estendere questa classe per ottenere oggetti instaziabili dalla classe controller per generare pagine collegate a database
+ *<br><br>
+ * <code>
  * Formato variabile [dbcontents]$columns
  * Array associativo
  * [Nome campo db] = array(
- * 		name: Descrizione Campo 
- * 		ontable: 1= Visualizza nella tabella     
+ * 		name: Descrizione Campo
+ * 		ontable: 1= Visualizza nella tabella
  * 		inputtype: tipo di campo
- * 			valori possibili: 
+ * 			valori possibili:
  * 				text : Testo semplice,
  *				readonly : Solo visualizzazione (indicato per campi ID)
  *				longtext : Testo di dimensioni oltre 40 caratteri (indicativo)
@@ -17,38 +32,70 @@
  *				time : Orario
  *				bool : Si/no
  *
- * 		relation: indica a quale vista può essere associato questo valore (tramite campo id),    
- * 		required: se impostato a 1 nella modalità edit non può essere vuoto      
- * 		regexpr: espressione regolare per verificare la correttezza del campo    
- * 		datatype: legato al tipo di dato usato nel database    
- * 		len: lunghezza campo (per i campi di testo incide sulla quantità di caratteri inseribili nella input    
+ * 		relation: indica a quale vista può essere associato questo valore (tramite campo id),
+ * 		required: se impostato a 1 nella modalità edit non può essere vuoto
+ * 		regexpr: espressione regolare per verificare la correttezza del campo
+ * 		datatype: legato al tipo di dato usato nel database
+ * 		len: lunghezza campo (per i campi di testo incide sulla quantità di caratteri inseribili nella input
  * 		null: se a 1 indica che nel database il campo può essere null (requred a 1 se il campo non può essere null)
- * 
- *  
- * */
-namespace framework\db {
-	use framework\contentBase;
-	use framework\html\table;
-	use framework\html\form\edittable;
-	use framework\html\element;
-	use framework\html\form\submit;
-	use framework\html\anchor;
-	use framework\html\icon;
-	use framework\html\form\paging;
-use framework\app;
+ * </code>
+ * <br>
+ * <br>
+ * @see \framework\controller
+ * @see \framework\contentBase
+ * @see \framework\db\dbcontent
+ * @package minifw/database
+ *
+ */
 		class dbcontent extends contentBase {
+			/**
+			 * @var string Tabella del database
+			 */
 		protected $table;
+		/**
+		 * @deprecated
+		 * @var string[] Lista campi
+		 */
 		protected $fields;
+		/**
+		 * @var string Indica la chiave primaria della tabella (se le chiavi sono multiple separare con la virgola)
+		 */
 		protected $idkey = "id";
+		/**
+		 * @var mixed[] Vedi descrizione della classe
+		 * @see \framework\db\dbcontent
+		 */
 		protected $columns = array();
+		/**
+		 * @var boolean Indica se la view può aggiungere dati
+		 */
 		protected $addRecord = TRUE;
+		/**
+		 * @var boolean Indica se la view può modificare dati
+		 */
 		protected $editRecord = TRUE;
+		/**
+		 * @var boolean Indica se la view può cancellare dati
+		 */
 		protected $deleteRecord = TRUE;
+		/**
+		 * @var boolean Indica se la view può vedere la tabella dati
+		 */
 		protected $viewRecord = TRUE;
+		/**
+		 * @var number numero di record per pagina 
+		 */
 		protected $defaultBlock = 25;
+		/**
+		 * @var string campi che offrono un breve descrizione del record (se le colonne sono multiple separare con la virgola)
+		 */
 		protected $DescriptionKeys = "";
-		protected $shortFields = "";
 
+		/**
+		 * init()
+		 * 
+		 * @see \framework\contentBase::init()
+		 */
 		function init() {
 			parent::init();
 			$this->addJavascript(app::root()."js/dbcontents.js");
@@ -60,6 +107,16 @@ use framework\app;
 			}
 		}
 
+		/**
+		 * Azione table
+		 * 
+		 * Visualizza la lista dei record
+		 * 
+		 * Questo metodo è richiamato direttamente dal controller 
+		 * 
+		 * @see \framework\controller
+		 * @return \framework\html\element 
+		 */
 		function action_table() {
 			$db = new database();
 			$where = NULL;
@@ -94,7 +151,13 @@ use framework\app;
 			if ($this->addRecord) $container->add(new anchor(app::root().$this->obj."/add", array(new icon("Plus")," Nuovo"),array("class"=>"button")) );
 			return $container;
 		}
-
+		/**
+		 * Azione edit
+		 * 
+		 * apre il form per la modifica dei dati
+		 * 
+		 * @return \framework\html\element
+		 */
 		function action_edit() {
 			$db = new database();
 			$row = $db->row($this->table, $this->item,$this->idkey);
@@ -108,6 +171,14 @@ use framework\app;
 			return $form;
 		}
 
+		/**
+		 * Azione add
+		 *
+		 * apre il form per l'aggiunta dei dati
+		 *
+		 * @return \framework\html\element
+		 */
+		
 		function action_add() {
 			$db = new database();
 			//$row = $db->row($this->table, $this->item);
@@ -122,12 +193,29 @@ use framework\app;
 			return $form;
 		}
 
+		/**
+		 * Azione remove
+		 *
+		 * cancella un record
+		 *
+		 * @return NULL
+		 */
+		
 		function action_remove() {
 			$db = new database();
 			$row = $db->delete($this->table, $this->item,$this->idkey);
 			header("location: ". $_SERVER['HTTP_REFERER']);
 		}
 
+		/**
+		 * Azione save
+		 * 
+		 * salva i dati provenienti dalle azioni add ed edit
+		 * 
+		 * @see action_edit()
+		 * @see action_add()
+		 *  
+		 */
 		function action_save() {
 			//print_r($_POST);
 			$data = array();
@@ -147,6 +235,16 @@ use framework\app;
 			exit();
 		}
 		
+		/**
+		 * uri()
+		 * 
+		 * Genera un Uri sulla base dei parametri impostati
+		 * 
+		 * @param string|number $id id del record
+		 * @param string $action azione
+		 * @param string[] $extra parametri extra 
+		 * @return string Uri completo
+		 */
 		function uri($id, $action= "table",$extra = array()) {
 			$uri = app::root().$this->obj;
 			if ($action) $uri .= "/$action"; 			
@@ -154,14 +252,42 @@ use framework\app;
 			return app::root().$this->obj."/$action/$id";
 		}
 		
+		/**
+		 * key()
+		 * 
+		 * rimuove eventuali virgole dalla chiave primaria
+		 * @see \framework\db\dbcontent::$idkey
+		 * 
+		 * @return string
+		 */
 		function key() {
 			return str_replace(",", "|", $this->idkey);
 		}
 		
+		/**
+		 * link(...)
+		 * 
+		 * Ritorna un link alla risorsa richiesta 
+		 * 
+		 * @param string $id Id record
+		 * @param string $action Azione
+		 * @return \framework\html\anchor 
+		 */
 		function link($id,$action = "table") {
 			if (!$id) return "-";
 			return new anchor($this->uri($id,"edit") , $this->label($id));
 		}
+		
+		
+		/**
+		 * link(...)
+		 *
+		 * Ritorna una stringa contenente la descrizione breve
+		 *
+		 * @param string $id Id record
+		 * @return string
+		 * @see $DescriptionKeys
+		 */
 		
 		function label($id) {
 			if (!$id) return "-";
@@ -180,6 +306,13 @@ use framework\app;
 			return trim($label);
 		}
 		
+		/**
+		 * fields()
+		 * 
+		 * Genera una lista delle colonne della tabella
+		 * 
+		 * @return string[]
+		 */
 		function fields() {
 			$cols = [];
 			$db = new database();
@@ -193,12 +326,16 @@ use framework\app;
 			return $cols;
 		}
 
+		/**
+		 * Azione di default
+		 * 
+		 * Imposta l'azione di default su table
+		 * 
+		 * @see \framework\contentBase::action_def()
+		 * @see action_table()
+		 */
 		function action_def() {
 			return $this->action_table();
-		}
-		
-		function columnInfo($column,$key) {
-			
 		}
 	}
 
