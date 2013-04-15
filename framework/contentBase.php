@@ -146,6 +146,7 @@ class contentBase {
 					if (strpos($value,",") !== FALSE) {
 						list($key,$value) = explode(",", $value);
 					}
+					$value = urldecode($value);
 					$this->extra[$key] = $value;
 				}
 				//print_r($this->extra);
@@ -324,5 +325,8 @@ class contentBase {
 				return "ERRORE NELLA RICHIESTA: <b>".$this->action."</b>";
 			}
 		}
+	}
+	function name() {
+		return $this->obj;
 	}
 }

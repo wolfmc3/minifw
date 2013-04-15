@@ -41,7 +41,6 @@ class controller {
 	 * @return string
 	 */
 	static function resolveUrl($req) {
-		$req = urldecode($req);
 		$req = str_replace(app::root(), "", $req);
 		$req = str_replace("//", "/", $req);
 		if (strpos($req,"?") === FALSE) $req .= "?";
@@ -53,7 +52,7 @@ class controller {
 		preg_match_all($qsregex, $url,$uriqs);
 		$uriqs = $uriqs[1];
 		//print_r($uriqs);
-		$url = preg_replace($qsregex, "", $url);
+		$url = urldecode(preg_replace($qsregex, "", $url));
 		//echo "$url\n";
 		//TODO: Controllo di sicurezza su oggetto e azione (html injection)
 		$querystring = trim($urlparts[1]);
@@ -84,6 +83,11 @@ class controller {
 		$obj = $uri[0];
 
 		$class = "\\views\\$obj";
+		//var_dump(app::Security()->getPermission($obj));
+		if (!app::Security()->getPermission($obj)->L) {
+			header("location:".app::root()."login?redirect=".urlencode(app::root().$this->uri));
+			exit();
+		}
 		if (class_exists($class,true)) {
 			$this->page = new $class($this);
 		} else {

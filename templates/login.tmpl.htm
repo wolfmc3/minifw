@@ -1,0 +1,44 @@
+<div id="login_form" title="Login">
+<form action="{loginurl}" method="POST">
+<table width="100%" cellpadding="15">
+	<tr>
+		<th>Nome utente</th>
+		<td><input name="username" type="text"></td>
+	</tr>
+	<tr>
+		<th>Password</th>
+		<td><input name="password" type="password"></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td>
+			<input id="store" type="checkbox" name="remember">
+			<label for="remember">Memorizza i dati</label>
+		</td>
+	</tr>
+</table>
+<input name="returnurl" type="hidden" value="{returnurl}" />
+</form>
+</div>
+<script>
+	$(document).ready(function(){
+		$("#login_form").dialog({
+			height : 320,
+			width : 450,
+			show: "fade",
+    		hide: "fade",
+			resizable : false,
+			closeOnEscape: false,
+			modal : true,
+			open: function(event, ui) { 
+				$(this).parent().find('.ui-dialog-titlebar-close').hide();
+			},
+			buttons : {
+				"Login" : function() {
+					$(this).dialog("close");
+					$(this).find("form").submit();
+				},
+			}
+		});
+	});
+</script>

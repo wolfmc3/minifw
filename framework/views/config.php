@@ -7,9 +7,7 @@ class config extends contentBase {
 	protected $title = "Configurazione";
 	protected $template = "html";
 	function action_def() {
-		$results = str_replace("\n", "<br>\n", print_r(app::conf(),TRUE)) ;
-		//print_r(get_declared_classes());
-		echo $results;
+		return "<code>".str_replace("=", "=<b>", str_replace("\n", "</b>\n<br>", app::conf()))."</code>";
 	}
 	
 }

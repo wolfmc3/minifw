@@ -8,6 +8,14 @@ input, select, textarea {
  vertical-align:top;
 }
 
+img {
+	vertical-align: middle;
+}
+
+.ui-widget-overlay {
+	opacity: 0.8;
+}
+
 .valerror {
 	background-color: #FF5555;
 	color: white;

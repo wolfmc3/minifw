@@ -28,6 +28,7 @@ namespace framework\html;
 		function __construct($icon) {
 			$this->tag = "img";
 			$this->attr = array("src" => app::root()."img/icons/$icon.png");
+			$this->addAttr("style", "vertical-align: sub;");
 		}
 	}	
 

@@ -30,22 +30,41 @@ class config {
 	function __construct($file) {
 		$config = parse_ini_file($file, true );
 		$defauts = parse_ini_file(__DIR__."/config/defaults.ini", true );
-		$config = array_merge($defauts,$config);
+		$config = $this->compile($config);
+		$defauts = $this->compile($defauts);
+		foreach ($defauts as $module => $section) {
+			if (array_key_exists($module, $config)) {
+				foreach ($section as $key => $value) {
+					if (!array_key_exists($key, $config[$module])) {
+						$config[$module][$key] = $value;
+					}
+				}
+			} else {
+				$config[$module] = $section;
+			}
+		}
+		foreach ($config as $module => $section) {
+			$this->config[$module] = $this->createClass($section);
+		}
+	}
+	private function compile($config) {
 		$parsedconfig = array();
 		foreach ($config as $module => $section) {
 			if (is_array($section)) {
 				list($module,$parent) = explode(":", $module.":");
 				if ($parent) $section = array_merge($config[$parent],$section);
-				$sectionobj = new \stdClass();
-				foreach ($section as $key => $value) {
-					$sectionobj->$key = $value;
-				}
-				$this->config[$module] = $sectionobj;
-				
-			} 
+				$parsedconfig[$module] = $section;
+			}
 		}
+		return $parsedconfig;
 	}
-	
+	private function createClass($section) {
+		$sectionobj = new \stdClass();
+		foreach ($section as $key => $value) {
+			$sectionobj->$key = $value;
+		}
+		return $sectionobj;
+	}
 	/**
 	 * ->[section]
 	 * 
@@ -59,7 +78,7 @@ class config {
 		if (array_key_exists($section, $this->config)) {
 			return $this->config[$section];
 		} else {
-			return;
+			return FALSE;
 		}
 	}
 	/**
@@ -67,6 +86,14 @@ class config {
 	 * @return string
 	 */
 	function __toString() {
-		return print_r($this->config,TRUE);
+		$return = "";
+		foreach ($this->config as $module => $object) {
+			$return .= "[$module]".PHP_EOL;
+			foreach ($object as $key => $value) {
+				$return .= $key ."=".$value.PHP_EOL;
+			}
+			$return .= PHP_EOL;
+		}
+		return $return;
 	}
 }

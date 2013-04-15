@@ -1,6 +1,7 @@
 <?php 
 namespace framework;
-	/**
+	use framework\security\security;
+/**
 	 * Application (classe statica)
 	 *
 	 * Inzializza il controller e la classe config 
@@ -23,6 +24,10 @@ final class app {
 	 * @var \framework\config $config Riferimento alla configurazione 
 	 */
 	private static $config;
+	/**
+	 * @var \framework\security\security
+	 */
+	private static $security;
 	
 	/**
 	 * Init
@@ -32,8 +37,9 @@ final class app {
 	 */
 	public static function init() {
 		self::$root = str_replace("index.php", "", $_SERVER['SCRIPT_NAME']);
-		self::$controller = new controller();
 		self::$config = new config(__DIR__."/../config/config.ini");
+		self::$security = new security();
+		self::$controller = new controller();
 		setlocale(LC_ALL, self::conf()->format->locale);
 		date_default_timezone_set(self::conf()->locale->timezone);
 		//print_r(self::$config);
@@ -85,6 +91,16 @@ final class app {
 	public static function &Controller() {
 		if (!self::$controller) throw new \Exception("Controller non found!!!");
 		return self::$controller;
+	}
+	/**
+	 * Security()
+	 * 
+	 * Ottiene l'oggetto security
+	 * 
+	 * @return \framework\security\security
+	 */
+	public static function &Security() {
+		return self::$security;
 	}
 	
 	/**
