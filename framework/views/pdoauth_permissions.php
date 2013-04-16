@@ -38,7 +38,7 @@ class pdoauth_permissions extends contentBase {
 	 */
 	function init() {
 		parent::init();
-		$this->addJavascript(app::root()."js/admin.js");
+		$this->addJavascript(app::root()."js/pdoauth.js");
 		$this->addJavascript(app::root()."js/jquery-ui.js");
 		$this->addCss(app::root()."css/black-tie/jquery-ui.css");
 		$this->typeByAction("edit", $this::TYPE_AJAX);

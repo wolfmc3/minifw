@@ -33,27 +33,29 @@ img {
 .box .title {
 	padding: 6px;
 	margin: 0px;
-	border-radius: 4px;
-	background-color: #FF5555;
+	border-radius: 6px;
+	background-color: #002F80;
 	color: #FFFFFF;
-	border: 3px solid #FF5555;
+	border: 3px solid #002F80;
 	border-bottom-left-radius: 0px;
 	border-bottom-right-radius: 0px;
 	text-align: center;
 }
 .box .title select, .box .title select option {
-	background-color: #FF5555;
+	background-color: #002F80;
+	border: 1px solid #002669;
+	padding: 2px;
+	border-radius: 3px;
 	color: #FFFFFF;
-	border: none;
 }
 
 .box .box {
-	border-radius: 4px;
-	border: 3px solid #FF5555;
+	border-radius: 6px;
+	border: 3px solid #002F80;
 	border-top: none;
 	border-top-left-radius: 0px;
 	border-top-right-radius: 0px;
-
+	background-color: #EFEFEF;
 	margin:0px;
 	padding-top: 12px;
 	padding: 14px;
