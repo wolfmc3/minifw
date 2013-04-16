@@ -16,21 +16,27 @@ namespace framework\db {
 		 * Database di sistema instanziato da init()
 		 * @var \PDO
 		 */
-		private static $db;
+		private static $db = [];
+		
+		private $module;
+		
+		function __construct($module = "database") {
+			$this->module = $module;
+		}
 		/**
 		 * init()
 		 * 
 		 * inizializza se necessaria la connessione al database di sistema
 		 */
-		
 		function init() {
-			if (!$this::$db) {
-				$config = app::conf()->database;
+			$module = $this->module;
+			if (!array_key_exists($module, $this::$db)) {
+				$config = app::conf()->$module;
 				$dsn = $config->driver.":";
 				$dsn .= "host=".$config->host.";";
 				$dsn .= "dbname=".$config->database;
-				$this::$db = new \PDO($dsn, $config->user, $config->password,array(\PDO::ERRMODE_EXCEPTION));
-				$this::$db->exec("set names utf8");
+				$this::$db[$this->module] = new \PDO($dsn, $config->user, $config->password,array(\PDO::ERRMODE_EXCEPTION));
+				$this::$db[$this->module]->exec("set names utf8");
 			}
 		}
 		
@@ -47,9 +53,9 @@ namespace framework\db {
 		 */
 		function compileid($id) {
 			if (strpos($id, ",") === FALSE) {
-				return $id;
+				return "`$id`";
 			} else {
-				return "CONCAT(".str_replace(",", ", '~' ,", $id).")";
+				return "CONCAT(`".str_replace(",", "`, '~' ,`", $id)."`)";
 			}
 		}
 		
@@ -63,7 +69,7 @@ namespace framework\db {
 			$this->init();
 			$sql = "SHOW COLUMNS FROM $table";
 			$res = array();
-			$ret = $this::$db->query($sql);
+			$ret = $this::$db[$this->module]->query($sql);
 			while ($row = $ret->fetch(\PDO::FETCH_ASSOC)) {
 				$res[] = $row;
 			}
@@ -89,12 +95,12 @@ namespace framework\db {
 			if ($filter) {
 				$where = " WHERE $filter";
 			}
-			$sql = "SELECT * FROM $table $where";
+			$sql = "SELECT * FROM `$table` $where";
 			$ret = new resultset();
 			
 			if ($count) {
-				$sqlcount = "SELECT count(*) FROM $table $where";
-				$sth = $this::$db->prepare($sqlcount);
+				$sqlcount = "SELECT count(*) FROM `$table` $where";
+				$sth = $this::$db[$this->module]->prepare($sqlcount);
 				$sth->execute($filterargs);				
 				$row = $sth->fetch(\PDO::FETCH_NUM);
 				$ret->count = $row[0]-$start;
@@ -103,7 +109,7 @@ namespace framework\db {
 				$sql .= " LIMIT $start,$count"; 
 			}
 			$res = array();
-			$sth = $this::$db->prepare($sql);
+			$sth = $this::$db[$this->module]->prepare($sql);
 			$sth->execute($filterargs);
 			//$sth->debugDumpParams();
 			while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
@@ -127,9 +133,9 @@ namespace framework\db {
 			$this->init();
 			$idkey = $this->compileid($idkey);
 			//echo "IDKEY:".$idkey." ID:$id";
-			$sql = "SELECT * FROM $table WHERE $idkey = ?";
+			$sql = "SELECT * FROM `$table` WHERE $idkey = ?";
 			$id = array($id);
-			$sth = $this::$db->prepare($sql);
+			$sth = $this::$db[$this->module]->prepare($sql);
 			$sth->execute($id);
 			//$sth->debugDumpParams();
 			$row = $sth->fetch(\PDO::FETCH_ASSOC);
@@ -150,9 +156,9 @@ namespace framework\db {
 		function delete($table,$id,$idkey = "id") {
 			$this->init();
 			$idkey = $this->compileid($idkey);
-			$sql = "DELETE FROM $table WHERE $idkey = ?";
+			$sql = "DELETE FROM `$table` WHERE $idkey = ?";
 			$id = array($id);
-			$sth = $this::$db->prepare($sql);
+			$sth = $this::$db[$this->module]->prepare($sql);
 			return $sth->execute($id);
 		}
 		
@@ -170,27 +176,30 @@ namespace framework\db {
 		 */
 		function write($table,$data,$fields,$id = NULL,$idkey = "id") {
 			if ($id) { //aggiornamento
-				$sql = "UPDATE $table SET ";
+				$sql = "UPDATE `$table` SET ";
 				foreach ($fields as $key => $value) {
-					$sql .= "$key = :$key ,";
+					$sql .= "`$key` = :$key ,";
 				}
 				$sql = substr($sql, 0, -1);
 				$data[":tempid"] = $id;
 				$where = $this->compileid($idkey) . " = :tempid";
 				$sql .= " WHERE $where";
 			} else {
-				$sql = "INSERT INTO $table SET ";
+				$sql = "INSERT INTO `$table` SET ";
 				foreach ($fields as $key => $value) {
-					$sql .= "$key = :$key ,";
+					$sql .= "`$key` = :$key ,";
 				}
 				$sql = substr($sql, 0, -1);
 			}
-			echo $sql.PHP_EOL;
+			//echo $sql.PHP_EOL;
+			//echo print_r($data,TRUE).PHP_EOL;
 			$this->init();
-			$sth = $this::$db->prepare($sql);
+			$sth = $this::$db[$this->module]->prepare($sql);
 			//var_dump($sth);
-			return $sth->execute($data);
+			$res = $sth->execute($data);
 			//$sth->debugDumpParams();
+			if (!$res) $res = $sth->errorInfo();
+			return $res;
 		}
 		
 	}

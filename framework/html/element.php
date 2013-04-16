@@ -64,6 +64,11 @@ class element {
 			}
 			
 		}
+		function addBR($count = 1) {
+			for ($i = 0; $i < $count; $i++) {
+				$this->add(new br());
+			}
+		}
 		/**
 		 * html()
 		 * 

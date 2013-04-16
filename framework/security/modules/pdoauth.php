@@ -2,8 +2,8 @@
 namespace framework\security\modules;
 use framework\security\securitymoduleinterface;
 use framework\app;
-class onlyadmin implements securitymoduleinterface {
-	
+class pdoauth implements securitymoduleinterface {
+	public 
 	function getUser($username, $password) {
 		$password = md5($password);
 		//echo "onlyadmin:login:$username - $password\n<hr>";
@@ -52,14 +52,15 @@ class onlyadmin implements securitymoduleinterface {
 	}
 	
 	function groupsPage() {
-		return NULL;
+		return app::root()."pdoauth_groups";
 	}
 	
 	function usersPage() {
-		return NULL;
+		return app::root()."pdoauth_users";
 	}
 	
 	function permissionsPage() {
-		return NULL;
+		return app::root()."pdoauth_permissions";
 	}
+	
 }

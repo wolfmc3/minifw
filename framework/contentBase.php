@@ -88,6 +88,14 @@ class contentBase {
 	 */
 	const TYPE_CUSTOM = 3;
 	/**
+	 * Risposta reindirizzata
+	 * 
+	 * Il valore ritornato verrà utilizzato come url per reindirizzare la navigazione
+	 * 
+	 * @const TYPE_REDIRECT
+	 */
+	const TYPE_REDIRECT = 4;
+	/**
 	 * Tipo risposta
 	 * 
 	 * Risposta predefinita 
@@ -244,7 +252,7 @@ class contentBase {
 	 * 
 	 */
 	function url($action = "") {
-		if (!$action) $action .= "/";
+		if ($action) $action .= "/";
 		return app::root().$this->obj."/".$action;
 	}
 /**
@@ -288,6 +296,11 @@ class contentBase {
 				break;
 			case self::TYPE_CUSTOM:
 				$this->action();
+				break;
+			case self::TYPE_REDIRECT:
+				$url = $this->action();
+				//TODO: Controllo solo url locali
+				if ($url) header("location: $url"); 
 				break;
 			case self::TYPE_JSON:
 				header('Content-type: application/json');

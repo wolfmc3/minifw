@@ -15,7 +15,12 @@ class logincontrol extends element {
 			$this->add(new element("span",[],app::Security()->user()->username));
 			$this->add(new anchor(app::root()."login", "Accedi"));
 		} 
-		$this->add(new icon("Lock"));
+		if (app::Security()->user()->isok) {
+			$this->add(new icon("Lock"));
+		} else {
+			$this->add(new icon("LockOpen"));
+		}
+		
 		foreach (app::Security()->getPermission() as $key => $value) {
 			if ($value)	$this->add($key);
 		}

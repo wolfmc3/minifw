@@ -125,6 +125,9 @@ interface securitymoduleinterface {
 	function readPermissions();
 	function init();
 	function ready();
+	function usersPage();
+	function groupsPage();
+	function permissionsPage();
 }
 
 /**

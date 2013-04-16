@@ -15,7 +15,7 @@ $menu->add(new anchor($apppath."customers/", "Clienti"));
 $menu->add(new anchor($apppath."employees/", "Dipendenti"));
 $menu->add(new anchor($apppath."offices/", "Sedi"));
 $menu->add(new anchor($apppath."products/", "Prodotti"));
-$menu->add(new anchor($apppath."login/", "Login"));
+$menu->add(new anchor($apppath."admin/", "Admin"));
 $cont->add($menu);
 
 $cont->add(new logincontrol());
