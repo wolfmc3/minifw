@@ -4,7 +4,7 @@ namespace framework\html;
  * template
  *
  * Genera codice HTML partendo da un template<br>
- * NOTA: questo oggetto table è utilizzato dall'oggetto dbcontents
+ * NOTA: questo oggetto table è utilizzato dall'oggetto dbpages
  *
  * @author Marco Camplese <info@wolfmc3.com>
  * @package minifw/html

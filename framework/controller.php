@@ -14,7 +14,7 @@ use framework\views\HTTP404;
 	 */
 class controller {
 	/**
-	 * @var \framework\contentBase $page riferimento all'view richiesta dall'utente
+	 * @var \framework\page $page riferimento all'view richiesta dall'utente
 	 */
 	private $page;
 	/**
@@ -67,6 +67,15 @@ class controller {
 		return $uri;
 	}
 	
+	//TODO: DA COMPLETARE
+	function addMessage($msg,$link1 = NULL,$link2 = NULL) {
+		if (isset($_SESSION["ctrl_messages"])) $_SESSION["ctrl_messages"] = []; 
+		$message = $msg;
+		if ($link1) $message .= " ".$link1;
+		if ($link2) $message .= " ".$link2;
+		$_SESSION["ctrl_messages"][] = $message;
+	}
+	
 	/**
 	 * Costruttore
 	 * 
@@ -84,12 +93,18 @@ class controller {
 
 		$class = "\\views\\$obj";
 		//var_dump(app::Security()->getPermission($obj));
-		if (!app::Security()->getPermission($obj)->L) {
-			header("location:".app::root()."login?redirect=".urlencode(app::root().$this->uri));
-			exit();
+		$perm = app::Security()->getPermission($obj);
+		if (!$perm->L && $obj != "login") {
+			if (app::Security()->user()->isok) { //Loggato ma non autorizzato
+				$obj = "HTTP401";
+			} else {
+				header("location:".app::root()."login?redirect=".urlencode(app::root().$this->uri));
+				exit();
+			}
 		}
 		if (class_exists($class,true)) {
 			$this->page = new $class($this);
+			$this->page->setPermissions($perm->R, $perm->W, $perm->L, $perm->A);
 		} else {
 			$class = "\\framework\\views\\$obj";
 			if (class_exists($class,true)) {
@@ -108,7 +123,7 @@ class controller {
 	 * Utilizzata da altri oggetti view (di solito quello della pagina) per recuperare dati da altre view
 	 * 
 	 * @param string $obj Nome classe view
-	 * @return \framework\contentBase
+	 * @return \framework\page
 	 */
 	
 	function __get($obj) {
@@ -127,7 +142,7 @@ class controller {
 	 * 
 	 * Ritorna la classe instanziata come page nel controller
 	 * 
-	 * @return \framework\contentBase
+	 * @return \framework\page
 	 */
 	function getPage() {
 		return $this->page;
@@ -149,7 +164,7 @@ class controller {
 	 * 
 	 * Avvia il rendering della pagina<br>Utilizzato da /index.php (Front Controller)
 	 * 
-	 * @see \framework\contentBase
+	 * @see \framework\page
 	 */
 	
 	function render() {

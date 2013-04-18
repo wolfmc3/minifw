@@ -7,12 +7,12 @@ use framework\app;
  * paging
  *
  * Genera un blocco html utile per visualizzare la paginazione
- * NOTA: Utilizzato da dbcontents
+ * NOTA: Utilizzato da dbpages
  *
  * @author Marco Camplese <info@wolfmc3.com>
  * @package minifw/html
  * 
- * @see \framework\db\dbcontent
+ * @see \framework\db\dbpage
  * @see \framework\db\resultset
  *
  */
@@ -33,6 +33,9 @@ class paging extends element {
 		$this->add("Pagine:");
 		if ($pages == 0) $pages = 1;
 		for ($i = 0;$i < $pages;$i++) {
+			if (!($i == 0 || ($i+3 > $page & $i-3 < $page) || $i == ($pages-1)  )) {
+				continue; 
+			}
 			if ($i == $page) {
 				$this->add(new element("span",null,$page+1));
 			} else {

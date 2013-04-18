@@ -1,17 +1,17 @@
 <?php 
 namespace framework\views;
 
-use framework\contentBase;
+use framework\page;
 use framework\app;
 use framework\html\template;
-class login extends contentBase {
+class login extends page {
 	protected $title = "Login";
 	protected $template = "html";
 	
 	function init() {
 		parent::init();
-		$this->addJavascript(app::root()."js/jquery-ui.js");
-		$this->addCss(app::root()."css/black-tie/jquery-ui.css");
+		$this->addJavascript(app::conf()->jquery->ui);
+		$this->addCss(app::conf()->jquery->theme);
 	}
 	
 	function action_def() {
@@ -24,8 +24,10 @@ class login extends contentBase {
 	function action_login() {
 		$username = isset($_POST['username'])?$_POST['username']:"~~~";
 		$password = isset($_POST['password'])?$_POST['password']:"~~~";
+		//VERIFICARE tipo variabile $Store meglio boolean?
 		$store = isset($_POST['store'])?$_POST['store']:"0";
 		$ret = app::Security()->login($username, $password,$store);
+		
 		if ($ret !== FALSE) {
 			header("location: " . $_POST['returnurl']);
 		} else {

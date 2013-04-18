@@ -24,7 +24,7 @@ use framework\app;
 <?php echo $this->menu(); ?>
 </div>
 <div id="contents">
-<?php echo $this->action(); ?>
+<?php echo $this->results; ?>
 </div>
 </div>
 </BODY>

@@ -2,8 +2,8 @@
 namespace framework\views;
 
 use framework\app;
-use framework\contentBase;
-class config extends contentBase {
+use framework\page;
+class admin_config extends page {
 	protected $title = "Configurazione";
 	protected $template = "html";
 	function action_def() {

@@ -2,8 +2,8 @@
 namespace framework\views;
 
 use framework\page;
-class HTTP404 extends page {
-	protected $title = "Pagina non trovata";
+class HTTP401 extends page {
+	protected $title = "Non sei autorizzato";
 	protected $template = "error";
 	function def() {
 		$this->render();

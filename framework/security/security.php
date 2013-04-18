@@ -20,6 +20,7 @@ class security {
 	private $module = "";
 	private $permissions;
 	private $currentuser = FALSE;
+	
 	/**
 	 * Construttore
 	 * 
@@ -29,6 +30,7 @@ class security {
 	 * 
 	 */
 	function __construct() {
+		session_start();
 		$modulename = "\\framework\\security\\modules\\".app::conf()->security->module;
 		$this->module = new $modulename();
 		
@@ -40,12 +42,10 @@ class security {
 		$this->permissions = $this->module->readPermissions();
 		if (isset($_COOKIE['AUTHID'])) {
 			$authid = $_COOKIE['AUTHID'];
-			if (($res = $this->module->getUserAuthID($authid)) !== FALSE) {
-				$this->currentuser = $res;
-			}
+			$this->currentuser = new user($this->module->getUserAuthID($authid));
 		} 
 		if (!$this->currentuser) {
-			$this->currentuser = new user(["username"=>"anonimo","group"=>"?","isok"=>FALSE]);
+			$this->currentuser = new user();
 		}
 		//var_dump($this);
 	}
@@ -55,11 +55,11 @@ class security {
 	 * @param string $user
 	 * @param string $password
 	 * @param string $store
-	 * @return \framework\security\user
+	 * @return boolean
 	 */
 	function login($username,$password,$store = TRUE) {
 		//echo "Security:login:$username - $password\n<hr>";
-		$data = $this->module->getUser($username, $password);
+		$data = $this->module->getUser($username, md5($password));
 		//echo "Security:data:".print_r($data,TRUE)."\n<hr>";
 		if ($data === FALSE) {
 			return FALSE;
@@ -67,25 +67,41 @@ class security {
 			$user = new user($data);
 			$newauthid = sha1(bin2hex(openssl_random_pseudo_bytes(16)).$password);
 			$_SESSION["AUTHID"] = $newauthid;
-			$_SESSION["userdata"] = $user;
 			$this->currentuser = $user;
 			setcookie("AUTHID", $newauthid, $store?(time()+60*60*24*30):0,app::root());
+			$this->module->setUserAuthID($user->username, $newauthid);
 			return TRUE;
 		}
 	}
 	
-	function getPermission($view = "") {
+	function getUsersInfo() {
+		return $this->module->getUsersInfo();
+	}
+	
+	function getPermission($view = "",$username = "") {
 		if ($view == "") $view = app::Controller()->getPage()->name();
+		$user = $this->user();
+		if ($username) {
+			$users = $this->module->getUsersInfo();
+			$user = new user($users[$username]);
+		}
+
 		$perm = "";
 		$viewpath = "/$view/";
-		$genericgroup = $this->user()->isok?"*":"?";
-		foreach ($this->permissions as $path => $data) {
-			$patho = $path;
-			$path = str_replace("*", $view, $path);
-			if ($viewpath == $path && ($data["group"] == $this->user()->group || $data["group"] == $genericgroup) ) {
+		$genericgroup = $user->isok?"*":"?";
+		//echo "user:";print_r($this->user());
+		//echo "getPermission:$view:"; print_r($this->permissions);
+		foreach ($this->permissions as $data) {
+			$path = $data["path"];
+			$regexpath = "/^".str_replace("\\*", ".*", preg_quote($path,"/"))."$/e";
+			//echo "PERM GROUP:".$data["group"]."\tCLASS GROUP:".$genericgroup."\tREGEX:$viewpath=$path: $regexpath: RESULT:"; echo preg_match($regexpath, $viewpath); echo PHP_EOL;
+			//echo "$path:".$data['perm']."-\n";
+			if (preg_match($regexpath, $viewpath) && ($data["group"] == $user->group || $data["group"] == $genericgroup) ) {
 				$perm .= $data['perm'];
+				//echo $data["group"]."@$path:".$data['perm']."-\n";
 			}
 		}
+		
 		if ($perm != "") $perm = str_split($perm); else $perm = []; 
 		$res = new \stdClass();
 		$res->A = $res->L = $res->W = $res->R = NULL;
@@ -99,6 +115,7 @@ class security {
 				$res->$curperm = 0;
 			}
 		}
+		//print_r($res);
 		return $res;
 	}
 	
@@ -122,6 +139,8 @@ interface securitymoduleinterface {
 	 */
 	function getUser($username, $password);
 	function getUserAuthID($authid);
+	function getUsersInfo();
+	function setUserAuthID($user,$authid);
 	function readPermissions();
 	function init();
 	function ready();
@@ -133,12 +152,14 @@ interface securitymoduleinterface {
 /**
  *  user
  * 
- *  Classe utilizzata dal modulo security per identificare l'utente
+ *  Classe utilizzata dal modulo security per riportare i dettagli utente 
  *
  */
 class user {
 	private $data;
-	function __construct($data) {
+	function __construct($data = FALSE) {
+		//echo "New user istance:"; print_r($data);
+		if (!is_array($data)) $data = ["username"=>"anonimo","group"=>"?","isok"=>FALSE];
 		$this->data = $data;
 	}
 	
@@ -146,7 +167,7 @@ class user {
 		if (array_key_exists($key, $this->data)) {
 			return $this->data[$key];
 		} else {
-			return false;
+			return "";
 		}
 	}
 }

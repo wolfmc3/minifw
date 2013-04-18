@@ -8,12 +8,12 @@ use framework\html\icon;
  * dyninput
  *
  * Genera un campo input in base alle impostazioni
- * NOTA: questo oggetto è utilizzato dall'oggetto dbcontents
+ * NOTA: questo oggetto è utilizzato dall'oggetto dbpages
  *
  * @author Marco Camplese <info@wolfmc3.com>
  * @package minifw/html
  *
- * @see \framework\db\dbcontent
+ * @see \framework\db\dbpage
  *
  */
 
@@ -25,11 +25,14 @@ class dyninput extends element {
 		 * @param string[] $setting Impostazioni
 		 */
 		function __construct($key, $text, $setting = array()) {
+			app::Controller()->getPage()->addJavascript("dyninput.js");
+				
 			parent::__construct("span");
 			if (count($setting) && array_key_exists("inputtype", $setting)) {
 				$input = NULL;
 				$dt = $setting['inputtype'];
 				$len = $setting['len'];
+				if ($dt == "readonly" && $text === NULL) $dt = 'text';
 				if ($dt == "readonly") {
 					$this->add($text);
 				} elseif ($dt == "currency" || $dt == "numeric") {
@@ -45,8 +48,8 @@ class dyninput extends element {
 						$input = $this->append(new element("input",array("type" => "time","value"=>$time, "class" => "time","data-ref"=>$key)));
 					}					
 					$input = $this->append(new element("input",array("type" => "hidden","value"=> $text,"id" => $key,"name" => $key)));
-				} elseif ($dt == "text") {
-					$input = $this->append(new element("input",array("type" => "text","value"=> $text,"name" => $key)));
+				} elseif ($dt == "text" || $dt == "password") {
+					$input = $this->append(new element("input",array("type" => $dt,"value"=> $text,"name" => $key)));
 					if (is_numeric($len) && $len > 0) {
 						$input->addAttr("size", $len);
 						$input->addAttr("maxlength", $len);

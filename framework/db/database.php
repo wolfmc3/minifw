@@ -32,11 +32,12 @@ namespace framework\db {
 			$module = $this->module;
 			if (!array_key_exists($module, $this::$db)) {
 				$config = app::conf()->$module;
+				if (!$config) throw new \Exception("Error: Not find config section $module");
 				$dsn = $config->driver.":";
 				$dsn .= "host=".$config->host.";";
 				$dsn .= "dbname=".$config->database;
-				$this::$db[$this->module] = new \PDO($dsn, $config->user, $config->password,array(\PDO::ERRMODE_EXCEPTION));
-				$this::$db[$this->module]->exec("set names utf8");
+				$this::$db[$module] = new \PDO($dsn, $config->user, $config->password,array(\PDO::ERRMODE_EXCEPTION));
+				$this::$db[$module]->exec("set names utf8");
 			}
 		}
 		
@@ -48,7 +49,7 @@ namespace framework\db {
 		 * esempio:
 		 * <code>"customerNumber,orderNumber" --> "CONCAT(customerNumber,'~',orderNumber)"</code>
 		 * 
-		 * @param string $id Campo id (di solito specificato nel campi idkey di dbcontents)
+		 * @param string $id Campo id (di solito specificato nel campi idkey di dbpages)
 		 * @return string
 		 */
 		function compileid($id) {
@@ -161,7 +162,12 @@ namespace framework\db {
 			$sth = $this::$db[$this->module]->prepare($sql);
 			return $sth->execute($id);
 		}
-		
+
+		function execute($sql,$args) {
+		 	$this->init();
+		 	$sth = $this::$db[$this->module]->prepare($sql);
+		 	return $sth->execute($args);
+		}
 		/**
 		 * Aggiunge o aggiorna una riga della tabella $table
 		 * 
@@ -169,12 +175,18 @@ namespace framework\db {
 		 * @param mixed[] $data Array associativo che contiene i dati da scrivere nel database. esempio: 
 		 * <code>$data[":customerName"] = "Pallino spa"</code>
 		 * I nomi di colonna devono essere preceduti da ":" 
-		 * @param string[] $fields Array associativo che contiene i nomi di colonna (protezione contro la scrittura di dati erreti)
-		 * @param string $id Valore della chiave primaria se NULL o non specificato la riga verrà aggiunta e non aggiornata
-		 * @param string $idkey Nome della colonna id. Se non specificato verrà usato "id"
+		 * @param string[] optional $fields Array associativo che contiene i nomi di colonna (protezione contro la scrittura di dati erreti)
+		 * @param string optional $id Valore della chiave primaria se NULL o non specificato la riga verrà aggiunta e non aggiornata
+		 * @param string optional $idkey Nome della colonna id. Se non specificato verrà usato "id"
 		 * @return boolean TRUE se l'aggiornamento/inserimento è avvenuto con successo
 		 */
-		function write($table,$data,$fields,$id = NULL,$idkey = "id") {
+		function write($table,$data,$fields = NULL,$id = NULL,$idkey = "id") {
+			if ($fields === NULL) {
+				foreach ($data as $key => $value) {
+					$key = substr($key, 1);
+					$fields[$key] = $key;
+				}
+			}
 			if ($id) { //aggiornamento
 				$sql = "UPDATE `$table` SET ";
 				foreach ($fields as $key => $value) {

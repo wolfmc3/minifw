@@ -2,18 +2,39 @@
 namespace framework\security\modules;
 use framework\security\securitymoduleinterface;
 use framework\app;
+use framework\db\database;
 class pdoauth implements securitymoduleinterface {
-	public 
+	private $db = NULL;
 	function getUser($username, $password) {
-		$password = md5($password);
 		//echo "onlyadmin:login:$username - $password\n<hr>";
 		//echo "config:onlyadmin:".app::conf()->onlyadmin->user." - ".app::conf()->onlyadmin->password."\n<hr>";
-		
-		if (app::conf()->onlyadmin->user == $username && app::conf()->onlyadmin->password == $password) {
-			return ["username"=>$username,"group"=>"admin","isok"=>TRUE];
+		$res = $this->db->read("users",0,0,"username = ? AND password = ?",[$username,$password]);
+		//echo "getUser:"; print_r($res); 
+		if (count($res->rows) == 1) { //UTENTE CORRETTO 
+			$userdata = $res->rows[0];
+			unset($userdata['password']);
+			$userdata["isok"] = TRUE;
+			return $userdata;
 		} else {
 			return false;
 		}
+	}
+	
+	function getUsersInfo() {
+		$res = $this->db->read("users");
+		$users = [];
+		foreach ($res->rows as $userdata) {
+			unset($userdata['password']);
+			$userdata["isok"] = TRUE;
+			$users[$userdata['username']] = $userdata;
+		}
+		$users["anonimo"] = ["username"=>"anonimo","group"=>"?","isok"=>FALSE];
+		return $users;
+	}
+	
+	function setUserAuthID($user,$authid) {
+		$row = [":username"=>$user,":authid"=>$authid,":ip"=>$_SERVER['REMOTE_ADDR']];
+		$this->db->write("usersessions", $row);
 	}
 	
 	function setUser($userdata) {
@@ -21,9 +42,14 @@ class pdoauth implements securitymoduleinterface {
 	}
 	
 	function getUserAuthID($authid) {
-		//print_r($_SESSION);
-		if (isset($_SESSION["AUTHID"]) && $_SESSION["AUTHID"] == $authid) {
-			return $_SESSION["userdata"];
+		$res = $this->db->read("usersessions",0,1,"authid = ?",[$authid]);
+		//echo "getUserAuthID:sessions:$authid:"; print_r($res); 
+		if (count($res->rows) == 1) { //UTENTE ESISTENTE
+			$user = $this->db->row("users", $res->rows[0]['username'],"username");
+			unset($user['password']);
+			$user["isok"] = TRUE;
+			//echo "getUserAuthID:users:$authid:"; print_r($user);
+			return $user;
 		} else {
 			return false;
 		}
@@ -31,36 +57,35 @@ class pdoauth implements securitymoduleinterface {
 	
 	
 	function readPermissions() {
-		return [
-			"/index/"	=>	["group"=>"*","perm"=>"L"],
-			"/login/"	=>	["group"=>"?","perm"=>"L"],
-			"/*/"		=>	["group"=>"?","perm"=>"L"],
-			"/*/"		=>	["group"=>"admin","perm"=>"RWLA"],
-			"/config/"	=>	["group"=>"admin","perm"=>"RWLA"],
-			"/admin/"	=>	["group"=>"?","perm"=>"rwla"],
-			"/admin/"	=>	["group"=>"admin","perm"=>"RWLA"],
-			"/config/"	=>	["group"=>"?","perm"=>"rwla"],
-			];
+		$rawperm = $this->db->read("permissions");
+		//echo "readPermission RAW:";print_r($rawperm);
+		$perm = [];
+		foreach ($rawperm->rows as $value) {
+			$perm[] = ["path"=>$value['path'], "group" => $value['group'],"perm"=>$value['permission']];
+		}
+		//echo "readPermission DEF:";print_r($perm);
+		return $perm;
 	}
 	
 	function init() {
-		return session_start();
+		$this->db = new database("pdoauth");
+		return TRUE;
 	}
 	
 	function ready() {
-		return session_status() == PHP_SESSION_ACTIVE;
+		return $this->db != NULL;
 	}
 	
 	function groupsPage() {
-		return app::root()."pdoauth_groups";
+		return app::root()."admin_pdoauth_groups";
 	}
 	
 	function usersPage() {
-		return app::root()."pdoauth_users";
+		return app::root()."admin_pdoauth_users";
 	}
 	
 	function permissionsPage() {
-		return app::root()."pdoauth_permissions";
+		return app::root()."admin_pdoauth_permissions";
 	}
 	
 }

@@ -36,7 +36,7 @@ class element {
 		 */
 		function __construct($tag="", $attr = array(), $inner = NULL) {
 			$this->tag = $tag;
-			if (is_null($attr)) $attr = array();
+			if (!is_array($attr)) $attr = array();
 			$this->attr = $attr;
 			if (!is_null($inner)) $this->add($inner);
 		}
@@ -137,7 +137,7 @@ class element {
 				if ($this->tag) $html .= "</".$this->tag.">\n";
 				
 			} else {
-				$html .= "/>";				
+				if ($html != '') $html .= "/>";				
 			}
 							
 			return $html;

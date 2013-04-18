@@ -28,6 +28,7 @@ img {
 	font-size: 75%;
 	font-weight: bold;
 	margin-top: 24px;
+	vertical-align: top;
 }
 
 .box .title {
@@ -41,6 +42,8 @@ img {
 	border-bottom-right-radius: 0px;
 	text-align: center;
 }
+
+
 .box .title select, .box .title select option {
 	background-color: #002F80;
 	border: 1px solid #002669;

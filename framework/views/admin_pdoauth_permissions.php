@@ -1,6 +1,6 @@
 <?php 
 namespace framework\views;
-use framework\contentBase;
+use framework\page;
 use framework\html\table;
 use framework\html\form\text;
 use framework\db\database;
@@ -11,7 +11,9 @@ use framework\html\form\hidden;
 use framework\html\form\checkboxes;
 use framework\html\br;
 use framework\html\form\submit;
-class pdoauth_permissions extends contentBase {
+use framework\html\anchor;
+use framework\html\anchorbutton;
+class admin_pdoauth_permissions extends page {
 	private $cols = [
 	"path"=>["name"=>"Percorso","ontable"=>1],
 	"group"=>["name"=>"Gruppo","ontable"=>1],
@@ -34,13 +36,13 @@ class pdoauth_permissions extends contentBase {
 	/**
 	 * init()
 	 *
-	 * @see \framework\contentBase::init()
+	 * @see \framework\page::init()
 	 */
 	function init() {
 		parent::init();
-		$this->addJavascript(app::root()."js/pdoauth.js");
-		$this->addJavascript(app::root()."js/jquery-ui.js");
-		$this->addCss(app::root()."css/black-tie/jquery-ui.css");
+		$this->addJavascript("pdoauth.js");
+		$this->addJavascript(app::conf()->jquery->ui);
+		$this->addCss(app::conf()->jquery->theme);
 		$this->typeByAction("edit", $this::TYPE_AJAX);
 		$this->typeByAction("save", $this::TYPE_REDIRECT);
 		$db = new database("pdoauth");
@@ -86,12 +88,8 @@ class pdoauth_permissions extends contentBase {
 		$permissions = new table($this->cols, $ret->rows,"id",["data-openurl" => app::root().$this->obj."/edit/"]);
 		$cont = new element();
 		$cont->add($permissions);
-		$groupsremove = new element("div",["style"=>"margin-top:25px;"]);
-		$form = $groupsremove->append(new element("form",["action"=>$this->url("grremove")]));
-		$form->add(new select("delgroup",$this->groups,""));
-		$form->add(new submit("Elimina gruppo"));
-		//TODO: Implementare rimozione gruppi		
-		$cont->add($groupsremove);
+		$cont->addBR(2);
+		$cont->add(new anchorbutton($this->url("edit"), "Aggiungi",["class"=>"addperm"]));
 		return $cont;
 	}
 	

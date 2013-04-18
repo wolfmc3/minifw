@@ -1,7 +1,7 @@
 <?php
 namespace views;
-use framework\db\dbcontent;
-class employees extends dbcontent {
+use framework\db\dbpage;
+class employees extends dbpage {
 //TABELLA
 protected $table = 'employees';
 
@@ -37,7 +37,7 @@ protected $columns = array(
 );
 	
 //CAMPO DESCRIZIONE
-protected $DescriptionKeys = 'lastName,firstName';
+protected $DescriptionKeys = 'lastName,firstName,jobTitle';
 				 	
 //TITOLO VISUALIZZATO NEL BROWSER
 function title() {

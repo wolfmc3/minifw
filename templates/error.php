@@ -11,7 +11,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="it" lang="it" dir="ltr">
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<TITLE>Pagina non trovata</TITLE>
+<TITLE><?php $this->Title() ?></TITLE>
 <?php $this->scripts(); ?>
 </HEAD>
 <BODY>
@@ -20,7 +20,7 @@
 <?php echo $this->menu(); ?>
 </div>
 <div id="contents">
-  <p><b>HTTP 404</b> Errore</p>
+  <p><b><?php echo $this->obj; ?></b> Errore: <?php echo $this->Title(); ?></p>
   <h3>La pagina richiesta non &egrave; disponibile</h3>
 </div>
 </div>

@@ -44,21 +44,24 @@
 	margin: 1px;
 	font-size: 75%;
 	border-radius: 5px;
+	width: auto;
+	overflow: hidden;
+	height: 26px;
 	top: 1px;
 	right: 1px;
 	text-align: center;
 	line-height: 26px;
 	color: #C1C1C1;
 	padding: 1px;
-	padding-left: 31px;
-	padding-right: 15px;
+	padding-left: 21px;
+	padding-right: 5px;
 	border: 1px dotted #C1C1C1;
 	background: url('../img/icons/User.png') 4px 50% no-repeat;
 }
 
 #logincontrol span {
 	color: #7E7E7E;
-	
+	margin-left: 5px;
 }
 
 #logincontrol a {

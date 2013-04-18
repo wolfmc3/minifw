@@ -2,7 +2,7 @@
 namespace framework;
 
 /**
- * interfaccia contentBase
+ * interfaccia page
  * 
  * Questa classe è l'interfaccia per la costruzione di oggetti view<br>
  * <code>
@@ -15,7 +15,7 @@ namespace framework;
  *
  */
 
-class contentBase {
+class page {
 	/** 
 	 * @var string Nome classe
 	 */
@@ -30,6 +30,10 @@ class contentBase {
 	 * @var string|int ID elemento da visualizzare (da URL)
 	 */ 
 	protected $item = 0;
+	/**
+	 * @var mixed variabile contenente il risultato dell'operazione action_*
+	 */
+	protected $results = NULL;
 	
 	/** 
 	 * 
@@ -187,10 +191,17 @@ class contentBase {
 	 * @return void
 	 */
 	function init() {
-		$this->addJavascript(app::root()."js/jquery-1.9.1.min.js");
+		$this->addJavascript(app::conf()->jquery->core);
 		if (isset($_POST["resp_ajax"])) $this->type = self::TYPE_AJAX;
 	}
-
+	
+	function setPermissions($read, $write, $list, $add) {
+		/*$this->addRecord = ($add==1);
+		$this->deleteRecord = ($write==1);
+		$this->editRecord = ($write==1);
+		$this->viewRecord = ($read==1);*/
+	}
+	
 	/** 
 	 * Titolo
 	 * 
@@ -211,7 +222,7 @@ class contentBase {
 	 * 
 	 */
 	function action_def() {
-		echo "NO CONTENTS";
+		return "NO CONTENTS";
 	}
 
 	/**
@@ -225,9 +236,21 @@ class contentBase {
 	 * @return void
 	 */
 	function addJavascript($script) {
-		$this->javascripts[] = $script;
+		$script = $this->resolveUrl($script,"js/");
+		if (array_search($script, $this->javascripts) === FALSE) {
+			$this->javascripts[] = $script;
+		}
 	}
-
+	
+	function addJqueryUi() {
+		$this->addJquery();
+		$this->addJavascript(app::conf()->jquery->ui);
+		$this->addCss(app::conf()->jquery->theme);
+	}
+	
+	function addJquery() {
+		$this->addJavascript(app::conf()->jquery->core);
+	}
 	/**
 	 * Aggiunta foglio di stile al template 
 	 * 
@@ -239,9 +262,25 @@ class contentBase {
 	 * @return void
 	 */
 	function addCss($css) {
-		$this->css[] = $css;
+		$css = $this->resolveUrl($css,"css/");
+		if (array_search($css, $this->css) === FALSE) {
+			$this->css[] = $css;
+		}
 	}
 
+	private function resolveUrl($file, $basedir="/") {
+		$fullpath = "";
+		if (substr($file, 0,1) == "/") { //root app
+			$fullpath = app::root().substr($file, 1);
+		} elseif (substr($file, 0,7) == "http://") { //external
+			$fullpath = $file;
+		} else { //relative to $basedir
+			if (substr($basedir, -1) != "/") $basedir .= "/";
+			if (substr($basedir, 0,1) == "/") $basedir = substr($basedir, 1);
+			$fullpath = app::root().$basedir.$file; 
+		}
+		return $fullpath;
+	}
 	/**
 	 * Indirizzo esterno
 	 * 
@@ -266,10 +305,10 @@ class contentBase {
  */
 	function scripts() {
 		foreach ($this->javascripts as $script ) {
-			echo "<script src='$script'></script>";
+			echo "<script src='$script'></script>".PHP_EOL;
 		}
 		foreach ($this->css as $script ) {
-			echo "<link rel='stylesheet' type='text/css' href='$script'>";
+			echo "<link rel='stylesheet' type='text/css' href='$script'>".PHP_EOL;
 		}
 	}
 
@@ -283,6 +322,7 @@ class contentBase {
 	 * 
 	 */
 	function render() {
+		$this->action();
 		header('Cache-Control: no-cache, must-revalidate');
 		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 		switch ($this->type) {
@@ -292,19 +332,19 @@ class contentBase {
 				break;
 			case self::TYPE_AJAX:
 				header('Content-type: text/html');
-				echo $this->action();
+				echo $this->results;
 				break;
 			case self::TYPE_CUSTOM:
 				$this->action();
 				break;
 			case self::TYPE_REDIRECT:
-				$url = $this->action();
+				$url = $this->results;
 				//TODO: Controllo solo url locali
 				if ($url) header("location: $url"); 
 				break;
 			case self::TYPE_JSON:
 				header('Content-type: application/json');
-				echo json_encode($this->action());
+				echo json_encode($this->results);
 				break;
 		}
 
@@ -320,22 +360,22 @@ class contentBase {
 	 */
 	function menu() {
 		if ($this->menu) {
-			require __DIR__."/../templates/".$this->menu.".php";
+			return $this->menu ;
 		}
 	}
 
 	function setMenu($menuModel) {
-		$this->menu = $menuModel;
+		$this->menu = "".$menuModel;
 	}
 
 	function action() {
 		if ($this->action == "") {
-			return $this->action_def();
+			$this->results = $this->action_def();
 		} else {
 			if (method_exists($this, "action_".$this->action)) {
-				return call_user_func(array($this,"action_".$this->action));
+				$this->results = call_user_func(array($this,"action_".$this->action));
 			} else {
-				return "ERRORE NELLA RICHIESTA: <b>".$this->action."</b>";
+				$this->results = "ERRORE NELLA RICHIESTA: <b>".$this->action."</b>";
 			}
 		}
 	}

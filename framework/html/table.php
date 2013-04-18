@@ -5,13 +5,13 @@ namespace framework\html;
 	 * table
 	 *
 	 * Genera una tabella HTML completa<br>
-	 * NOTA: questo oggetto table è utilizzato dall'oggetto dbcontents
+	 * NOTA: questo oggetto table è utilizzato dall'oggetto dbpages
 	 *
 	 * @author Marco Camplese <info@wolfmc3.com>
 	 * @package minifw/html
 	 *
 	 * @see element
-	 * @see \framework\db\dbcontent
+	 * @see \framework\db\dbpage
 	 *
 	 */
 	class table extends element {
@@ -86,7 +86,7 @@ namespace framework\html;
 						list($obj,$linkid) = explode("/", $colname) ;
 						$id = $row[$linkid];
 						$tr->add(new element("td",array(),
-							new element("b",NULL,app::Controller()->$obj->label($id))		
+							new element("span",NULL,app::Controller()->$obj->label($id))		
 						));
 					} elseif (substr($colname,0,1) == "=") { //Calculated view
 						$colname = str_replace("=", "", $colname);

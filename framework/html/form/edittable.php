@@ -5,12 +5,12 @@ use framework\html\element;
  * edittable
  *
  * Genera form html completo di tabella in base alle impostazioni
- * NOTA: questo oggetto è utilizzato dall'oggetto dbcontents
+ * NOTA: questo oggetto è utilizzato dall'oggetto dbpages
  *
  * @author Marco Camplese <info@wolfmc3.com>
  * @package minifw/html
  *
- * @see \framework\db\dbcontent
+ * @see \framework\db\dbpage
  *
  */
 

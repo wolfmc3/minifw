@@ -16,8 +16,8 @@ use framework\html\dotlist;
 /**
  * Interfaccia viewdesign
  * 
- * Questa classe è l'interfaccia per disegnare classi <var>\framework\dbcontents</var> <br>
- * Questa classe aggiunge l'azione design che permette di disegnare la classe finale dbcontents<br>
+ * Questa classe è l'interfaccia per disegnare classi <var>\framework\dbpages</var> <br>
+ * Questa classe aggiunge l'azione design che permette di disegnare la classe finale dbpages<br>
  * Per motivi di sicurezza non utilizzare questa classe durante il normale funzionamento<br>
  * <br>
  * Per utilizzare la modalità design <code>http://host/[nomeclasse]/design/</code><br>
@@ -36,24 +36,24 @@ use framework\html\dotlist;
  * <br><br>
  * @author Marco Camplese <info@wolfmc3.com>
  * @package minifw/database
- * @see \framework\db\dbcontent
+ * @see \framework\db\dbpage
  *
  */
 
-class viewdesign extends dbcontent {
+class viewdesign extends dbpage {
 	/**
 	 * @ignore 
 	 */
 	protected $columns = array("1");
 	
 	/**
-	 * @see \framework\db\dbcontent::init()
+	 * @see \framework\db\dbpage::init()
 	 */
 	function init() {
 		parent::init();
-		$this->addJavascript(app::root()."js/dbdesign.js");
-		$this->addJavascript(app::root()."js/jquery-ui.js");
-		$this->addCss(app::root()."css/black-tie/jquery-ui.css");
+		$this->addJavascript("dbdesign.js");
+		$this->addJavascript(app::conf()->jquery->ui);
+		$this->addCss(app::conf()->jquery->theme);
 		$this->typeByAction("addform", self::TYPE_AJAX);
 		$this->typeByAction("coldata", self::TYPE_JSON);
 		$this->typeByAction("viewinfo", self::TYPE_JSON);
@@ -103,8 +103,8 @@ class viewdesign extends dbcontent {
 		$string = <<<CODE
 <?php
 namespace views;
-use framework\\db\\dbcontent;
-class $table extends dbcontent {
+use framework\\db\\dbpage;
+class $table extends dbpage {
 //TABELLA
 protected \$table = '$table';
 
@@ -149,7 +149,7 @@ CODE;
 	 * @see action_design()
 	 */
 	function action_addform() {
-		$db = new database();
+		$db = new database($this->database);
 		$cols = $db->columnInfo($this->table);
 		$colnames = array();
 		foreach ($cols as $key => $value) {
@@ -226,16 +226,16 @@ CODE;
 	 * @see action_design()
 	 */
 	function action_coldata() {
-		$db = new database();
+		$db = new database($this->database);
 		return $db->columnInfo($this->table);
 	}
 	
 	/**
 	 * Azione table
 	 * 
-	 * Esegue l'override dell'azione table di dbcontents per aggiungere un link che riporta al design della tabella
+	 * Esegue l'override dell'azione table di dbpages per aggiungere un link che riporta al design della tabella
 	 * 
-	 * @see \framework\db\dbcontent::action_table()
+	 * @see \framework\db\dbpage::action_table()
 	 */
 	function action_table() {
 		$ret = new element();
@@ -254,7 +254,7 @@ CODE;
 	 * @return \framework\html\element
 	 */
 	function action_design() {
-		$db = new database();
+		$db = new database($this->database);
 		$cols = $db->columnInfo($this->table);
 		$show = new element("form",array("METHOD"=>"POST","ACTION"=>app::root().$this->obj."/export/"));
 		$colnames = array();

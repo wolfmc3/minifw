@@ -38,6 +38,7 @@ final class app {
 	public static function init() {
 		self::$root = str_replace("index.php", "", $_SERVER['SCRIPT_NAME']);
 		self::$config = new config(__DIR__."/../config/config.ini");
+		if (self::conf()->system->usesessiondb)	session_set_save_handler(new pdosessions());
 		self::$security = new security();
 		self::$controller = new controller();
 		setlocale(LC_ALL, self::conf()->format->locale);
@@ -108,11 +109,16 @@ final class app {
 	 * 
 	 * @return string[]
 	 */
-	public static function getViews() {
+	public static function getViews($systemviews = FALSE) {
 		$views = array();
 		chdir("views");
 		$list = glob('*.php',GLOB_BRACE);
 		chdir("..");
+		if ($systemviews) {
+			chdir("framework/views");
+			$list = array_merge($list,glob('*.php',GLOB_BRACE));
+			chdir("../..");
+		}
 		$list = explode("/", str_replace(".php", "", implode("/", $list))); 
 		return $list;
 	}

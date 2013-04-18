@@ -1,6 +1,6 @@
 <?php 
 namespace framework\db {
-	use framework\contentBase;
+	use framework\page;
 	use framework\html\table;
 	use framework\html\form\edittable;
 	use framework\html\element;
@@ -9,13 +9,14 @@ namespace framework\db {
 	use framework\html\icon;
 	use framework\html\form\paging;
 	use framework\app;
-/**
- * Classe dbcontent
+use framework\html\anchorbutton;
+		/**
+ * Classe dbpage
  * 
  * Estendere questa classe per ottenere oggetti instaziabili dalla classe controller per generare pagine collegate a database
  *<br><br>
  * <code>
- * Formato variabile [dbcontents]$columns
+ * Formato variabile [dbpages]$columns
  * Array associativo
  * [Nome campo db] = array(
  * 		name: Descrizione Campo
@@ -42,12 +43,12 @@ namespace framework\db {
  * <br>
  * <br>
  * @see \framework\controller
- * @see \framework\contentBase
- * @see \framework\db\dbcontent
+ * @see \framework\page
+ * @see \framework\db\dbpage
  * @package minifw/database
  *
  */
-		class dbcontent extends contentBase {
+		class dbpage extends page {
 			/**
 			 * @var string Tabella del database
 			 */
@@ -57,13 +58,14 @@ namespace framework\db {
 		 * @var string[] Lista campi
 		 */
 		protected $fields;
+		protected $database = "database";
 		/**
 		 * @var string Indica la chiave primaria della tabella (se le chiavi sono multiple separare con la virgola)
 		 */
 		protected $idkey = "id";
 		/**
 		 * @var mixed[] Vedi descrizione della classe
-		 * @see \framework\db\dbcontent
+		 * @see \framework\db\dbpage
 		 */
 		protected $columns = array();
 		/**
@@ -79,9 +81,13 @@ namespace framework\db {
 		 */
 		protected $deleteRecord = TRUE;
 		/**
-		 * @var boolean Indica se la view può vedere la tabella dati
+		 * @var boolean Indica se la view può vedere il dettaglio dati
 		 */
 		protected $viewRecord = TRUE;
+		/**
+		 * @var boolean Indica se la view può vedere la lista dei dati
+		 */
+		protected $listRecord = TRUE;
 		/**
 		 * @var number numero di record per pagina 
 		 */
@@ -94,14 +100,13 @@ namespace framework\db {
 		/**
 		 * init()
 		 * 
-		 * @see \framework\contentBase::init()
+		 * @see \framework\page::init()
 		 */
 		function init() {
 			parent::init();
-			$this->addJavascript(app::root()."js/dbcontents.js");
-			$this->addJavascript(app::root()."js/jquery-ui.js");
-			$this->addCss(app::root()."css/black-tie/jquery-ui.css");
-			$this->addJavascript(app::root()."js/dyninput.js");
+			$this->addJavascript("dbpages.js");
+			$this->addJavascript(app::conf()->jquery->ui);
+			$this->addCss(app::conf()->jquery->theme);
 			if (isset($this->extra[0])) {
 				$this->defaultBlock = $this->extra[0];
 			}
@@ -118,7 +123,8 @@ namespace framework\db {
 		 * @return \framework\html\element 
 		 */
 		function action_table() {
-			$db = new database();
+			if (!$this->listRecord) return "";
+			$db = new database($this->database);
 			$where = NULL;
 			$whereArgs = array();
 			//echo "fileds:";print_r($this->fields);
@@ -148,7 +154,7 @@ namespace framework\db {
 				
 			$container->add(new paging($this->obj, "table", $ret->page(), $ret->pages(), $ret->block));
 			$container->add(new element("hr"));
-			if ($this->addRecord) $container->add(new anchor(app::root().$this->obj."/add", array(new icon("Plus")," Nuovo"),array("class"=>"button")) );
+			if ($this->addRecord) $container->add(new anchorbutton(app::root().$this->obj."/add", array(new icon("Plus")," Nuovo"),array("class"=>"button")) );
 			return $container;
 		}
 		/**
@@ -159,7 +165,8 @@ namespace framework\db {
 		 * @return \framework\html\element
 		 */
 		function action_edit() {
-			$db = new database();
+			if (!$this->editRecord) return "";
+			$db = new database($this->database);
 			$row = $db->row($this->table, $this->item,$this->idkey);
 			$options = array(
 					"action" => app::root().$this->obj."/save/".$this->item,
@@ -180,14 +187,15 @@ namespace framework\db {
 		 */
 		
 		function action_add() {
-			$db = new database();
+			if (!$this->addRecord) return "";
+			$db = new database($this->database);
 			//$row = $db->row($this->table, $this->item);
-			$row = array_fill_keys(array_keys($this->columnnames), '');
+			$row = array_fill_keys(array_keys($this->columns), NULL);
 			$options = array(
 					"action" => app::root().$this->obj."/save",
 					"method" => "POST"
 			);
-			$table = new edittable($row,$this->columnnames, $this->idkey,$options);
+			$table = new edittable($row,$this->columns, $this->idkey,$options);
 			$form = new element("form",$options);
 			$form->add($table);
 			return $form;
@@ -202,11 +210,18 @@ namespace framework\db {
 		 */
 		
 		function action_remove() {
-			$db = new database();
+			if (!$this->editRecord) return "";
+			$db = new database($this->database);
 			$row = $db->delete($this->table, $this->item,$this->idkey);
 			header("location: ". $_SERVER['HTTP_REFERER']);
 		}
 
+		function setPermissions($read, $write, $list, $add) {
+			$this->addRecord = ($add==1);
+			$this->deleteRecord = ($write==1);
+			$this->editRecord = ($write==1);
+			$this->viewRecord = ($read==1);
+		}
 		/**
 		 * Azione save
 		 * 
@@ -217,6 +232,8 @@ namespace framework\db {
 		 *  
 		 */
 		function action_save() {
+			if (!$this->editRecord) return "";
+				
 			//print_r($_POST);
 			$data = array();
 			$realcolumns = array();
@@ -228,8 +245,8 @@ namespace framework\db {
 					$realcolumns[$key] = $value;
 				}
 			}
-			print_r($data);
-			$db = new database();
+			//print_r($data);
+			$db = new database($this->database);
 			$db->write($this->table, $data, $realcolumns,$this->item,$this->idkey);
 			header("location: ". app::root().$this->obj."/");
 			exit();
@@ -256,7 +273,7 @@ namespace framework\db {
 		 * key()
 		 * 
 		 * rimuove eventuali virgole dalla chiave primaria
-		 * @see \framework\db\dbcontent::$idkey
+		 * @see \framework\db\dbpage::$idkey
 		 * 
 		 * @return string
 		 */
@@ -295,10 +312,11 @@ namespace framework\db {
 				$this->DescriptionKeys = $this->idkey;
 			}
 			
-			$db = new database();
+			$db = new database($this->database);
 			$row = $db->row($this->table, $id, $this->idkey);
 			//print_r($row);
 			$label = "";
+			
 			$keys = explode(",", $this->DescriptionKeys);
 			foreach ($keys as $key) {
 				$label .= $row[$key]." ";
@@ -315,7 +333,7 @@ namespace framework\db {
 		 */
 		function fields() {
 			$cols = [];
-			$db = new database();
+			$db = new database($this->database);
 			$dbcol = $db->columnInfo($this->table);
 			foreach ($dbcol as $vals) {
 				$col = $vals['Field'];
@@ -331,7 +349,7 @@ namespace framework\db {
 		 * 
 		 * Imposta l'azione di default su table
 		 * 
-		 * @see \framework\contentBase::action_def()
+		 * @see \framework\page::action_def()
 		 * @see action_table()
 		 */
 		function action_def() {

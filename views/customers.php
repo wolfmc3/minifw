@@ -1,7 +1,7 @@
 <?php
 namespace views;
-use framework\db\dbcontent;
-class customers extends dbcontent {
+use framework\db\dbpage;
+class customers extends dbpage {
 //TABELLA
 protected $table = 'customers';
 
