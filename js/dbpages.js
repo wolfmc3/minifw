@@ -7,7 +7,8 @@ $(document).ready(
 			});
 			$("tr[data-id]").css("cursor", "pointer").click(
 					function() {
-						window.location = $(this).parents("table").data("openurl") + $(this).data("id");
+						var baseurl = $(this).parents("table").data("editurl");
+						if (baseurl) window.location = baseurl + $(this).data("id");
 			})
 			$("tr[data-id]").find('a[href*="#remove"]').each(function() {
 				$(this).parent().css("text-align","center")

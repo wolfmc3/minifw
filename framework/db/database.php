@@ -210,7 +210,7 @@ namespace framework\db {
 			//var_dump($sth);
 			$res = $sth->execute($data);
 			//$sth->debugDumpParams();
-			if (!$res) $res = $sth->errorInfo();
+			if (!$res) app::Controller()->addMessage("Errore durante il salvataggio: ".$sth->errorInfo());
 			return $res;
 		}
 		

@@ -23,6 +23,7 @@ use framework\app;
 <div id="menu" >
 <?php echo $this->menu(); ?>
 </div>
+<?php echo app::Controller()->messages(); ?>
 <div id="contents">
 <?php echo $this->results; ?>
 </div>

@@ -1,3 +1,11 @@
-FOR SAMPLE DATABASE EXECUTE: sampledatabase.sql
+Edit sample_config.ini file in /config folder and rename config.ini
+
+For reference default config is located in /framework/config/default.ini 
+
+To use pdoauth security module install /sql/pdoauth.sql
+
+TO INSTALL SAMPLE DATABASE EXECUTE: sampledatabase.sql
 
 SOURCE: http://www.mysqltutorial.org/mysql-sample-database.aspx
+
+

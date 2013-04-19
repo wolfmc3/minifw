@@ -29,16 +29,20 @@ class login extends page {
 		$ret = app::Security()->login($username, $password,$store);
 		
 		if ($ret !== FALSE) {
+			app::Controller()->addMessage("Ciao, ".app::Security()->user()->name);
 			header("location: " . $_POST['returnurl']);
 		} else {
+			app::Controller()->addMessage("Nome utente o password errati!!");
 			header("location: " . $this->url(""));
 		}
 		exit();
 	}
 	function action_exit() {
-		session_destroy();
-		setcookie("AUTHID",NULL,time()-1000,app::root());
-		header("location: " . $this->url(""));
+		$this->type = $this::TYPE_REDIRECT;
+		app::Security()->logout();
+		app::Controller()->addMessage("Sei uscito dalla sessione");
+
+		return app::root();
 	}
 	
 }

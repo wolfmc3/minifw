@@ -2,6 +2,7 @@
 namespace framework;
 
 use framework\views\HTTP404;
+use framework\html\element;
 	/**
 	 * Controller
 	 *
@@ -69,11 +70,25 @@ class controller {
 	
 	//TODO: DA COMPLETARE
 	function addMessage($msg,$link1 = NULL,$link2 = NULL) {
-		if (isset($_SESSION["ctrl_messages"])) $_SESSION["ctrl_messages"] = []; 
-		$message = $msg;
+		$this->page->addJavascript("sysmsg.js");
+		$this->page->addJqueryUi();
+		
+		if (!isset($_SESSION["ctrl_messages"])) $_SESSION["ctrl_messages"] = []; 
+		$message = htmlspecialchars($msg);
 		if ($link1) $message .= " ".$link1;
 		if ($link2) $message .= " ".$link2;
 		$_SESSION["ctrl_messages"][] = $message;
+	}
+	
+	function messages() {
+		if (!isset($_SESSION["ctrl_messages"])) return;
+		$messages = $_SESSION["ctrl_messages"];
+		unset($_SESSION["ctrl_messages"]);
+		$msgcont = new element("div",["id"=>"controller_messages"]);
+		foreach ($messages as $line) {
+			$msgcont->add(new element("div",[],$line,TRUE));
+		} 
+		return $msgcont;
 	}
 	
 	/**
@@ -112,6 +127,10 @@ class controller {
 			} else {
 				$this->page = new HTTP404($this);
 			}
+		}
+		if (isset($_SESSION["ctrl_messages"])) {
+			$this->page->addJavascript("sysmsg.js");
+			$this->page->addJqueryUi();
 		}
 	}
 	

@@ -74,6 +74,11 @@ class security {
 		}
 	}
 	
+	function logout() {
+		unset($_SESSION["AUTHID"]);
+		setcookie("AUTHID", NULL, 0,app::root());
+	}
+	
 	function getUsersInfo() {
 		return $this->module->getUsersInfo();
 	}

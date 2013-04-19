@@ -24,8 +24,8 @@ class dotlist extends element {
 	 * 
 	 * @param string $ulclass classe css per l'elemento UL
 	 */
-	function __construct($ulclass = NULL) {
-		parent::__construct("ul");
+	function __construct($ulclass = NULL,$options = []) {
+		parent::__construct("ul",$options);
 		if ($ulclass) $this->addAttr("class", $ulclass);
 	}
 	

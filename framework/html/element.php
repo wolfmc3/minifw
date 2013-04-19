@@ -34,7 +34,8 @@ class element {
 		 * @param string[] $attr Attributi del tag (class, name, id) 
 		 * @param string|\framework\html\element $inner Contenuto del tag 
 		 */
-		function __construct($tag="", $attr = array(), $inner = NULL) {
+		function __construct($tag="", $attr = array(), $inner = NULL,$html = FALSE) {
+			$this->html = $html;
 			$this->tag = $tag;
 			if (!is_array($attr)) $attr = array();
 			$this->attr = $attr;
@@ -55,11 +56,11 @@ class element {
 					$this->add($sel);
 				}
 			} else {
-				if (is_string($el)&&!$this->html) {
-					$this->inner[] = htmlentities($el);					
-				} else {
+				if (is_a($el, "framework\\html\\element") || $this->html) {
 					$this->inner[] = $el;
 					return $el;
+				} else {
+					$this->inner[] = htmlentities($el);					
 				}
 			}
 			
@@ -128,7 +129,7 @@ class element {
 						$html .= $single;
 					}
 				} else {
-					if (is_object($this->inner)) {
+					if (is_a($this->inner, "framework\\html\\element") || $this->html) {
 						$html .= $this->inner;
 					} else {
 						$html .= htmlspecialchars($this->inner);

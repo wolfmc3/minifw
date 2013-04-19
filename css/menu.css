@@ -34,6 +34,44 @@
 	color: #FFFFFF;
 }
 
+.submenu {
+	position: fixed;
+	background-color: #121212;
+	color: #C1C1C1;
+	top: 32px;
+	min-width: 150px;
+	display: none;
+}
+
+.submenu ul {
+	margin: 0px;
+	padding: 0px;
+}
+
+.submenu ul li {
+	font-size: 80%;
+	list-style-type: none;
+	height: 20px;
+	/*line-height: 20px;*/
+}
+
+.submenu ul li a {
+	display: block;
+	text-decoration: none;
+	color: #C1C1C1;
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	vertical-align: middle;
+}
+
+.submenu ul li a:hover {
+	/*display: block;*/
+	color: #FFFFFF;
+}
+
+
 #contents {
 	margin-top: 45px;
 	
@@ -46,16 +84,17 @@
 	border-radius: 5px;
 	width: auto;
 	overflow: hidden;
-	height: 26px;
+	height: 22px;
 	top: 1px;
 	right: 1px;
 	text-align: center;
-	line-height: 26px;
+	line-height: 22px;
 	color: #C1C1C1;
 	padding: 1px;
 	padding-left: 21px;
 	padding-right: 5px;
-	border: 1px dotted #C1C1C1;
+	border: 3px ridge #C1C1C1;
+	white-space:nowrap;
 	background: url('../img/icons/User.png') 4px 50% no-repeat;
 }
 

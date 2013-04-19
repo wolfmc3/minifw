@@ -15,13 +15,12 @@ class logincontrol extends element {
 			$this->add(new element("span",[],app::Security()->user()->username.":".app::Security()->user()->group));
 			$this->add(new anchor(app::root()."login/exit", "Esci"));
 		} else {
-			$this->add(new element("span",[],app::Security()->user()->username));
 			$this->add(new anchor(app::root()."login", "Accedi"));
 		} 
 		if (app::Security()->user()->isok) {
-			$this->add(new icon("Lock"));
-		} else {
 			$this->add(new icon("LockOpen"));
+		} else {
+			$this->add(new icon("Lock"));
 		}
 		$this->add(new jsondata("notlogged", !app::Security()->user()->isok));
 		foreach (app::Security()->getPermission() as $key => $value) {

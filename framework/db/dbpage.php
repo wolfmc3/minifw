@@ -139,7 +139,7 @@ use framework\html\anchorbutton;
 			$ret = $db->read($this->table,$this->item*$this->defaultBlock,$this->defaultBlock,$where,$whereArgs);
 			$rows = $ret->rows;
 			$options = array(
-					"data-openurl" => app::root().$this->obj."/edit/",
+					"data-editurl" => app::root().$this->obj."/edit/",
 					"data-delurl" => app::root().$this->obj."/remove/",
 					"id" => $this->table,
 					"class" => "datatable"
@@ -148,6 +148,9 @@ use framework\html\anchorbutton;
 			$columns = $this->columns;
 			if ($this->deleteRecord) {
 				$columns = array_merge($columns,array(":DELETE:"=>["name"=>"Cancella","ontable"=>1]));
+			} else {
+				unset($options["data-delurl"]);
+				unset($options["data-editurl"]);
 			}
 			$table = new table($columns, $rows, $this->idkey,$options);
 			$container->add($table);
@@ -232,7 +235,10 @@ use framework\html\anchorbutton;
 		 *  
 		 */
 		function action_save() {
-			if (!$this->editRecord) return "";
+			if (!$this->editRecord) {
+				app::Controller()->addMessage("Non sei autorizzato a modificare il record");
+				return "";
+			}
 				
 			//print_r($_POST);
 			$data = array();
@@ -248,6 +254,7 @@ use framework\html\anchorbutton;
 			//print_r($data);
 			$db = new database($this->database);
 			$db->write($this->table, $data, $realcolumns,$this->item,$this->idkey);
+			app::Controller()->addMessage("Modifiche salvate",new anchor($this->url("edit/".$this->item), "Modifica di nuovo"));
 			header("location: ". app::root().$this->obj."/");
 			exit();
 		}
