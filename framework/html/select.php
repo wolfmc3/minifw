@@ -26,6 +26,7 @@ namespace framework\html;
  */
 class select extends element {
 	/**
+	 * Costruttore
 	 * 
 	 * @param string $name Corrisponde all'attributo name="$name" del tag select
 	 * @param string $data Array contenente la coppia chiave=>valore della select

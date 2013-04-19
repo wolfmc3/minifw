@@ -58,6 +58,9 @@ use framework\html\anchorbutton;
 		 * @var string[] Lista campi
 		 */
 		protected $fields;
+		/**
+		 * @var string Database oggetto di configurazione passato all'oggetto database per i parametri di collegamento 
+		 */
 		protected $database = "database";
 		/**
 		 * @var string Indica la chiave primaria della tabella (se le chiavi sono multiple separare con la virgola)
@@ -218,7 +221,9 @@ use framework\html\anchorbutton;
 			$row = $db->delete($this->table, $this->item,$this->idkey);
 			header("location: ". $_SERVER['HTTP_REFERER']);
 		}
-
+		/**
+		 * @see \framework\page::setPermissions()
+		 */
 		function setPermissions($read, $write, $list, $add) {
 			$this->addRecord = ($add==1);
 			$this->deleteRecord = ($write==1);

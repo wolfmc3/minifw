@@ -3,6 +3,26 @@ namespace framework\security\modules;
 use framework\security\securitymoduleinterface;
 use framework\app;
 use framework\security\user;
+/**
+ * 
+ * onlyadmin
+ *
+ * Sistema di autenticazione base dove l'unico utente ammesso è admin con permessi illimitati<br>
+ * La password (codificata MD5) è memorizzata nel file /framework/config/defaults.ini<br>
+ * Prima di utilizzare questo modulo inserire nel file di configurazione il nome utente e la password (codificata MD5)<br>
+ * Esempio:<br>
+ * <code>
+ * [onlyadmin]
+ * user=admin
+ * password=a1234567891a2345678912345x
+ * </code>
+ * sostiuire "a1234567891a2345678912345x" con la password codificata MD5<br>
+ * 
+ * @author Marco Camplese <info@wolfmc3.com>
+ * @package minifw/security
+ *
+ */
+
 class onlyadmin implements securitymoduleinterface {
 	private $user;
 	function getUser($username, $password) {

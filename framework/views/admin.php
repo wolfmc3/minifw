@@ -13,6 +13,19 @@ use framework\html\br;
 use framework\html\form\submit;
 use framework\html\anchor;
 use framework\html\html;
+/**
+ *
+ * admin
+ *
+ * Pagina di accesso alla gestione del sistema
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ * @package minifw/security
+ *
+ * @see \framework\
+ *
+ */
+
 class admin extends page {
 
 	function init() {

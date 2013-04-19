@@ -68,7 +68,17 @@ class controller {
 		return $uri;
 	}
 	
-	//TODO: DA COMPLETARE
+	/**
+	 * addMessage
+	 * 
+	 * Inserisce un messaggio nello stack dei messaggi per l'utente<br>
+	 * I messaggi sono inseriti nella variabile di sessione <code>$_SESSION["ctrl_messages"]</code><br>
+	 * I messaggi visualizzati dal metodo messages() sono rimossi automaticamente<br>
+	 * 
+	 * @param string $msg Messaggio sotto forma di testo (tag HTML saranno convertiti)
+	 * @param \framework\html\anchor $link1 optional Link 1 da visualizzare nel messaggio 
+	 * @param \framework\html\anchor $link2 optional Link 2 da visualizzare nel messaggio 
+	 */
 	function addMessage($msg,$link1 = NULL,$link2 = NULL) {
 		$this->page->addJavascript("sysmsg.js");
 		$this->page->addJqueryUi();
@@ -80,8 +90,18 @@ class controller {
 		$_SESSION["ctrl_messages"][] = $message;
 	}
 	
+	/**
+	 * Messages()
+	 * 
+	 * Utilizzato nel template HTML per reperire i messaggi destinati all'utente (conferme, notifiche, ecc)<br>
+	 * Genera un TAG DIV con id="controller_messages"<br>
+	 * $_SESSION["ctrl_messages"] viene azzerata automaticamente<br>
+	 * per aggiungere messaggi utilizzare il metodo <code>addMessage(...)</code>
+	 * 
+	 * @return string|\framework\html\element
+	 */
 	function messages() {
-		if (!isset($_SESSION["ctrl_messages"])) return;
+		if (!isset($_SESSION["ctrl_messages"])) return "";
 		$messages = $_SESSION["ctrl_messages"];
 		unset($_SESSION["ctrl_messages"]);
 		$msgcont = new element("div",["id"=>"controller_messages"]);

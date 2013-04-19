@@ -2,6 +2,16 @@
 namespace framework\security\modules;
 use framework\security\securitymoduleinterface;
 use framework\app;
+/**
+ * 
+ * noauth
+ *
+ * Sistema di autenticazione dove tutti gli utenti sono autenticati come admin con permessi illimitati 
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ * @package minifw/security
+ *
+ */
 class noauth implements securitymoduleinterface {
 	
 	function getUser($username, $password) {

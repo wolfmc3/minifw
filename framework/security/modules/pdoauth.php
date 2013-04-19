@@ -3,6 +3,29 @@ namespace framework\security\modules;
 use framework\security\securitymoduleinterface;
 use framework\app;
 use framework\db\database;
+/**
+ *
+ * pdoauth
+ *
+ * Sistema di autenticazione completo basato su db mysql<br>
+ * Prima di utilizzare questo modulo inserire i parametri di configurazione nel file di configurazione<br>
+ * Esempio:<br>
+ * <code>
+ * [security]
+ * module=noauth
+ * 
+ * [pdoauth:database]
+ * database=pdoauth
+ * </code>
+ * 
+ * per la lista completa dei parametri vedi il file /framework/config/defaults.ini
+ * 
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ * @package minifw/security
+ *
+ */
+
 class pdoauth implements securitymoduleinterface {
 	private $db = NULL;
 	function getUser($username, $password) {

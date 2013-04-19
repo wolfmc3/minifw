@@ -6,7 +6,23 @@ use framework\app;
 use framework\html\br;
 use framework\html\anchor;
 use framework\html\form\jsondata;
+/**
+ * 
+ * logincontrol
+ *
+ * Crea i rifermenti alla views e gestisce le richieste di dati 
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ * @package minifw/html
+ *
+ */
 class logincontrol extends element {
+	/**
+	 * Costruttore
+	 * 
+	 * Genera un blocco dinamico che contiene i dati utente e il link per il login/logout
+	 * 
+	 */
 	function __construct() {
 		app::Controller()->getPage()->addJqueryUi();
 		app::Controller()->getPage()->addJavascript("logincontrol.js");

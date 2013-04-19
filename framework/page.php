@@ -194,7 +194,19 @@ class page {
 		$this->addJavascript(app::conf()->jquery->core);
 		if (isset($_POST["resp_ajax"])) $this->type = self::TYPE_AJAX;
 	}
-	
+	/**
+	 * setPermissions()
+	 *
+	 * Utilizzato dal controller per impostare i permessi che l'utente ha sull'oggetto<br>
+	 * Autorizzato == 1<br>
+	 * Non autorizzato = 0<br>
+	 * Indifferente = NULL <br>
+	 * 
+	 * @param number $read Permesso di lettura dei dati
+	 * @param number $write Permesso di scrittura 
+	 * @param number $list Permesso di visualizzare l'oggetto
+	 * @param number $add Permesso di aggiungere dati
+	 */
 	function setPermissions($read, $write, $list, $add) {
 		/*$this->addRecord = ($add==1);
 		$this->deleteRecord = ($write==1);
@@ -242,15 +254,29 @@ class page {
 		}
 	}
 	
+	/**
+	 * addJqueryUi()
+	 * 
+	 * Aggiunge automaticamente i riferimenti css e javascript per utilizzare jquery con jqueryui<br>
+	 * Questo metodo chiama automaticamente addJquery()
+	 * 
+	 */
 	function addJqueryUi() {
 		$this->addJquery();
 		$this->addJavascript(app::conf()->jquery->ui);
 		$this->addCss(app::conf()->jquery->theme);
 	}
-	
+
+	/**
+	 * addJquery()
+	 *
+	 * Aggiunge automaticamente i riferimenti javascript per utilizzare jquery
+	 *
+	 */
 	function addJquery() {
 		$this->addJavascript(app::conf()->jquery->core);
 	}
+	
 	/**
 	 * Aggiunta foglio di stile al template 
 	 * 
@@ -267,7 +293,13 @@ class page {
 			$this->css[] = $css;
 		}
 	}
-
+	/**
+	 * Risolve l'url del file specificato
+	 * 
+	 * @param string $file file
+	 * @param string $basedir directory di base
+	 * @return string Url Completo
+	 */
 	private function resolveUrl($file, $basedir="/") {
 		$fullpath = "";
 		if (substr($file, 0,1) == "/") { //root app
@@ -363,11 +395,23 @@ class page {
 			return $this->menu ;
 		}
 	}
-
+	/**
+	 * setMenu()
+	 * 
+	 * Imposta il menu
+	 * 
+	 * @param string $menuModel
+	 */
 	function setMenu($menuModel) {
 		$this->menu = "".$menuModel;
 	}
-
+	
+	/**
+	 * action()
+	 * 
+	 * Richiama l'azione richesta in base al valore di $this->action o l'azione predefinita
+	 * 
+	 */
 	function action() {
 		if ($this->action == "") {
 			$this->results = $this->action_def();
@@ -379,6 +423,11 @@ class page {
 			}
 		}
 	}
+	
+	/**
+	 * Ritorna la classe della pagina
+	 */
+	
 	function name() {
 		return $this->obj;
 	}

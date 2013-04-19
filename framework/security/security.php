@@ -133,6 +133,7 @@ class security {
 /**
  * Securitymoduleinterface
  *
+ * @package minifw/security
  */
 interface securitymoduleinterface {
 	/**

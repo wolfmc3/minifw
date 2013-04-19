@@ -1,6 +1,19 @@
 <?php
 namespace framework\views;
 use framework\db\dbpage;
+/**
+ *
+ * admin_pdoauth_users
+ *
+ * Pagina per la gestione degli utenti per il modulo sicurezza pdoauth
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ * @package minifw/security
+ *
+ * @see \framework\security\modules\pdoauth
+ *
+ */
+
 class admin_pdoauth_users extends dbpage {
 //TABELLA
 protected $table = 'users';

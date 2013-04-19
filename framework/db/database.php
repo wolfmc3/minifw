@@ -17,9 +17,15 @@ namespace framework\db {
 		 * @var \PDO
 		 */
 		private static $db = [];
-		
+		/**
+		 * @var string Modulo di configurazione che contiene le impostazioni del database
+		 */
 		private $module;
-		
+		/**
+		 * Costruttore
+		 * 
+		 * @param string $module optional Modulo di configurazione che contiene le impostazioni del database
+		 */
 		function __construct($module = "database") {
 			$this->module = $module;
 		}
@@ -162,7 +168,13 @@ namespace framework\db {
 			$sth = $this::$db[$this->module]->prepare($sql);
 			return $sth->execute($id);
 		}
-
+		/**
+		 * execute()
+		 * 
+		 * @param string $sql Query SQL i valori devono essere inseriti come parametri nominati es: <code>`id` = :id</code>
+		 * @param string[] $args Array associativo contenete i dati per i parametri della query le chiavi devono iniziare con ":"
+		 * @return boolean TRUE se eseguita correttamente
+		 */
 		function execute($sql,$args) {
 		 	$this->init();
 		 	$sth = $this::$db[$this->module]->prepare($sql);

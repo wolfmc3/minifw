@@ -4,6 +4,19 @@ namespace framework\views;
 use framework\page;
 use framework\app;
 use framework\html\template;
+/**
+ *
+ * login
+ *
+ * Pagina di login
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ * @package minifw/security
+ *
+ * @see \framework\security\
+ *
+ */
+
 class login extends page {
 	protected $title = "Login";
 	protected $template = "html";

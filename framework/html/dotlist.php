@@ -23,6 +23,7 @@ class dotlist extends element {
 	 * Costruttore
 	 * 
 	 * @param string $ulclass classe css per l'elemento UL
+	 * @param string[] $options Attributi opzionali del tag
 	 */
 	function __construct($ulclass = NULL,$options = []) {
 		parent::__construct("ul",$options);
@@ -47,6 +48,9 @@ class dotlist extends element {
 	 * add
 	 * 
 	 * aggiunge un tag li per ogni elemento specificato
+	 * 
+	 * @param \framework\html\element $el Elemento da inserire
+	 * @param string[] $attr Attributi del tag LI da generare
 	 * 
 	 * @see \framework\html\element::add()
 	 */

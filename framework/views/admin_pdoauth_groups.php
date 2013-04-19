@@ -1,6 +1,19 @@
 <?php
 namespace framework\views;
 use framework\db\dbpage;
+
+/**
+ * 
+ * admin_pdoauth_groups
+ *
+ * Pagina per la gestione dei gruppi per il modulo sicurezza pdoauth 
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ * @package minifw/security
+ * 
+ * @see \framework\security\modules\pdoauth
+ *
+ */
 class admin_pdoauth_groups extends dbpage {
 //TABELLA
 protected $table = 'groups';

@@ -13,6 +13,19 @@ use framework\html\br;
 use framework\html\form\submit;
 use framework\html\anchor;
 use framework\html\anchorbutton;
+/**
+ *
+ * admin_pdoauth_permissions
+ *
+ * Pagina per la gestione dei permessi per il modulo sicurezza pdoauth
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ * @package minifw/security
+ *
+ * @see \framework\security\modules\pdoauth
+ *
+ */
+
 class admin_pdoauth_permissions extends page {
 	private $cols = [
 	"path"=>["name"=>"Percorso","ontable"=>1],

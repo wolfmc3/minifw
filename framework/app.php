@@ -107,6 +107,7 @@ final class app {
 	/**
 	 * Ritorna la lista dei nomi degli oggetti presenti nella cartella /views
 	 * 
+	 * @param boolean $systemviews Specifica se devono essere incluse le viste di sistema (/framework/views/)
 	 * @return string[]
 	 */
 	public static function getViews($systemviews = FALSE) {
