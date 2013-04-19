@@ -4,6 +4,9 @@
   <parser>
     <target>../minifw-docs</target>
   </parser>
+  <transformations>
+    <template name="responsive" />
+</transformations>
   <transformer>
     <target>../minifw-docs</target>
   </transformer>

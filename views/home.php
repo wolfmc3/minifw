@@ -5,7 +5,7 @@ use framework\html\element;
 use framework\html\img;
 use framework\app;
 use framework\html\anchorbutton;
-class index extends \framework\page {
+class home extends \framework\page {
 	function title() {
 		return "Home";
 	}
@@ -54,7 +54,7 @@ SAMPLE2;
 		$cont->add(new anchorbutton("orders", "Vedi Ordini",array("class"=>"button")));
 		$cont->add(new element("p",array(), file_get_contents(__DIR__."/../lib/home.txt")));
 		$code = new element("div",[],$samplecode2,TRUE);
-		$cont->add([new element("h3",[],"Il codice che ha generato questa pagina:"), $code]);
+		$cont->add([new element("h3",[],"Il codice necessario per questa pagina:"), $code]);
 		return $cont;
 	}
 

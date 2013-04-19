@@ -8,7 +8,7 @@ class mainmenu extends menu {
 	function __construct() {
 		parent::__construct("mainmenu");
 
-		$this->addMenuItem("index", "index", "Home",TRUE);
+		$this->addMenuItem("index", app::conf()->system->defaultobj, "Home",TRUE);
 		$this->addMenuItem("functions", "functions", "Test funzioni",TRUE);
 		$this->addMenuItem("customers", "customers", "Clienti",TRUE);
 		$this->addMenuItem("employees", "employees", "Impiegati",TRUE);

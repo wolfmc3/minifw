@@ -37,13 +37,17 @@ namespace framework\db {
 		function init() {
 			$module = $this->module;
 			if (!array_key_exists($module, $this::$db)) {
-				$config = app::conf()->$module;
-				if (!$config) throw new \Exception("Error: Not find config section $module");
-				$dsn = $config->driver.":";
-				$dsn .= "host=".$config->host.";";
-				$dsn .= "dbname=".$config->database;
-				$this::$db[$module] = new \PDO($dsn, $config->user, $config->password,array(\PDO::ERRMODE_EXCEPTION));
-				$this::$db[$module]->exec("set names utf8");
+				try {
+					$config = app::conf()->$module;
+					if (!$config) throw new \Exception("Error: Not find config section $module");
+					$dsn = $config->driver.":";
+					$dsn .= "host=".$config->host.";";
+					$dsn .= "dbname=".$config->database;
+					$this::$db[$module] = new \PDO($dsn, $config->user, $config->password,array(\PDO::ERRMODE_EXCEPTION));
+					$this::$db[$module]->exec("set names utf8");
+				} catch (\Exception $e) {
+					exit("Errore durante l'accesso al database $module: ".$e->getMessage());
+				}
 			}
 		}
 		

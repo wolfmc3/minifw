@@ -58,7 +58,7 @@ class controller {
 		//TODO: Controllo di sicurezza su oggetto e azione (html injection)
 		$querystring = trim($urlparts[1]);
 		$url = $url?explode("/", $url):[];
-		$def = ["index","def",""];
+		$def = [app::conf()->system->defaultobj,app::conf()->system->defaultaction,""];
 		for ($i = count($url); $i < count($def); $i++) {
 			$url[$i] = $def[$i];
 		}
