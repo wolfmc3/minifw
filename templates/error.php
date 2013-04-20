@@ -9,12 +9,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="it" lang="it" dir="ltr">
-<HEAD>
+<head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<TITLE><?php $this->Title() ?></TITLE>
+<title><?php $this->Title() ?></title>
 <?php $this->scripts(); ?>
-</HEAD>
-<BODY>
+</head>
+<body>
 <div id="view">
 <div id="menu" >
 <?php echo $this->menu(); ?>
@@ -24,6 +24,6 @@
   <h3>La pagina richiesta non &egrave; disponibile</h3>
 </div>
 </div>
-</BODY>
-</HTML>
+</body>
+</html>
 
