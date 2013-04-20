@@ -6,14 +6,14 @@ $(document).ready(function() {
 			if (child.children("ul").children("li").length == 0) {
 				child.remove();
 			} else {
-				$("body").append(child)
+				$("body").append(child);
 				child.hide();
 				var submenuname = "#submenu_" + $(this).children("a").attr("id");
 				$(submenuname).hover(function() {
 					$(this).stop(true, true).show();
 				}, function() {
 					$(this).hide();
-				})
+				});
 
 				var link = $(this).children("a");
 				link.hover(function() {
@@ -24,10 +24,10 @@ $(document).ready(function() {
 				}, function() {
 					var submenuname = "#submenu_" + $(this).attr("id");
 					$(submenuname).hide();
-				})
+				});
 				
 			}
 		}
 
 	});	
-})
+});

@@ -22,7 +22,7 @@ $(document).ready(function() {
 		$.each($(this).serializeArray(), function(i, field) {
 			var input = $("[name='"+field.name+"']");
 			if (regex = input.data("validate")) {
-				var pattern = new RegExp(regex);
+				//var pattern = new RegExp(regex);
 				var res = field.value.match(regex);
 				if (!res) { //NOT MATCH
 					correct = false;
@@ -31,7 +31,7 @@ $(document).ready(function() {
 			}
 		});
 		return correct;
-	})
+	});
 		$(".selectitem").click(function() {
 			var itemClicked = $(this);
 			$("<div></div>").attr("title", $(this).text()).load($(this).attr("href")+" table", function() {
@@ -63,7 +63,7 @@ $(document).ready(function() {
 					buttons : {
 						"Annulla" : function() {
 							$(this).dialog("close");
-							$(this).dialog('destroy').remove()
+							$(this).dialog('destroy').remove();
 						}
 					}
 				});

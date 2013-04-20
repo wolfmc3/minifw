@@ -49,12 +49,12 @@ $(document).ready(function() {
 					$("#selectviews").change(function() {
 						var dest = $("#target");
 						var view = $(this).val();
-						var url = document.location.href.replace("design", "viewinfo")
+						var url = document.location.href.replace("design", "viewinfo");
 						$.getJSON(url, function(data) {
 							var v = data[view];
 							$(dest).addOptions(v.fields);
 						});
-					})
+					});
 					$("#addtype").change();
 				},
 				buttons : {
@@ -67,11 +67,11 @@ $(document).ready(function() {
 						$("#cols").append($("<option></option>").attr("value", vals).attr("selected", "1").text(vals));
 						alert(vals);
 						$(this).dialog("close");
-						$(this).dialog('destroy').remove()
+						$(this).dialog('destroy').remove();
 					},
 					"Annulla" : function() {
 						$(this).dialog("close");
-						$(this).dialog('destroy').remove()
+						$(this).dialog('destroy').remove();
 					}
 				}
 			});
@@ -79,7 +79,7 @@ $(document).ready(function() {
 		return false;
 	});
 	$("#tocopy").select();
-})
+});
 var formtypes = {
 	"text" : "Testo",
 	"readonly" : "Visualizza",
@@ -99,18 +99,18 @@ jQuery.fn.addOptions = function(options) {
 		if (value == "§") value = "";
 		$(element).append($("<option>").attr("value", key).text(value));
 	});
-}
+};
 var FormSelectorClass = {
 	"/" : ".showtable",
 	"+" : ".showtable",
 	"?" : ".viewrecord",
 	"!" : ".viewrecord",
 	"=" : ".calcfield"
-}
+};
 var lastSelector = ".showtable, .viewrecord, .calcfield";
 
 function addTd(cont, el, text) {
-	td = $("<td>").append(el)
+	td = $("<td>").append(el);
 	if (text)
 		td.append(text);
 	$(cont).append(td);
@@ -124,7 +124,7 @@ function updateFields() {
 			// div.css({"border":"1px
 			// solid
 			// #252525","padding":"3px","margin":"3px"});
-			addTd(tr, "<b><small>" + value + "</small></b>")
+			addTd(tr, "<b><small>" + value + "</small></b>");
 
 			var input = $("<input>");
 			input.attr({
@@ -145,14 +145,14 @@ function updateFields() {
 				var input = $("<select>");
 				input.attr({
 					"name" : "settings[" + value + "][inputtype]"
-				})
+				});
 				input.addOptions(formtypes);
 				addTd(tr, input);
 
 				var input = $("<select>");
 				input.attr({
 					"name" : "settings[" + value + "][relation]"
-				})
+				});
 				input.addOptions(listviews);
 				addTd(tr, input);
 
@@ -209,5 +209,5 @@ function updateFields() {
 			}
 
 			$("#settings tbody").append(tr);
-		})
+		});
 }

@@ -13,12 +13,12 @@ use framework\app;
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="it" lang="it" dir="ltr">
 <!-- URI:<?php echo framework\app::Controller()->uri; ?> -->
-<HEAD>
+<head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<TITLE><?= $this->title() ?></TITLE>
+<title><?= $this->title() ?></title>
 <?php $this->scripts(); ?>
-</HEAD>
-<BODY>
+</head>
+<body>
 <div id="view">
 <div id="menu" >
 <?php echo $this->menu(); ?>
@@ -28,6 +28,6 @@ use framework\app;
 <?php echo $this->results; ?>
 </div>
 </div>
-</BODY>
-</HTML>
+</body>
+</html>
 

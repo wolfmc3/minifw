@@ -9,17 +9,17 @@ $(document).ready(
 					function() {
 						var baseurl = $(this).parents("table").data("editurl");
 						if (baseurl) window.location = baseurl + $(this).data("id");
-			})
+			});
 			$("tr[data-id]").find('a[href*="#remove"]').each(function() {
-				$(this).parent().css("text-align","center")
+				$(this).parent().css("text-align","center");
 				$(this).click(
 						function(ev) {
 							ev.stopPropagation();
 							ev.preventDefault();
 							if (confirm("Vuoi cancellare?")) window.location = $(this).parents("table").data("delurl") + $(this).parents("tr[data-id]").data("id");
-				})
+				});
 				
-			})
+			});
 			$(".inlinedetail").click(function(event){
 				var tr = $(this).closest("tr");
 				var next = tr.next("tr"); 
@@ -37,4 +37,4 @@ $(document).ready(
 				event.preventDefault();
 				event.stopPropagation();
 			});
-		})
+		});

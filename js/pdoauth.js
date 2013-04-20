@@ -9,7 +9,7 @@ $(document).ready(
 			$(".addperm").click(openEdit);
 			$("tr[data-id]").find('a[href*="#remove"]').each(
 					function() {
-						$(this).parent().css("text-align", "center")
+						$(this).parent().css("text-align", "center");
 						$(this).click(
 								function(ev) {
 									ev.stopPropagation();
@@ -20,9 +20,9 @@ $(document).ready(
 												+ $(this)
 														.parents("tr[data-id]")
 														.data("id");
-								})
+								});
 
-					})
+					});
 		});
 function openEdit() {
 	var url = ($(this).prop("tagName")=="A")?$(this).attr("href"):$(this).parents("table").data("openurl") + $(this).data("id");

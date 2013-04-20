@@ -7,7 +7,7 @@ $(window).load(function() {
 				$(this).animate({"width": logincontrolw+"px"},700,"easeOutBounce");
 			},
 			function(){ //HOVER OUT
-				$(this).delay(1000).animate({"width": "0px"},700,"easeOutBounce")
+				$(this).delay(1000).animate({"width": "0px"},700,"easeOutBounce");
 			}
 	);
 });
