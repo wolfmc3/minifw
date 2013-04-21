@@ -31,9 +31,10 @@ class menu extends element {
 	 * @param string $ulclass Attributo class della lista dei menu (ul)
 	 * @param string[] $options Attributi optionali del contenitore (div)
 	 */
-	function __construct($id,$ulclass = "menu", $options = []) {
+	function __construct($id,$ulclass = "nav", $options = []) {
 		app::Controller()->getPage()->addJavascript("menu.js");
 		$options["id"] = $id;
+		if (!isset($options["class"])) $options["class"] = "navbar-inner";
 		parent::__construct("div",$options);
 		$this->dotlist = new dotlist($ulclass);
 		$this->add($this->dotlist);
@@ -51,7 +52,7 @@ class menu extends element {
 	function addMenuItem($id, $obj, $text, $checkpermission = FALSE) {
 		if ($checkpermission && app::Security()->getPermission($obj)->L != 1) return FALSE;
 		if ($checkpermission && (substr($obj,0,7) != 'http://')) $obj = app::root().$obj;
-		$submenu = new menu("submenu_$id","",["class"=>"submenu"]);
+		$submenu = new menu("submenu_$id","",["class"=>"dropdown"]);
 		$this->menuitems[$id] = $submenu;
 		$this->dotlist->addItem([new anchor($obj, $text,["id"=>$id]),$submenu] );
 		//$this->append(new icon("Lock"));

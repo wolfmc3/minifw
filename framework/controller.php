@@ -104,7 +104,7 @@ class controller {
 		if (!isset($_SESSION["ctrl_messages"])) return "";
 		$messages = $_SESSION["ctrl_messages"];
 		unset($_SESSION["ctrl_messages"]);
-		$msgcont = new element("div",["id"=>"controller_messages"]);
+		$msgcont = new element("div",["id"=>"controller_messages","class"=>"alert alert-info","style"=>"position: fixed;top:25px;"]);
 		foreach ($messages as $line) {
 			$msgcont->add(new element("div",[],$line,TRUE));
 		} 

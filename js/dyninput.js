@@ -22,7 +22,6 @@ $(document).ready(function() {
 		$.each($(this).serializeArray(), function(i, field) {
 			var input = $("[name='"+field.name+"']");
 			if (regex = input.data("validate")) {
-				//var pattern = new RegExp(regex);
 				var res = field.value.match(regex);
 				if (!res) { //NOT MATCH
 					correct = false;

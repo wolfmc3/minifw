@@ -10,6 +10,7 @@ $(document).ready(
 						var baseurl = $(this).parents("table").data("editurl");
 						if (baseurl) window.location = baseurl + $(this).data("id");
 			});
+			
 			$("tr[data-id]").find('a[href*="#remove"]').each(function() {
 				$(this).parent().css("text-align","center");
 				$(this).click(
