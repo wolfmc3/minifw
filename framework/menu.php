@@ -4,6 +4,7 @@ use framework\html\element;
 use framework\html\anchor;
 use framework\html\dotlist;
 use framework\html\icon;
+use framework\html\responsive\div;
 /**
  * 
  * menu
@@ -14,16 +15,7 @@ use framework\html\icon;
  * @package minifw
  *
  */
-class menu extends element {
-	/**
-	 * @var \framework\menu[] Array dei submenu inseriti con addSubMenuItem
-	 */
-	private $menuitems = [];
-	/**
-	 * 
-	 * @var \framework\html\dotlist Oggetto che gerera la lista dei menu
-	 */
-	private $dotlist;
+class menu extends dotlist {
 	/**
 	 * Costruttore
 	 * 
@@ -33,11 +25,7 @@ class menu extends element {
 	 */
 	function __construct($id,$ulclass = "nav", $options = []) {
 		app::Controller()->getPage()->addJavascript("menu.js");
-		$options["id"] = $id;
-		if (!isset($options["class"])) $options["class"] = "navbar-inner";
-		parent::__construct("div",$options);
-		$this->dotlist = new dotlist($ulclass);
-		$this->add($this->dotlist);
+		parent::__construct($ulclass,$options);
 	}
 	
 	/**
@@ -51,11 +39,17 @@ class menu extends element {
 	 */
 	function addMenuItem($id, $obj, $text, $checkpermission = FALSE) {
 		if ($checkpermission && app::Security()->getPermission($obj)->L != 1) return FALSE;
-		if ($checkpermission && (substr($obj,0,7) != 'http://')) $obj = app::root().$obj;
-		$submenu = new menu("submenu_$id","",["class"=>"dropdown"]);
+		$link = $obj;
+		if ($checkpermission && (substr($obj,0,7) != 'http://')) $link = app::root().$obj;
+		$anc = new anchor($link, $text,["id"=>$id]);
+		$attr = [];
+		if ($checkpermission && $obj == app::Controller()->getPage()->name()) {
+			$attr["class"] = "active";
+		}
+		$this->addItem($anc,$attr);
+		/*$submenu = new menu("submenu_$id","",["class"=>"dropdown"]);
 		$this->menuitems[$id] = $submenu;
-		$this->dotlist->addItem([new anchor($obj, $text,["id"=>$id]),$submenu] );
-		//$this->append(new icon("Lock"));
+		//$this->append(new icon("Lock"));*/
 		return TRUE;
 	}
 	/**
@@ -70,10 +64,11 @@ class menu extends element {
 	 * @return boolean Ritorna TRUE se la voce $parent esiste e il menu è stato inserito
 	 */
 	function addSubMenuItem($parent, $id, $obj, $text) {
-		if (!array_key_exists($parent, $this->menuitems)) return false;
-		$submenu = $this->menuitems[$parent];
+		$emp = $this->findId($parent);
+		//echo "search:";print_r($emp);
+		if ($emp === NULL) return FALSE;
 		//var_dump($submenu);
-		$submenu->addMenuItem("submenu_{$parent}_{$id}", $obj, $text);
+		$emp->add(new div("bubu", "sub$parent"));
 		return true;
 	}
 } 

@@ -241,7 +241,7 @@ class page {
 	/**
 	 * Aggiunta javascript esterno
 	 *
-	 * <code>$this->addCss("/percorso/tuostile.js)</code>
+	 * <code>$this->addCss("/percorso/tuoscript.js)</code>
 	 *
 	 * @todo supporto javascript in base al percorso (http:// | /sdfhk/script)
 	 *
@@ -348,7 +348,7 @@ class page {
 			echo "<script src='$script'></script>".PHP_EOL;
 		}
 		foreach ($this->css as $script ) {
-			echo "<link rel='stylesheet' type='text/css' href='$script'>".PHP_EOL;
+			echo "<link rel='stylesheet' type='text/css' href='$script' media='screen'>".PHP_EOL;
 		}
 	}
 
