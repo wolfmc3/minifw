@@ -3,6 +3,8 @@ namespace framework\html\form;
 use framework\html\element;
 use framework\html\anchor;
 use framework\app;
+use framework\html\dotlist;
+use framework\html\responsive\div;
 /**
  * paging
  *
@@ -28,29 +30,40 @@ class paging extends element {
 	 */
 	function __construct($object,$action,$page,$pages,$block) {
 		parent::__construct("div");
-		$this->addAttr("class", "paging");
+		$this->addAttr("class", "fwpaging");
+
+		$row = $this->append(new div("container row-fluid alert-info", "",["style"=>"margin-top:5px;margin-bottom:5px;"]));
+		
+		$pagin = $row->append(new div("pagination pagination-mini offset1 span10","",["style"=>"margin:0px;"]));
 		$basepath = app::root();
-		$this->add("Pagine:");
+
+		$pagescont = $pagin->append(new dotlist("nav nav-pills span11"));
 		if ($pages == 0) $pages = 1;
+		$pagescont->addItem(new anchor("$basepath$object/$action/0/$block", new element("i",["class"=>"icon-fast-backward"],"")));
 		for ($i = 0;$i < $pages;$i++) {
-			if (!($i == 0 || ($i+3 > $page & $i-3 < $page) || $i == ($pages-1)  )) {
+			if (!($i+5 > $page && $i-5 < $page)) {
 				continue; 
 			}
 			if ($i == $page) {
-				$this->add(new element("span",null,$page+1));
+				$pagescont->addItem(new anchor("$basepath$object/$action/$i/$block", $i+1),["class"=>"active"]);
 			} else {
-				$this->add(new anchor("$basepath$object/$action/$i/$block", $i+1));
+				$pagescont->addItem(new anchor("$basepath$object/$action/$i/$block", $i+1));
 			}
 		}
+		$pages--; 
+		$pagescont->addItem(new anchor("$basepath$object/$action/$pages/$block", new element("i",["class"=>"icon-fast-forward"],"")));
+
+		
+		$divblock = new div("btn-group span1", "");
+		
+		$divblock->add(new anchor("#", [$block." elementi per pagina", new element("span",["class"=>"caret"])],["class"=>"btn btn-mini btn-primary dropdown-toggle","data-toggle"=>"dropdown"]));
+		$blockmenu = $divblock->append(new dotlist("dropdown-menu"));
 		$blocks = array(10=>"10",25=>"25",50=>"50",100=>"100",0=>"Tutti");
-		$this->add("Record per pagina:");
+		//$this->add("Record per pagina:");
 		foreach ($blocks as $key => $value) {
-			if ($key == $block) {
-				$this->add(new element("span",null,$value));
-			} else {
-				$this->add(new anchor("$basepath$object/$action/0/$key", $value));
-			}
+			$blockmenu->addItem(new anchor("$basepath$object/$action/0/$key",$value ));
 		}
+		$row->add($divblock);
 	}
 }
 

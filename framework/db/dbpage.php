@@ -155,11 +155,11 @@ use framework\html\anchorbutton;
 				unset($options["data-delurl"]);
 				unset($options["data-editurl"]);
 			}
+			$container->add(new paging($this->obj, "table", $ret->page(), $ret->pages(), $ret->block));
 			$table = new table($columns, $rows, $this->idkey,$options);
 			$container->add($table);
 				
 			$container->add(new paging($this->obj, "table", $ret->page(), $ret->pages(), $ret->block));
-			$container->add(new element("hr"));
 			if ($this->addRecord) $container->add(new anchorbutton(app::root().$this->obj."/add", array(new icon("Plus")," Nuovo"),array("class"=>"button")) );
 			return $container;
 		}

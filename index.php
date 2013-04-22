@@ -27,8 +27,8 @@ use menu\mainmenu;
 	
 app::init();
 $page = app::Controller()->getPage();
-$page->addCss(app::conf()->system->pagetheme);
-$page->addCss(app::conf()->system->menutheme);
+$page->addCss(app::conf()->system->maincss);
+$page->addJavascript(app::conf()->system->mainjs);
 $page->setMenu(new mainmenu("menu"));
 app::Controller()->render();
 
