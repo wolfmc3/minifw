@@ -14,6 +14,7 @@ use framework\html\form\submit;
 use framework\html\anchor;
 use framework\html\html;
 use framework\html\responsive\div;
+use framework\html\dotlist;
 /**
  *
  * admin
@@ -44,23 +45,24 @@ class admin extends page {
 		chdir("../../..");
 		$list = explode("/", str_replace(".php", "", implode("/", $list))); 
 		 $list = array_combine($list,$list);
-		$cont = new div("row", "");
-		$sec_cont = new element("div",["class"=>"span3 alert"]);
-		$sec_title = new element("h6",["class"=>"title"]);
+		$cont = new dotlist("thumbnails");
+		$sec_cont = new element("div",["class"=>"thumbnail"]);
+		$sec_title = new element("h5",["class"=>"title"]);
 		$sec_title->add("Moduli sicurezza: ");
 		$sec_title->add(new select("sec_modules",$list,app::conf()->security->module,["id"=>"sec_modules","data-info"=>$this->url("secinfo"), "style"=>"vertical-align: baseline;"]));
 		$sec_cont->add($sec_title);
 		$sec_cont->add(new element("p",["id"=>"secinfo"],"Scegli il modulo"));
-		$cont->add($sec_cont);
-		$tests_cont = new element("div",["class"=>"span3 alert"]);
-		$tests_title = new element("h6",["class"=>"title"]);
+		$tests_cont = new element("div",["class"=>"thumbnail"]);
+		$tests_title = new element("h5",["class"=>"title"]);
 		$tests_title->add("Test di sistema: ");
 		$tests_cont->add($tests_title);
 		$tests_div = $tests_cont->append(new element("p",["id"=>"secinfo"],""));
 		$tests_div->add(new anchor($this->url("permissiontest"),"Controllo permessi"));
 		$tests_div->addBR();
 		$tests_div->add(new anchor(app::root()."admin_config","Vedi configurazione"));
-		$cont->add($tests_cont);
+		
+		$cont->addItem($sec_cont);
+		$cont->addItem($tests_cont);
 		return $cont;
 	}
 	

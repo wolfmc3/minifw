@@ -27,7 +27,7 @@ namespace framework\html;
 			app::Controller()->getPage()->addJquery();
 			app::Controller()->getPage()->addJavascript("responsive-table.js");
 			parent::__construct("table",$options,array());
-			$this->addAttr("class", "rtable");
+			$this->addAttr("class", "rtable table table-striped table-hover");
 			$this->addAttr("style", "width: 100%;");
 				
 			$head = new element("tr",array(),array());

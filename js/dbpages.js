@@ -32,4 +32,10 @@ $(document).ready(
 				event.preventDefault();
 				event.stopPropagation();
 			});
+
+			$(".fwpaging").delay(1000).animate({"opacity":0.4},1200).hover(function () {
+				$(this).animate({'opacity':1}, 250);
+			}, function (){
+				$(this).animate({'opacity':0.4}, 350);
+			});
 		});

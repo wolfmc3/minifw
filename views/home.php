@@ -38,7 +38,7 @@ class index extends \framework\page {
 	}
 }
 SAMPLE;
-		app::Controller()->addMessage("Benvenuto!!");
+		app::Controller()->addMessage("Benvenuto!!",NULL,NULL,"Ciao");
 		$cont = new element("");
 		$cont->add(new img("minifwlogo.jpg"));
 		$cont->add(new element("h1",array(),"Ciao!!" ));		

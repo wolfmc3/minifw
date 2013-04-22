@@ -17,7 +17,7 @@ class admin_config extends page {
 	protected $title = "Configurazione";
 	protected $template = "html";
 	function action_def() {
-		return "<code>".str_replace("=", "=<b>", str_replace("\n", "</b>\n<br>", app::conf()))."</code>";
+		return "<pre>".str_replace("=", "=<b>", str_replace("\n", "</b>\n", app::conf()))."</pre>";
 	}
 	
 }

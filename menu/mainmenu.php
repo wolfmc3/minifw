@@ -14,7 +14,7 @@ class mainmenu extends element {
 		$this->append(new anchor(app::root().app::conf()->system->defaultobj, app::conf()->system->appname,["class"=>"brand"]));
 		$menu = new menu("mainmenu");
 		$menu->createMenu("menu1", "nav");
-		$menu->addMenuItem("menu1","functions", "functions", "Test funzioni",TRUE);
+		$menu->addMenuItem("menu1","functions", "functions", "Messaggi",TRUE);
 		$menu->addMenuItem("menu1","customers", "customers", "Clienti",TRUE);
 		$menu->addSubMenuItem("customers", "customers_add", app::root()."customers/add", "Nuovo cliente");
 		$menu->addMenuItem("menu1","employees", "employees", "Impiegati",TRUE);
@@ -23,7 +23,7 @@ class mainmenu extends element {
 		$menu->addMenuItem("menu1","admin", "admin", "Amministrazione",TRUE);
 		$menu->addMenuItem("menu1","docs", "http://www.wolfmc3.com/minifw-docs/", "Documentazione",TRUE);
 		$menu->addSubMenuItem("admin", "info", app::root()."admin/info", "Informazioni PHP");
-		$menu->addSubMenuItem("admin", "config", "admin_config", "Configurazione");
+		$menu->addSubMenuItem("admin", "config", app::root()."admin_config", "Configurazione");
 		$menu->append(new logincontrol());
 		$menudiv = new div("nav-collapse collapse","main_menu_cont");
 		$menudiv->append($menu);

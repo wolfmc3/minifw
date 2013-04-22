@@ -23,7 +23,7 @@ use framework\app;
 <link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
 </head>
 <body>
-	<div id="menu" class="navbar navbar-static-top ">
+	<div id="menu" class="navbar navbar-static-top navbar-inverse">
 		<div class='navbar-inner' id='navbar-inner'>
 			<div class="container">
 
