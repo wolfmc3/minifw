@@ -14,7 +14,7 @@ namespace framework\html;
 	 * @see element
 	 *
 	 */
-	class anchorbutton extends anchor {
+	class anchorbutton extends element {
 	/**
 	 * Costruttore 
 	 *  
@@ -23,12 +23,8 @@ namespace framework\html;
 	 * @param string[] $options
 	 */
 		function __construct($url, $text, $options = array()) {
-			app::Controller()->getPage()->addJavascript(app::conf()->jquery->core);
-			app::Controller()->getPage()->addJavascript(app::conf()->jquery->ui);
-			app::Controller()->getPage()->addCss(app::conf()->jquery->theme);
-			app::Controller()->getPage()->addJavascript("button.js");
-			parent::__construct($url, $text, $options);
-			$this->addAttr("class","anchorbutton");
+			parent::__construct("div",["class"=>"btn-group"]);
+			$this->add(new anchor($url, $text,["class"=>"btn"]));
 		}
 	}	
 

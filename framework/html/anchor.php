@@ -23,7 +23,7 @@ namespace framework\html;
 		function __construct($url, $text, $options = array()) {
 			$this->tag = "a";
 			$this->attr = array_merge(array("href" => $url),$options);
-			$this->inner = $text;
+			$this->add($text);
 		}
 	}	
 

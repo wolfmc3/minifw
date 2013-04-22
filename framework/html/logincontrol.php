@@ -6,6 +6,8 @@ use framework\app;
 use framework\html\br;
 use framework\html\anchor;
 use framework\html\form\jsondata;
+use framework\menu;
+use framework\html\responsive\div;
 /**
  * 
  * logincontrol
@@ -16,7 +18,7 @@ use framework\html\form\jsondata;
  * @package minifw/html
  *
  */
-class logincontrol extends element {
+class logincontrol extends template {
 	/**
 	 * Costruttore
 	 * 
@@ -26,21 +28,26 @@ class logincontrol extends element {
 	function __construct() {
 		app::Controller()->getPage()->addJqueryUi();
 		app::Controller()->getPage()->addJavascript("logincontrol.js");
-		parent::__construct("div",["id"=>"logincontrol"]);
+		$data = [];
+		$dropdown = new menu("dropdown_login","dropdown-menu");
+		$dropdown->createMenu("logincontrol_menu", "dropdown-menu");
 		if (app::Security()->user()->isok) {
-			$this->add(new element("span",[],app::Security()->user()->username.":".app::Security()->user()->group));
-			$this->add(new anchor(app::root()."login/exit", "Esci"));
+			$data["user"] = app::Security()->user()->username.":".app::Security()->user()->group;
+			$dropdown->addMenuItem("logincontrol_menu","drp_login", app::root()."login/exit", "Esci");
 		} else {
-			$this->add(new anchor(app::root()."login", "Accedi"));
+			$dropdown->addMenuItem("logincontrol_menu","drp_login", app::root()."login", "Accedi");
 		} 
 		if (app::Security()->user()->isok) {
-			$this->add(new icon("LockOpen"));
+			$data["lock"] = "LockOpen";
 		} else {
-			$this->add(new icon("Lock"));
+			$data["lock"] = "LockOpen";
 		}
-		$this->add(new jsondata("notlogged", !app::Security()->user()->isok));
-		foreach (app::Security()->getPermission() as $key => $value) {
+		$data["ulmenu"] = $dropdown;
+		//$this->add(new jsondata("notlogged", !app::Security()->user()->isok));
+		/*foreach (app::Security()->getPermission() as $key => $value) {
 			if ($value)	$this->add($key);
-		}
+		}*/
+		parent::__construct("logincontrol", $data);
+		
 	}
 }

@@ -24,9 +24,12 @@ namespace framework\html;
 		 * @param string[] $options attributi del tag table
 		 */
 		function __construct($cols,$rows,$useidkey = FALSE,$options = array()) {
+			app::Controller()->getPage()->addJquery();
+			app::Controller()->getPage()->addJavascript("responsive-table.js");
 			parent::__construct("table",$options,array());
+			$this->addAttr("class", "rtable table table-striped table-hover");
 			$this->addAttr("style", "width: 100%;");
-
+				
 			$head = new element("tr",array(),array());
 
 			foreach ($cols as $colname => $setting) {
@@ -40,7 +43,8 @@ namespace framework\html;
 				} 
 					
 			}
-			$this->add($head);
+			$this->add( new element("thead",[],$head) );
+			$tbody = new element("tbody");
 			foreach ($rows as $row) {
 				
 				$tr = new element("tr");
@@ -103,8 +107,9 @@ namespace framework\html;
 					}
 
 				}
-				$this->add($tr);
+				$tbody->add($tr);
 			}
+			$this->add($tbody);
 		}
 	}	
 

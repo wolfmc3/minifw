@@ -1,9 +1,11 @@
 <?php
+use framework\html\responsive\div;
 namespace framework;
-
-use framework\views\HTTP404;
 use framework\html\element;
-	/**
+use framework\html\responsive\div;
+use framework\views\HTTP404;
+use framework\html\img;
+/**
 	 * Controller
 	 *
 	 * Crea i rifermenti alla views e gestisce le richieste di dati 
@@ -79,14 +81,21 @@ class controller {
 	 * @param \framework\html\anchor $link1 optional Link 1 da visualizzare nel messaggio 
 	 * @param \framework\html\anchor $link2 optional Link 2 da visualizzare nel messaggio 
 	 */
-	function addMessage($msg,$link1 = NULL,$link2 = NULL) {
+	function addMessage($msg,$link1 = NULL,$link2 = NULL,$title=NULL) {
 		$this->page->addJavascript("sysmsg.js");
 		$this->page->addJqueryUi();
 		
 		if (!isset($_SESSION["ctrl_messages"])) $_SESSION["ctrl_messages"] = []; 
 		$message = htmlspecialchars($msg);
-		if ($link1) $message .= " ".$link1;
-		if ($link2) $message .= " ".$link2;
+		if ($link1){
+			$link1->addAttr("class","btn btn-mini");
+			$message .= " ".$link1;
+		}
+		if ($link2) {
+			$link2->addAttr("class","btn btn-mini");
+			$message .= " ".$link2;
+		}
+		if ($title) $message = (new element("strong",[],$title))." ".$message;
 		$_SESSION["ctrl_messages"][] = $message;
 	}
 	
@@ -104,9 +113,12 @@ class controller {
 		if (!isset($_SESSION["ctrl_messages"])) return "";
 		$messages = $_SESSION["ctrl_messages"];
 		unset($_SESSION["ctrl_messages"]);
-		$msgcont = new element("div",["id"=>"controller_messages"]);
+		$msgcont = new element("div",["id"=>"controller_messages","style"=>"background-color: rgba(125,125,125,0.1); border-radius: 10px;display:block;position:absolute;text-align:right;margin-right:15px;"]);
+		$div = new div("icon-star", "",["style"=>"height: 12px;"]);
+		$div->add(" ");
+		$msgcont->add($div);
 		foreach ($messages as $line) {
-			$msgcont->add(new element("div",[],$line,TRUE));
+			$msgcont->add(new element("div",["class"=>"alert alert-info"],$line,TRUE));
 		} 
 		return $msgcont;
 	}

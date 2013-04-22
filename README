@@ -4,7 +4,7 @@ For reference default config is located in /framework/config/default.ini
 
 To use pdoauth security module install /sql/pdoauth.sql
 
-TO INSTALL SAMPLE DATABASE EXECUTE: sampledatabase.sql
+TO INSTALL SAMPLE DATABASE EXECUTE: /sql/sampledatabase.sql
 
 SOURCE: http://www.mysqltutorial.org/mysql-sample-database.aspx
 
