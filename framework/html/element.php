@@ -79,7 +79,7 @@ class element {
 	 */
 	function html($html) {
 		$this->inner = array();
-		$this->add($html);
+		if ($html) $this->add($html);
 	}
 	/**
 	 * append
@@ -108,7 +108,28 @@ class element {
 			$this->attr[$key] = $value;
 		}
 	}
+	
+	function getContents() {
+		return $this->inner;
+	}
+	
 
+	function &findTag($tag) {
+		if ($this->tag == $tag) {
+			return $this;
+		}
+		$inner = NULL;
+		if (is_array($this->inner)) {
+			foreach ($this->inner as $element) {
+				if (is_a($element, "framework\\html\\element") && ($inner = &$element->findTag($tag)) !== NULL){
+					break;
+				}
+			}
+		}
+		return $inner;
+			
+	}
+	
 	function &findId($id) {
 		if (array_key_exists("id", $this->attr ) && $this->attr["id"] == $id) {
 			return $this;
@@ -133,16 +154,17 @@ class element {
 	 */
 	function __toString() {
 		$html = "";
-
-		if ($this->tag) $html = "<".$this->tag;
+		$fo = (is_array($this->inner) && count($this->inner) > 1)?PHP_EOL:"";
+		
+		if ($this->tag) $html .= "$fo<".$this->tag;
 		foreach ($this->attr as $key => $value) {
 			$html .= " ".$key."='".htmlspecialchars($value)."' ";
 		}
 		if (!is_null($this->inner)) {
-			if ($this->tag) $html .= ">\n";
+			if ($this->tag) $html .= ">$fo";
 			if (is_array($this->inner)) {
 				foreach ($this->inner as $single) {
-					$html .= $single;
+					$html .= $single.$fo;
 				}
 			} else {
 				if (is_a($this->inner, "framework\\html\\element") || $this->html) {
@@ -151,10 +173,15 @@ class element {
 					$html .= htmlspecialchars($this->inner);
 				}
 			}
-			if ($this->tag) $html .= "</".$this->tag.">\n";
+			if ($this->tag) {
+				$html .= "</".$this->tag.">";
+				if (isset($this->attr['id']) && is_array($this->inner) && count($this->inner) > 1) $html .= "<!-- ".$this->attr['id']." -->".PHP_EOL;
+			}
 
 		} else {
-			if ($html != '') $html .= "/>";
+			if ($html != '') {
+				$html .= "/>$fo";
+			}
 		}
 			
 		return $html;

@@ -30,11 +30,12 @@ class logincontrol extends template {
 		app::Controller()->getPage()->addJavascript("logincontrol.js");
 		$data = [];
 		$dropdown = new menu("dropdown_login","dropdown-menu");
+		$dropdown->createMenu("logincontrol_menu", "dropdown-menu");
 		if (app::Security()->user()->isok) {
 			$data["user"] = app::Security()->user()->username.":".app::Security()->user()->group;
-			$dropdown->addMenuItem("drp_login", app::root()."login/exit", "Esci");
+			$dropdown->addMenuItem("logincontrol_menu","drp_login", app::root()."login/exit", "Esci");
 		} else {
-			$dropdown->addMenuItem("drp_login", app::root()."login", "Accedi");
+			$dropdown->addMenuItem("logincontrol_menu","drp_login", app::root()."login", "Accedi");
 		} 
 		if (app::Security()->user()->isok) {
 			$data["lock"] = "LockOpen";

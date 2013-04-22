@@ -15,7 +15,7 @@ use framework\html\responsive\div;
  * @package minifw
  *
  */
-class menu extends dotlist {
+class menu extends element {
 	/**
 	 * Costruttore
 	 * 
@@ -23,11 +23,16 @@ class menu extends dotlist {
 	 * @param string $ulclass Attributo class della lista dei menu (ul)
 	 * @param string[] $options Attributi optionali del contenitore (div)
 	 */
-	function __construct($id,$ulclass = "nav", $options = []) {
+	function __construct() {
 		app::Controller()->getPage()->addJavascript("menu.js");
-		parent::__construct($ulclass,$options);
+		parent::__construct("");
 	}
 	
+	function &createMenu($id, $class) {
+		$newmenu = new dotlist($class,["id"=>$id]);
+		$this->add($newmenu);
+		return $newmenu;
+	}
 	/**
 	 * addMenuItem()
 	 * 
@@ -37,16 +42,18 @@ class menu extends dotlist {
 	 * @param string $checkpermission se TRUE verifica e decide se visulizzare il link, tramite l'oggetto security
 	 * @return boolean Ritorna TRUE se la voce è stata inserita, FALSE se i permessi dell'utente non permettono di vilualizzare l'oggetto
 	 */
-	function addMenuItem($id, $obj, $text, $checkpermission = FALSE) {
+	function addMenuItem($menu,$id, $obj, $text, $checkpermission = FALSE) {
+		$menu = $this->findId($menu);
+		if (!$menu) return;
 		if ($checkpermission && app::Security()->getPermission($obj)->L != 1) return FALSE;
 		$link = $obj;
 		if ($checkpermission && (substr($obj,0,7) != 'http://')) $link = app::root().$obj;
-		$anc = new anchor($link, $text,["id"=>$id]);
-		$attr = [];
+		$anc = new anchor($link, $text,[]);
+		$attr = ["id"=>$id];
 		if ($checkpermission && $obj == app::Controller()->getPage()->name()) {
 			$attr["class"] = "active";
 		}
-		$this->addItem($anc,$attr);
+		$menu->addItem($anc,$attr);
 		/*$submenu = new menu("submenu_$id","",["class"=>"dropdown"]);
 		$this->menuitems[$id] = $submenu;
 		//$this->append(new icon("Lock"));*/
@@ -68,7 +75,22 @@ class menu extends dotlist {
 		//echo "search:";print_r($emp);
 		if ($emp === NULL) return FALSE;
 		//var_dump($submenu);
-		$emp->add(new div("bubu", "sub$parent"));
+		$submenu = $emp->findId("menu_items_".$parent);
+		if (!$submenu) {
+			$link = $emp->findTag("a");
+			$emp->html(NULL);
+			$openlink = new anchor("#",$link->getContents(),["class"=>"dropdown-toggle","data-toggle"=>"dropdown"]);
+			$openlink->add(new element("b",["class"=>"caret"],""));
+			$emp->append($openlink);
+			$emp->addAttr("class", "dropdown");
+			$link->html("Apri");
+			$contsubmenu = new menu();
+			$submenu = $contsubmenu->createMenu("menu_items_".$parent, "dropdown-menu");
+			$emp->add($contsubmenu);
+			$submenu->addItem($link);
+			$submenu->addItem("",["class"=>"divider"]);
+		}
+		$submenu->addItem(new anchor($obj,$text));
 		return true;
 	}
 } 

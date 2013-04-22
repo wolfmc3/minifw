@@ -33,9 +33,7 @@ use framework\app;
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</a>
-				<div class="nav-collapse collapse">
 					<?php echo $this->menu(); ?>
-				</div>
 			</div>
 		</div>
 	</div>
