@@ -6,10 +6,8 @@ use framework\html\img;
 use framework\app;
 use framework\html\anchorbutton;
 class home extends \framework\page {
-	function title() {
-		return "Home";
-	}
-	
+	protected $title = "Home"; 
+		
 	function action_def() {
 $samplecode = <<<'SAMPLE'
 <?php 

@@ -28,7 +28,5 @@ protected $columns = array(
 protected $DescriptionKeys = 'productLine';
 				 	
 //TITOLO VISUALIZZATO NEL BROWSER
-function title() {
-	return 'Linee prodotti';
-}
+protected $title = "Linee prodotti";
 }

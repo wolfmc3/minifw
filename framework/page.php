@@ -224,7 +224,7 @@ class page {
 	 * @return $this->title
 	 */
 	function title() {
-		return $this->title;
+		return $this->title." - ".app::conf()->system->appname;
 	}
 
 	/**

@@ -30,7 +30,5 @@ protected $columns = array(
 protected $DescriptionKeys = 'checkNumber';
 				 	
 //TITOLO VISUALIZZATO NEL BROWSER
-function title() {
-	return 'payments';
-}
+protected $title = "Pagamenti";
 }

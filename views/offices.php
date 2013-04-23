@@ -42,7 +42,5 @@ protected $columns = array(
 protected $DescriptionKeys = 'officeCode,city';
 				 	
 //TITOLO VISUALIZZATO NEL BROWSER
-function title() {
-	return 'Sedi';
-}
+protected $title = "Sedi";
 }

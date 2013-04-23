@@ -57,7 +57,5 @@ protected $columns = array(
 protected $DescriptionKeys = 'customerName';
 				 	
 //TITOLO VISUALIZZATO NEL BROWSER
-function title() {
-	return 'Clienti';
-}
+protected $title = "Clienti";
 }

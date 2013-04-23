@@ -16,6 +16,7 @@ use framework\page;
 class admin_config extends page {
 	protected $title = "Configurazione";
 	protected $template = "html";
+	protected $title = "Configurazione";
 	function action_def() {
 		return "<pre>".str_replace("=", "=<b>", str_replace("\n", "</b>\n", app::conf()))."</pre>";
 	}

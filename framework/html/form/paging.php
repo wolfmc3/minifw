@@ -30,6 +30,7 @@ class paging extends element {
 	 */
 	function __construct($object,$action,$page,$pages,$block) {
 		parent::__construct("div");
+		if ($pages < 2 && $block != 0) return;
 		$this->addAttr("class", "fwpaging");
 
 		$row = $this->append(new div("container row-fluid alert-info", "",["style"=>"margin-top:5px;margin-bottom:5px;"]));
