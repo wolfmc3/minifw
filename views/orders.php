@@ -42,7 +42,5 @@ protected $columns = array(
 protected $DescriptionKeys = 'orderNumber,orderDate';
 				 	
 //TITOLO VISUALIZZATO NEL BROWSER
-function title() {
-	return 'Ordini';
-}
+protected $title = "Ordini";
 }

@@ -1,48 +1,47 @@
 <?php
-use framework\html\responsive\div;
 namespace framework;
 use framework\html\element;
 use framework\html\responsive\div;
 use framework\views\HTTP404;
 use framework\html\img;
 /**
-	 * Controller
-	 *
-	 * Crea i rifermenti alla views e gestisce le richieste di dati 
-	 *
-	 * @author Marco Camplese <info@wolfmc3.com>
-	 * @package minifw
-	 *
-	 * 
-	 */
+ * Controller
+ *
+ * Crea i rifermenti alla views e gestisce le richieste di dati
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ * @package minifw
+ *
+ *
+ */
 class controller {
 	/**
 	 * @var \framework\page $page riferimento all'view richiesta dall'utente
 	 */
 	private $page;
 	/**
-	 * @var string $uri Url richiesto dall'utente passato per resolveUrl Formato:/[view]/[action]/[item][/[nome,valore]...] 
+	 * @var string $uri Url richiesto dall'utente passato per resolveUrl Formato:/[view]/[action]/[item][/[nome,valore]...]
 	 */
 	public $uri = "";
 	/**
-	 * 
+	 *
 	 * @var array[] $parseduri URI in formato array
 	 */
 	public $parseduri = array();
 	/**
 	 * @var array[] $viewscalled Cache oggetti Views riutilizzabili già instanziati dal controller
-	 */
+	*/
 	private $viewscalled = array();
-	
+
 	/**
 	 * resolveUrl
-	 * 
+	 *
 	 * Rettifica e uniforma un url trasformandolo in uri valido
-	 * 
-	 * 
+	 *
+	 *
 	 * @param string $req
 	 * @return string
-	 */
+	*/
 	static function resolveUrl($req) {
 		$req = str_replace(app::root(), "", $req);
 		$req = str_replace("//", "/", $req);
@@ -69,23 +68,23 @@ class controller {
 		$uri = implode("/", array_merge($url,$querystring,$uriqs));
 		return $uri;
 	}
-	
+
 	/**
 	 * addMessage
-	 * 
+	 *
 	 * Inserisce un messaggio nello stack dei messaggi per l'utente<br>
 	 * I messaggi sono inseriti nella variabile di sessione <code>$_SESSION["ctrl_messages"]</code><br>
 	 * I messaggi visualizzati dal metodo messages() sono rimossi automaticamente<br>
-	 * 
+	 *
 	 * @param string $msg Messaggio sotto forma di testo (tag HTML saranno convertiti)
-	 * @param \framework\html\anchor $link1 optional Link 1 da visualizzare nel messaggio 
-	 * @param \framework\html\anchor $link2 optional Link 2 da visualizzare nel messaggio 
+	 * @param \framework\html\anchor $link1 optional Link 1 da visualizzare nel messaggio
+	 * @param \framework\html\anchor $link2 optional Link 2 da visualizzare nel messaggio
 	 */
 	function addMessage($msg,$link1 = NULL,$link2 = NULL,$title=NULL) {
 		$this->page->addJavascript("sysmsg.js");
 		$this->page->addJqueryUi();
-		
-		if (!isset($_SESSION["ctrl_messages"])) $_SESSION["ctrl_messages"] = []; 
+
+		if (!isset($_SESSION["ctrl_messages"])) $_SESSION["ctrl_messages"] = [];
 		$message = htmlspecialchars($msg);
 		if ($link1){
 			$link1->addAttr("class","btn btn-mini");
@@ -98,15 +97,15 @@ class controller {
 		if ($title) $message = (new element("strong",[],$title))." ".$message;
 		$_SESSION["ctrl_messages"][] = $message;
 	}
-	
+
 	/**
 	 * Messages()
-	 * 
+	 *
 	 * Utilizzato nel template HTML per reperire i messaggi destinati all'utente (conferme, notifiche, ecc)<br>
 	 * Genera un TAG DIV con id="controller_messages"<br>
 	 * $_SESSION["ctrl_messages"] viene azzerata automaticamente<br>
 	 * per aggiungere messaggi utilizzare il metodo <code>addMessage(...)</code>
-	 * 
+	 *
 	 * @return string|\framework\html\element
 	 */
 	function messages() {
@@ -119,16 +118,16 @@ class controller {
 		$msgcont->add($div);
 		foreach ($messages as $line) {
 			$msgcont->add(new element("div",["class"=>"alert alert-info"],$line,TRUE));
-		} 
+		}
 		return $msgcont;
 	}
-	
+
 	/**
 	 * Costruttore
-	 * 
+	 *
 	 * Instanziato dalla classe application::init()
 	 * Inizializza la classe page
-	 * 
+	 *
 	 */
 	function __construct() {
 		$uri = self::resolveUrl($_SERVER['REQUEST_URI']);
@@ -165,18 +164,18 @@ class controller {
 			$this->page->addJqueryUi();
 		}
 	}
-	
+
 	/**
 	 * [controller]->[view]
-	 * 
+	 *
 	 * Cerca e inizializza la classe view richiesta
 	 * Se la classe è già stata richiesta verrà ripresa dalla cache
 	 * Utilizzata da altri oggetti view (di solito quello della pagina) per recuperare dati da altre view
-	 * 
+	 *
 	 * @param string $obj Nome classe view
 	 * @return \framework\page
 	 */
-	
+
 	function __get($obj) {
 		$view = "\\views\\$obj";
 		if (array_key_exists($obj, $this->viewscalled)) {
@@ -184,44 +183,41 @@ class controller {
 			return $this->viewscalled[$obj];
 		} else {
 			//echo "__GET:".$view;
-			return  $this->viewscalled[$obj] = new $view(); 
+			return  $this->viewscalled[$obj] = new $view();
 		}
 	}
-	
+
 	/**
 	 * Classe page
-	 * 
+	 *
 	 * Ritorna la classe instanziata come page nel controller
-	 * 
+	 *
 	 * @return \framework\page
 	 */
 	function getPage() {
 		return $this->page;
 	}
-	
+
 	/**
 	 * Url base
-	 * 
-	 * Ritorna l'indirizzo base (senza host, protocollo e view) 
-	 * 
+	 *
+	 * Ritorna l'indirizzo base (senza host, protocollo e view)
+	 *
 	 * @return string Root dell'applicazione di solito "/" se installato in sottodirectory ritorna /[nomedir]/
 	 */
 	function getAppRoot() {
 		return $this->approot;
 	}
-	
+
 	/**
 	 * Richiama il rendering della pagina
-	 * 
+	 *
 	 * Avvia il rendering della pagina<br>Utilizzato da /index.php (Front Controller)
-	 * 
+	 *
 	 * @see \framework\page
 	 */
-	
+
 	function render() {
 		$this->page->render();
 	}
 }
-
-
-

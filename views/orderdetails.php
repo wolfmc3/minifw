@@ -38,7 +38,5 @@ protected $columns = array(
 protected $DescriptionKeys = 'orderNumber,productCode';
 				 	
 //TITOLO VISUALIZZATO NEL BROWSER
-function title() {
-	return 'Dettagli ordine';
-}
+protected $title = "Dettagli ordini";
 }

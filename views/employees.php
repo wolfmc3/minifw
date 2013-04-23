@@ -40,7 +40,5 @@ protected $columns = array(
 protected $DescriptionKeys = 'lastName,firstName,jobTitle';
 				 	
 //TITOLO VISUALIZZATO NEL BROWSER
-function title() {
-	return 'Dipendenti';
-}
+protected $title = "Dipendenti";
 }

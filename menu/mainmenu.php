@@ -15,6 +15,7 @@ class mainmenu extends element {
 		$menu = new menu("mainmenu");
 		$menu->createMenu("menu1", "nav");
 		$menu->addMenuItem("menu1","functions", "functions", "Messaggi",TRUE);
+		$menu->addMenuItem("menu1","images", "images", "Immagini",TRUE);
 		$menu->addMenuItem("menu1","customers", "customers", "Clienti",TRUE);
 		$menu->addSubMenuItem("customers", "customers_add", app::root()."customers/add", "Nuovo cliente");
 		$menu->addMenuItem("menu1","employees", "employees", "Impiegati",TRUE);
