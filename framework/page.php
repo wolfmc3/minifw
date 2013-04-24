@@ -363,19 +363,19 @@ class page {
 	 */
 	function render() {
 		$this->action();
-		header('Cache-Control: no-cache, must-revalidate');
-		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 		switch ($this->type) {
 			case self::TYPE_HTML:
 				header('Content-type: text/html');
 				require __DIR__."/../templates/".$this->template.".php";
 				break;
 			case self::TYPE_AJAX:
+				header('Cache-Control: no-cache, must-revalidate');
+				header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 				header('Content-type: text/html');
 				echo $this->results;
 				break;
 			case self::TYPE_CUSTOM:
-				$this->action();
+				//$this->action();
 				break;
 			case self::TYPE_REDIRECT:
 				$url = $this->results;
@@ -383,6 +383,8 @@ class page {
 				if ($url) header("location: $url");
 				break;
 			case self::TYPE_JSON:
+				header('Cache-Control: no-cache, must-revalidate');
+				header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 				header('Content-type: application/json');
 				echo json_encode($this->results);
 				break;
@@ -426,6 +428,8 @@ class page {
 		} else {
 			if (method_exists($this, "action_".$this->action)) {
 				$this->results = call_user_func(array($this,"action_".$this->action));
+			} elseif (method_exists($this, "action_other"))  {
+				$this->results = call_user_func(array($this,"action_other"));
 			} else {
 				$this->results = "ERRORE NELLA RICHIESTA: <b>".$this->action."</b>";
 			}

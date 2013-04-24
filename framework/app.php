@@ -43,6 +43,16 @@ final class app {
 		self::$controller = new controller();
 		setlocale(LC_ALL, self::conf()->format->locale);
 		date_default_timezone_set(self::conf()->locale->timezone);
+		if (!file_exists(self::conf()->system->imagecache)) {
+			if (@mkdir(self::conf()->system->imagecache)) {
+				self::Controller()->addMessage("Cartella cache immagini creata con successo");
+			} else {
+				self::Controller()->addMessage("ERRORE: Impossibile creare cartella cache");
+			}
+		} elseif (!is_writable(self::conf()->system->imagecache)) {
+			self::Controller()->addMessage("Attenzione: La cartella cache non è scrivibile");
+		}
+		
 		//print_r(self::$config);
 	}
 	

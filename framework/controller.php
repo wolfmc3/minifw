@@ -81,6 +81,7 @@ class controller {
 	 * @param \framework\html\anchor $link2 optional Link 2 da visualizzare nel messaggio
 	 */
 	function addMessage($msg,$link1 = NULL,$link2 = NULL,$title=NULL) {
+		if (isset($_SESSION["ctrl_messages"]) && array_search($msg, $_SESSION["ctrl_messages"]) !== FALSE) return;
 		$this->page->addJavascript("sysmsg.js");
 		$this->page->addJqueryUi();
 

@@ -186,5 +186,9 @@ class element {
 			
 		return $html;
 	}
+	
+	public static function __callstatic($el,$args) {
+		return new element($el,$args);
+	}
 }
 
