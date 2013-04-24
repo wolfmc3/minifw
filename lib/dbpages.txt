@@ -1,0 +1,8 @@
+<ul>
+<li>Clienti</li>
+<li>Impiegati</li>
+<li>Uffici</li>
+<li>Articoli</li>
+</ul>
+Queste voci del menù dimostrano come le viste dedicate all'accesso ai dati permettano con poche righe di impostare tutto il necessario per visualizzare e modificare una tabella di database.<br>
+La classe derivata <code>/framework/db/viewdesign</code> aiuta nella fase di progettazione ad impostare e regolamentare i dati. 

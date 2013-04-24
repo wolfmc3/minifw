@@ -40,7 +40,7 @@ class logincontrol extends template {
 		if (app::Security()->user()->isok) {
 			$data["lock"] = "LockOpen";
 		} else {
-			$data["lock"] = "LockOpen";
+			$data["lock"] = "Lock";
 		}
 		$data["ulmenu"] = $dropdown;
 		//$this->add(new jsondata("notlogged", !app::Security()->user()->isok));

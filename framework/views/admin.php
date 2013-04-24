@@ -15,6 +15,8 @@ use framework\html\anchor;
 use framework\html\html;
 use framework\html\responsive\div;
 use framework\html\dotlist;
+use framework\html\responsive\textblock;
+use framework\html\anchorbutton;
 /**
  *
  * admin
@@ -29,7 +31,7 @@ use framework\html\dotlist;
  */
 
 class admin extends page {
-
+	protected $title = "Amministrazione";
 	function init() {
 		parent::init();
 		$this->addJavascript(app::conf()->jquery->ui);
@@ -45,13 +47,29 @@ class admin extends page {
 		chdir("../../..");
 		$list = explode("/", str_replace(".php", "", implode("/", $list))); 
 		 $list = array_combine($list,$list);
-		$cont = new dotlist("thumbnails");
+		$cont = new div("row"); 
+		$secblock = $cont->append(new textblock(["Moduli sicurezza: ", new select("sec_modules",$list,app::conf()->security->module,["id"=>"sec_modules","data-info"=>$this->url("secinfo"), "style"=>"vertical-align: baseline;"])],4,1));
+		$secblock->add(new element("p",["id"=>"secinfo"],"Scegli il modulo"));
+		
+		$opblock = $cont->append(new textblock("Menutenzione e test",4,2));
+		$opblock->append(new anchorbutton($this->url("permissiontest"),"Controllo permessi"));
+		$opblock->append(new anchorbutton(app::root()."admin_config","Vedi configurazione"));
+		$opblock->append(new anchorbutton($this->url("clearcache"),"Azzera cache immagini"));
+		
+		//$cont->add($secblock);
+		
+		/*
+		 * VECCHIO!!!
+		 * */
+		  
+		/*$cont = new dotlist("thumbnails");
 		$sec_cont = new element("div",["class"=>"thumbnail"]);
 		$sec_title = new element("h5",["class"=>"title"]);
 		$sec_title->add("Moduli sicurezza: ");
 		$sec_title->add(new select("sec_modules",$list,app::conf()->security->module,["id"=>"sec_modules","data-info"=>$this->url("secinfo"), "style"=>"vertical-align: baseline;"]));
 		$sec_cont->add($sec_title);
 		$sec_cont->add(new element("p",["id"=>"secinfo"],"Scegli il modulo"));
+
 		$tests_cont = new element("div",["class"=>"thumbnail"]);
 		$tests_title = new element("h5",["class"=>"title"]);
 		$tests_title->add("Test di sistema: ");
@@ -62,7 +80,7 @@ class admin extends page {
 		$tests_div->add(new anchor(app::root()."admin_config","Vedi configurazione"));
 		
 		$cont->addItem($sec_cont);
-		$cont->addItem($tests_cont);
+		$cont->addItem($tests_cont);*/
 		return $cont;
 	}
 	
@@ -108,7 +126,19 @@ class admin extends page {
 		}
 		return $cont;
 	}
-	
+	function action_clearcache() {
+		$this->type = page::TYPE_REDIRECT;
+		//chdir(app::conf()->system->imagecache);
+		
+		$list = glob(app::conf()->system->imagecache.'*',GLOB_BRACE);
+		$filesize = 0;
+		foreach ($list as $file) {
+			$filesize += filesize($file);
+			unlink($file);
+		}
+		app::Controller()->addMessage("Cache cancellata, recuperati ".ceil($filesize/1024/1024)."MB");
+		return $this->url(); 
+	}
 	function action_secinfo() {
 		$modulename = "\\framework\\security\\modules\\".$this->item;
 		$module = new $modulename();

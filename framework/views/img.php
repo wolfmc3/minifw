@@ -11,6 +11,7 @@ class img extends page {
 	function action_other() {
 		//echo "\n".__DIR__.app::root()."img/".$this->action.":\n";
 		//echo "\nimmagine:".app::Controller()->uri.PHP_EOL;
+		
 		$uri = array_slice(app::Controller()->parseduri, 0);
 		$img = "img";
 		reset($uri);
@@ -30,7 +31,7 @@ class img extends page {
 			$tmp = app::conf()->system->imagecache;
 			$tmpname = $tmp.urlencode(implode("_", $uri).".png");
 			prev($uri);
-			if (!file_exists($tmpname) || TRUE){ 
+			if (!file_exists($tmpname)){ 
 				$source = $this->loadimage($img);
 				$i = 0;
 				while (($operation = next($uri)) !== FALSE) {
@@ -47,6 +48,21 @@ class img extends page {
 							$sigma = intval(next($uri));
 							$radius = intval(next($uri));
 							$source->blurimage($radius, $sigma);
+						} elseif (ctype_alpha($operation) && $operation == "sepia") {
+							$source->modulateimage(130, 100, 100);
+							$source->contrastImage( 1 );
+							$source->sepiatoneimage(80);
+							$source->adaptiveBlurImage( 1, 1 );
+							$source->addnoiseimage(\Imagick::NOISE_GAUSSIAN,\Imagick::CHANNEL_GRAY);
+						} elseif (ctype_alpha($operation) && $operation == "enh") {
+							$source->normalizeimage();
+							$source->modulateimage(130, 155, 100);
+							$source->contrastImage( 1 );
+						} elseif (ctype_alpha($operation) && $operation == "bw") {
+							$source->contrastImage( 1 );
+							$source->contrastImage( 1 );
+							$source->contrastImage( 0.5 );
+							$source->modulateimage(115, 10, 100);
 						} elseif (ctype_alpha($operation) && $operation == "width") {
 							$newwidth = intval(next($uri));
 							$source = $this->resize($source, $newwidth);
@@ -67,7 +83,6 @@ class img extends page {
 					}
 
 				}
-
 				$source->writeimage($tmpname);
 				$img = $tmpname;
 				$type = "image/png";
@@ -76,9 +91,20 @@ class img extends page {
 				$type = "image/png";
 			}
 		}
-
+		
+		$last_modified_time = filemtime($img);
+		if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) == $last_modified_time) {
+			header("HTTP/1.1 304 Not Modified");
+			return;
+		}
+		
 		header('Content-Type:'.$type);
 		header('Content-Length: ' . filesize($img));
+		header('Cache-control: max-age='.(60*60*6).', private');
+		header('Expires: '.gmdate(DATE_RFC1123,time()+60*60*6));
+		header("Last-Modified: ".gmdate("D, d M Y H:i:s", $last_modified_time)." GMT");
+		
+		//header("Cache-Control: max-age=1, private, proxy-revalidate");
 		readfile($img);
 
 	}

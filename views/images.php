@@ -17,7 +17,13 @@ class images extends page {
 			"user/minifw.jpg"=>["T"=>"Mini fw","D"=>"Questo framework fà anche il caffè","S"=>3,"A"=>TRUE,"L"=>"#"],
 			"user/castle.jpg"=>["T"=>"Paesaggi","D"=>"Ho sempre gradito i paesaggi, sono rilassanti","S"=>3,"A"=>FALSE,"L"=>"#"],
 			"user/beach.jpg"=>["T"=>"Natura","D"=>"La natura è un miracolo che si perpetua ogni giorno davanti ai nostri occhi.","S"=>3,"A"=>FALSE,"L"=>"#"],
-			"user/animal.jpg"=>["T"=>"Animali","D"=>"Non importa se sei leone o gazella... inizia a correre","S"=>3,"A"=>FALSE,"L"=>"#"],
+			"user/animal.jpg/enh"=>["T"=>"Animali","D"=>"Non importa se sei leone o gazella... inizia a correre","S"=>3,"A"=>FALSE,"L"=>"#"],
+		];
+		$imageeffects = [
+			"user/animal.jpg"=>"Normale",
+			"user/animal.jpg/sepia"=>"Seppia",
+			"user/animal.jpg/bw"=>"Bianco e nero",
+			"user/animal.jpg/enh"=>"Migliorato",
 		];
 		
 		$cont = new element();
@@ -37,11 +43,11 @@ class images extends page {
 		$cont->append($thu);
 		$cont->addBR(2);
 		
-		$cont->append(new element("h3"))->add("Anteprime con link");
+		$cont->append(new element("h3"))->add("Effetti");
 		
 		$thu = new thumbnails();
-		foreach ($imagelist as $img => $data) {
-			$thu->addThumbnail($img."/height/160/box/160/160",app::root()."img/".$img."/resize/1024/1024/",NULL,NULL,2);
+		foreach ($imageeffects as $img => $title) {
+			$thu->addThumbnail($img."/height/250/box/250/190","#",$title,NULL,3);
 		}
 		$cont->append($thu);
 		$cont->addBR(2);
@@ -54,7 +60,7 @@ class images extends page {
 		$cont->append(new element("h3"))->add("Sfocature");
 		$i = 0;
 		foreach ($imagessize as $size) {
-			$cont->append(new img("icon.png/blur/$i/10/width/125"));
+			$cont->append(new img("user/castle.jpg/blur/$i/10/box/512/512/width/125"));
 			$i += 2;
 		}
 		
