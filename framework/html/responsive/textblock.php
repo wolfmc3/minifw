@@ -12,7 +12,7 @@ class textblock extends div {
 		parent::append($titleel);	
 	}
 	
-	function append($el) {
+	function &append($el) {
 		$cont = element::p();
 		$cont->add($el);
 		parent::add($cont);
