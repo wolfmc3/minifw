@@ -113,7 +113,9 @@ class controller {
 		if (!isset($_SESSION["ctrl_messages"])) return "";
 		$messages = $_SESSION["ctrl_messages"];
 		unset($_SESSION["ctrl_messages"]);
-		$msgcont = new element("div",["id"=>"controller_messages","style"=>"background-color: rgba(125,125,125,0.1); border-radius: 10px;display:block;position:absolute;text-align:right;margin-right:15px;"]);
+		$msgcont = new element("div",[
+				"id"=>"controller_messages",
+				"style"=>"background-color: rgba(125,125,125,0.1); border-radius: 10px;display:block;position:absolute;text-align:right;margin-right:15px;"]);
 		$div = new div("icon-star", "",["style"=>"height: 12px;"]);
 		$div->add(" ");
 		$msgcont->add($div);
