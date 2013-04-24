@@ -26,52 +26,128 @@ class img extends page {
 		$finfo = finfo_open(FILEINFO_MIME_TYPE);
 		$type = finfo_file($finfo, $img);
 
-		$operation = next($uri);
-		if ($operation) {
-			if ($operation == "resize") {
-				$newwidth = intval(next($uri));
-
-				list($width, $height) = getimagesize($img);
-				$percent = $newwidth/$width;
-				$newwidth = intval($width * $percent);
-				$newheight = intval($height * $percent);
-
-				$tmp = app::conf()->system->imagecache;
-				$tmpname = $tmp.urlencode($img."_resize_".$newwidth."x".$newheight.".png");
-				
-				if (!file_exists($tmpname)){
-					// Load
-					$thumb = imagecreatetruecolor($newwidth, $newheight);
-					$trans_colour = imagecolorallocatealpha($thumb, 255, 255, 255, 127);
-					imagefill($thumb, 0, 0, $trans_colour);
-					imagealphablending($thumb, true); // setting alpha blending on
-					imagesavealpha($thumb, true);
-
-					if ($type == "image/jpeg") {
-						$source = imagecreatefromjpeg($img);
-					} elseif ($type == "image/png") {
-						$source = imagecreatefrompng($img);
-						//$col=imagecolorallocatealpha($thumb,255,255,255,127);
-					} elseif ($type == "image/gif") {
-						$source = imagecreatefromgif($img);
-					}
+		if (next($uri)) {
+			$tmp = app::conf()->system->imagecache;
+			$tmpname = $tmp.urlencode(implode("_", $uri).".png");
+			prev($uri);
+			if (!file_exists($tmpname) || TRUE){ 
+				$source = $this->loadimage($img);
+				$i = 0;
+				while (($operation = next($uri)) !== FALSE) {
+					/*if (ctype_alpha($operation)) {
+						$draw = new \ImagickDraw();
+						$draw->setFillColor('white');
+						$draw->setFont('Arial');
+						$draw->setFontSize( 15 );
 						
-					// Resize
-					imagecopyresampled($thumb, $source, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
+						$source->annotateimage($draw, 15, 15*$i++, 0, $operation);
+					}*/
+					try {
+						if (ctype_alpha($operation) && $operation == "blur") {
+							$sigma = intval(next($uri));
+							$radius = intval(next($uri));
+							$source->blurimage($radius, $sigma);
+						} elseif (ctype_alpha($operation) && $operation == "width") {
+							$newwidth = intval(next($uri));
+							$source = $this->resize($source, $newwidth);
+						} elseif (ctype_alpha($operation) && $operation == "height") {
+							$newheight = intval(next($uri));
+							$source = $this->resize($source,0, $newheight);
+						} elseif (ctype_alpha($operation) && $operation == "resize") {
+							$newwidth = intval(next($uri));
+							$newheight = intval(next($uri));
+							$source = $this->resize($source,$newwidth, $newheight);
+						} elseif (ctype_alpha($operation) && $operation == "box") {
+							$newwidth = intval(next($uri));
+							$newheight = intval(next($uri));
+							$source = $this->box($source,$newwidth, $newheight);
+						}
+					} catch (Exception $e) {
+						continue;
+					}
 
-					// Output
-					imagepng($thumb,$tmpname,9);
-					imagedestroy($thumb);
-					imagedestroy($source);
 				}
-				header('Content-Type: image/png');
-				readfile($tmpname);
-			} 
-		} else {
-			header('Content-Type:'.$type);
-			header('Content-Length: ' . filesize($img));
-			readfile($img);
+
+				$source->writeimage($tmpname);
+				$img = $tmpname;
+				$type = "image/png";
+			} else  {
+				$img = $tmpname;
+				$type = "image/png";
+			}
 		}
+
+		header('Content-Type:'.$type);
+		header('Content-Length: ' . filesize($img));
+		readfile($img);
+
 	}
 
+	/**
+	 * 
+	 * @param string $file
+	 * @param string $type
+	 * @return \Imagick
+	 */
+	private function loadimage($file) {
+		$source = new \Imagick($file);
+		$source->setimageformat("png");
+		return $source;
+	}
+/**
+ * 
+ * @param \Imagick $source
+ * @param number $newwidth
+ * @param number $newheight
+ * @throws \Exception
+ * @return \Imagick
+ */
+	private function resize(&$source,$newwidth = 0,$newheight = 0) {
+		list($width,$height) = array_values($source->getimagegeometry());
+
+		if ($newwidth && $newheight == 0) { //COMANDA la larghezza
+			$ratio = $newwidth/$width;
+			$newwidth = intval($width * $ratio);
+			$newheight = intval($height * $ratio);
+		} elseif ($newwidth == 0 && $newheight) {
+			$ratio = $newheight/$height;
+			$newwidth = intval($width * $ratio);
+			$newheight = intval($height * $ratio);
+		} elseif ($newwidth && $newheight) {
+			$ratiow = $newwidth/$width;
+			$ratioy = $newheight/$height;
+			$ratio = min([$ratiow,$ratioy]);
+			$newwidth = intval($width * $ratio);
+			$newheight = intval($height * $ratio);
+			// ONLY FOR CHECK
+		} else {
+			throw new \Exception("Required one dimension {$newheight}x{$newwidth}");
+		}
+		$source->resizeimage($newwidth, $newheight,\Imagick::FILTER_LANCZOS,1);
+		return $source;
+	}
+
+	/**
+	 * 
+	 * @param \Imagick $source
+	 * @param number $newwidth
+	 * @param number $newheight
+	 * @throws \Exception
+	 */
+	private function box(&$source,$newwidth = 0,$newheight = 0) {
+		list($width,$height) = array_values($source->getimagegeometry());
+		
+		if ($newwidth && $newheight) {
+			// ONLY FOR CHECK
+		} else {
+			throw new \Exception("Required one dimension {$newheight}x{$newwidth}");
+		}
+		$box = new \Imagick();
+		$box->newImage($newwidth, $newheight, 'transparent', 'png' );
+		$box->compositeimage($source, \imagick::COMPOSITE_OVERLAY, -($width-$newwidth)/2, -($height-$newheight)/2);
+		//$source->cropimage($newwidth, $newheight, 0, 0);
+		//$source->extentimage($newwidth, $newheight, 0, 0);
+
+		return $box;
+	}
 }
