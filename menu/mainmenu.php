@@ -25,6 +25,7 @@ class mainmenu extends element {
 		$menu->addMenuItem("menu1","docs", "http://www.wolfmc3.com/minifw-docs/", "Documentazione",TRUE);
 		$menu->addSubMenuItem("admin", "info", app::root()."admin/info", "Informazioni PHP");
 		$menu->addSubMenuItem("admin", "config", app::root()."admin_config", "Configurazione");
+		$menu->addMenuItem("menu1","github", "https://github.com/wolfmc3/minifw", "Codice su GitHub");
 		$menu->append(new logincontrol());
 		$menudiv = new div("nav-collapse collapse","main_menu_cont");
 		$menudiv->append($menu);
