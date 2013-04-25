@@ -32,7 +32,7 @@ class img extends page {
 			$tmp = app::conf()->system->imagecache;
 			$tmpname = $tmp.urlencode(implode("_", $uri).".$ext");
 			prev($uri);
-			if (!file_exists($tmpname) || TRUE ){
+			if (!file_exists($tmpname)){
 				//PREVENT TOO MANY REQUEST
 				if (isset($_SESSION["cacheimgcount"])) {
 					if ((time()-$_SESSION["cacheimglast"]) < 60 ) {
