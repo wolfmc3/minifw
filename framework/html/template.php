@@ -22,7 +22,7 @@ class template extends element {
 	 * @ignore
 	 * @var unknown
 	 */
-	private $loadedtemplate=[];
+	private $loadedtemplate=array();
 	/**
 	 * @var string Template corrente
 	 */

@@ -8,7 +8,7 @@ class thumbnails extends dotlist {
 	private $width = 0;
 	private $height = 0;
 	private $method = "";
-	function __construct($method="",$width=0,$height=0,$class="",$options=[]) {
+	function __construct($method="",$width=0,$height=0,$class="",$options=array()) {
 		parent::__construct($class);
 		$this->addAttr("class", "thumbnails");
 		$this->width = $width;
@@ -40,6 +40,6 @@ class thumbnails extends dotlist {
 			$cont = $link;
 		}
 		//$cont = new anchor("#", "");
-		$this->addItem($cont,["class"=>"span$span"]);
+		$this->addItem($cont,array("class"=>"span$span"));
 	}
 }

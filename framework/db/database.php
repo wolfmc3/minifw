@@ -16,7 +16,7 @@ namespace framework\db {
 		 * Database di sistema instanziato da init()
 		 * @var \PDO
 		 */
-		private static $db = [];
+		private static $db = array();
 		/**
 		 * @var string Modulo di configurazione che contiene le impostazioni del database
 		 */

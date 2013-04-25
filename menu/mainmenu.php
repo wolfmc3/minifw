@@ -11,7 +11,7 @@ use framework\html\responsive\div;
 class mainmenu extends element {
 	function __construct() {
 		parent::__construct("");
-		$this->append(new anchor(app::root().app::conf()->system->defaultobj, app::conf()->system->appname,["class"=>"brand"]));
+		$this->append(new anchor(app::root().app::conf()->system->defaultobj, app::conf()->system->appname,array("class"=>"brand")));
 		$menu = new menu("mainmenu");
 		$menu->createMenu("menu1", "nav");
 		$menu->addMenuItem("menu1","functions", "functions", "Messaggi",TRUE);

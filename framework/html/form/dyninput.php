@@ -59,10 +59,10 @@ class dyninput extends element {
 					$input->addAttr("style","width: 100%; height: 150px;");
 				} elseif ($dt == "bool") {
 					$input = $this->append(new element("div",array("id" => $key,"class"=>"bool")));
-					$input->add(new element("label",["for"=>"{$key}1"],"Si"));
-					$input->add(new element("input",["type"=>"radio","name"=>"$key","value"=>"1","id"=>"{$key}1"]));
-					$input->add(new element("label",["for"=>"{$key}2"],"No"));
-					$input->add(new element("input",["type"=>"radio","name"=>"$key","value"=>"0","id"=>"{$key}2"]));
+					$input->add(new element("label",array("for"=>"{$key}1"),"Si"));
+					$input->add(new element("input",array("type"=>"radio","name"=>"$key","value"=>"1","id"=>"{$key}1")));
+					$input->add(new element("label",array("for"=>"{$key}2"),"No"));
+					$input->add(new element("input",array("type"=>"radio","name"=>"$key","value"=>"0","id"=>"{$key}2")));
 					$input = NULL;
 				} else {
 					$input = $this->append(new element("input",array("type" => "text","value"=> $text,"name" => $key)));
@@ -76,7 +76,7 @@ class dyninput extends element {
 						$input->addAttr("class","fromlist");
 						$label = " (".app::Controller()->$obj->label($text).")";
 						$this->append(
-							new anchor(app::root()."$obj/table",array(new icon("FolderOpen"),new element("span",["id"=>"label_$key"],$label ) ),array("class"=>"selectitem rotate"))
+							new anchor(app::root()."$obj/table",array(new icon("FolderOpen"),new element("span",array("id"=>"label_$key"),$label ) ),array("class"=>"selectitem rotate"))
 						);
 					}
 					if ($setting['regexpr']) {

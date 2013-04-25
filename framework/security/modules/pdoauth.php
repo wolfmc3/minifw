@@ -31,7 +31,7 @@ class pdoauth implements securitymoduleinterface {
 	function getUser($username, $password) {
 		//echo "onlyadmin:login:$username - $password\n<hr>";
 		//echo "config:onlyadmin:".app::conf()->onlyadmin->user." - ".app::conf()->onlyadmin->password."\n<hr>";
-		$res = $this->db->read("users",0,0,"username = ? AND password = ?",[$username,$password]);
+		$res = $this->db->read("users",0,0,"username = ? AND password = ?",array($username,$password));
 		//echo "getUser:"; print_r($res); 
 		if (count($res->rows) == 1) { //UTENTE CORRETTO 
 			$userdata = $res->rows[0];
@@ -45,18 +45,18 @@ class pdoauth implements securitymoduleinterface {
 	
 	function getUsersInfo() {
 		$res = $this->db->read("users");
-		$users = [];
+		$users = array();
 		foreach ($res->rows as $userdata) {
 			unset($userdata['password']);
 			$userdata["isok"] = TRUE;
 			$users[$userdata['username']] = $userdata;
 		}
-		$users["anonimo"] = ["username"=>"anonimo","group"=>"?","isok"=>FALSE];
+		$users["anonimo"] = array("username"=>"anonimo","group"=>"?","isok"=>FALSE);
 		return $users;
 	}
 	
 	function setUserAuthID($user,$authid) {
-		$row = [":username"=>$user,":authid"=>$authid,":ip"=>$_SERVER['REMOTE_ADDR']];
+		$row = array(":username"=>$user,":authid"=>$authid,":ip"=>$_SERVER['REMOTE_ADDR']);
 		$this->db->write("usersessions", $row);
 	}
 	
@@ -65,7 +65,7 @@ class pdoauth implements securitymoduleinterface {
 	}
 	
 	function getUserAuthID($authid) {
-		$res = $this->db->read("usersessions",0,1,"authid = ?",[$authid]);
+		$res = $this->db->read("usersessions",0,1,"authid = ?",array($authid));
 		//echo "getUserAuthID:sessions:$authid:"; print_r($res); 
 		if (count($res->rows) == 1) { //UTENTE ESISTENTE
 			$user = $this->db->row("users", $res->rows[0]['username'],"username");
@@ -82,9 +82,9 @@ class pdoauth implements securitymoduleinterface {
 	function readPermissions() {
 		$rawperm = $this->db->read("permissions");
 		//echo "readPermission RAW:";print_r($rawperm);
-		$perm = [];
+		$perm = array();
 		foreach ($rawperm->rows as $value) {
-			$perm[] = ["path"=>$value['path'], "group" => $value['group'],"perm"=>$value['permission']];
+			$perm[] = array("path"=>$value['path'], "group" => $value['group'],"perm"=>$value['permission']);
 		}
 		//echo "readPermission DEF:";print_r($perm);
 		return $perm;

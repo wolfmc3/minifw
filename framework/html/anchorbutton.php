@@ -23,8 +23,8 @@ namespace framework\html;
 	 * @param string[] $options
 	 */
 		function __construct($url, $text, $options = array()) {
-			parent::__construct("div",["class"=>"btn-group"]);
-			$this->add(new anchor($url, $text,["class"=>"btn"]));
+			parent::__construct("div",array("class"=>"btn-group"));
+			$this->add(new anchor($url, $text,array("class"=>"btn")));
 		}
 	}	
 

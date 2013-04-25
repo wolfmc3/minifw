@@ -23,7 +23,7 @@ class home extends \framework\page {
 			->append(new anchorbutton("customers", "Vedi clienti"));
 		
 		$row->append(new textblock("Demo immagini",6))
-			->append([new img("minifwlogo.jpg/width/230"),new img("minifwlogo.jpg/width/230/bw")])
+			->append(array(new img("minifwlogo.jpg/width/230"),new img("minifwlogo.jpg/width/230/bw")))
 			->append("Visualizza la demo sulle immagini")
 			->append(new anchorbutton("images", "Vedi demo"))
 			->append(file_get_contents(__DIR__."/../lib/home.txt"));

@@ -48,8 +48,8 @@ class admin extends page {
 		$list = explode("/", str_replace(".php", "", implode("/", $list))); 
 		 $list = array_combine($list,$list);
 		$cont = new div("row"); 
-		$secblock = $cont->append(new textblock(["Moduli sicurezza: ", new select("sec_modules",$list,app::conf()->security->module,["id"=>"sec_modules","data-info"=>$this->url("secinfo"), "style"=>"vertical-align: baseline;"])],4,1));
-		$secblock->add(new element("p",["id"=>"secinfo"],"Scegli il modulo"));
+		$secblock = $cont->append(new textblock(array("Moduli sicurezza: ", new select("sec_modules",$list,app::conf()->security->module,array("id"=>"sec_modules","data-info"=>$this->url("secinfo"), "style"=>"vertical-align: baseline;"))),4,1));
+		$secblock->add(new element("p",array("id"=>"secinfo"),"Scegli il modulo"));
 		
 		$opblock = $cont->append(new textblock("Menutenzione e test",4,2));
 		$opblock->append(new anchorbutton($this->url("permissiontest"),"Controllo permessi"));
@@ -63,18 +63,18 @@ class admin extends page {
 		 * */
 		  
 		/*$cont = new dotlist("thumbnails");
-		$sec_cont = new element("div",["class"=>"thumbnail"]);
-		$sec_title = new element("h5",["class"=>"title"]);
+		$sec_cont = new element("div",array("class"=>"thumbnail"));
+		$sec_title = new element("h5",array("class"=>"title"));
 		$sec_title->add("Moduli sicurezza: ");
-		$sec_title->add(new select("sec_modules",$list,app::conf()->security->module,["id"=>"sec_modules","data-info"=>$this->url("secinfo"), "style"=>"vertical-align: baseline;"]));
+		$sec_title->add(new select("sec_modules",$list,app::conf()->security->module,array("id"=>"sec_modules","data-info"=>$this->url("secinfo"), "style"=>"vertical-align: baseline;")));
 		$sec_cont->add($sec_title);
-		$sec_cont->add(new element("p",["id"=>"secinfo"],"Scegli il modulo"));
+		$sec_cont->add(new element("p",array("id"=>"secinfo"),"Scegli il modulo"));
 
-		$tests_cont = new element("div",["class"=>"thumbnail"]);
-		$tests_title = new element("h5",["class"=>"title"]);
+		$tests_cont = new element("div",array("class"=>"thumbnail"));
+		$tests_title = new element("h5",array("class"=>"title"));
 		$tests_title->add("Test di sistema: ");
 		$tests_cont->add($tests_title);
-		$tests_div = $tests_cont->append(new element("p",["id"=>"secinfo"],""));
+		$tests_div = $tests_cont->append(new element("p",array("id"=>"secinfo"),""));
 		$tests_div->add(new anchor($this->url("permissiontest"),"Controllo permessi"));
 		$tests_div->addBR();
 		$tests_div->add(new anchor(app::root()."admin_config","Vedi configurazione"));
@@ -89,29 +89,30 @@ class admin extends page {
 		phpinfo();
 		$s = ob_get_contents();
 		ob_end_clean();
-		$res = []; 
+		$res = array(); 
 		preg_match("/.*<body>(.*?)<\/body>.*/s", $s,$res);
 		//print_r($res);
 		return $res[1];
 	}
 	
 	function action_permissiontest() {
-		$permstr = ["A0" => "<b><s>%s</s>","A1" => "%s"];
+		$permstr = array("A0" => "<b><s>%s</s>","A1" => "%s");
 		$users = app::Security()->getUsersInfo();
 		$views = app::getViews(TRUE);
-		$rows = [];
+		$rows = array();
 		$cont = new element("div");
-		$table = $cont->append(new element("table",["width"=>"100%"]));
+		$table = $cont->append(new element("table",array("width"=>"100%")));
 		$tr = $table->append(new element("tr"));
-		$tr->add(new element("th",["colspan"=>2],"Utente"));
+		$tr->add(new element("th",array("colspan"=>2),"Utente"));
 		foreach ($views as $view) {
 			$view = str_replace("_", "<br>", $view);
-			$tr->add(new element("th",[],new element("small",[], new html($view))));
+			$tr->add(new element("th",array(),
+					new element("small",array(), new html($view))));
 		}
 		foreach ($users as $username => $data) {
 			$tr = new element("tr");
-			$tr->add(new element("th",[],$username)); 
-			$tr->add(new element("th",[],$data["group"])); 
+			$tr->add(new element("th",array(),$username)); 
+			$tr->add(new element("th",array(),$data["group"])); 
 			foreach ($views as $view) {
 				$perm = app::Security()->getPermission($view,$username);
 				$permtext = "";
@@ -120,7 +121,7 @@ class admin extends page {
 				if ($perm->R !== NULL) $permtext .= sprintf($permstr["A".$perm->R],"R");
 				if ($perm->L !== NULL) $permtext .= sprintf($permstr["A".$perm->L],"L");
 				if ($perm->A !== NULL) $permtext .= sprintf($permstr["A".$perm->A],"A");
-				$tr->add(new element("td",[],new element("small",[],new html($permtext)))); 
+				$tr->add(new element("td",array(),new element("small",array(),new html($permtext)))); 
 			}
 			$table->add($tr);
 		}

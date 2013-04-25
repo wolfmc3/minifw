@@ -30,7 +30,7 @@ class login extends page {
 	function action_def() {
 		$returnurl = isset($_SERVER['HTTP_REFERER'])?$_SERVER['HTTP_REFERER']:"../";
 		if (isset($this->extra['redirect'])) $returnurl = $this->extra['redirect']; 
-		$result = new template("login", ["loginurl"=>$this->url("login"),"returnurl"=>$returnurl]);
+		$result = new template("login", array("loginurl"=>$this->url("login"),"returnurl"=>$returnurl));
 		return $result;
 	}
 	

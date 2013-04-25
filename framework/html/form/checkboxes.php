@@ -9,7 +9,7 @@ use framework\app;
  * 
  * <code>
  * use framework\html\select;
- * $options = ["val1"=>"Elemento","val2"=>"Elemento 2"];
+ * $options = array("val1"=>"Elemento","val2"=>"Elemento 2");
  * $checkboxes = new checkboxes("type_select",$options,"val1");
  * echo $checkboxes;
  * </code>
@@ -33,8 +33,8 @@ class checkboxes extends element {
 			parent::__construct("div", array("id" => $name,"class"=>"checkboxes" ),"");
 			foreach ($data as $key => $value) {
 				$selected = (array_search($key, $cur) !== FALSE)?"checked":"unchecked";
-				$this->add(new element("input",[$selected=>"1", "type"=>"checkbox","name"=>"{$name}[]","value"=>"$key","id"=>"{$name}_{$key}"]));
-				$this->add(new element("label",["for"=>"{$name}_{$key}"],$value));
+				$this->add(new element("input",array($selected=>"1", "type"=>"checkbox","name"=>"{$name}[]","value"=>"$key","id"=>"{$name}_{$key}")));
+				$this->add(new element("label",array("for"=>"{$name}_{$key}"),$value));
 			}
 			
 		}

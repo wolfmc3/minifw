@@ -56,20 +56,20 @@ class onlyadmin implements securitymoduleinterface {
 	}
 	
 	function readPermissions() {
-		return [
-			["path"=> "/index/", "group"=>"*","perm"=>"L"],
-			["path"=> "/login/", "group"=>"?","perm"=>"L"],
-			["path"=> "/*/" , "group"=>"?","perm"=>"L"],
-			["path"=>"/*/" , "group"=>"admins","perm"=>"RWLA"],
-			["path"=> "/config/", "group"=>"admins","perm"=>"RWLA"],
-			["path"=> "/admin/", "group"=>"?","perm"=>"rwla"],
-			["path"=> "/admin/", "group"=>"admins","perm"=>"RWLA"],
-			["path"=> "/config/", "group"=>"?","perm"=>"RWLA"],
-		];
+		return array(
+			array("path"=> "/index/", "group"=>"*","perm"=>"L"),
+			array("path"=> "/login/", "group"=>"?","perm"=>"L"),
+			array("path"=> "/*/" , "group"=>"?","perm"=>"L"),
+			array("path"=>"/*/" , "group"=>"admins","perm"=>"RWLA"),
+			array("path"=> "/config/", "group"=>"admins","perm"=>"RWLA"),
+			array("path"=> "/admin/", "group"=>"?","perm"=>"rwla"),
+			array("path"=> "/admin/", "group"=>"admins","perm"=>"RWLA"),
+			array("path"=> "/config/", "group"=>"?","perm"=>"RWLA"),
+		);
 	}
 	
 	function init() {
-		$this->user = ["username"=>"admin","group"=>"admins","isok"=>TRUE];
+		$this->user = array("username"=>"admin","group"=>"admins","isok"=>TRUE);
 		return session_start();
 	}
 	

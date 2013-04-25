@@ -14,7 +14,7 @@ class functions extends \framework\page {
 		$cont = new element("");
 		$cont->add(new img("minifwlogo.jpg", app::Controller()));
 		$cont->add(new element("h1",array(),"Test messaggi di sistema" ));
-		$form = $cont->append(new element("form",["action"=>$this->url("save"),"method"=>"POST"]));
+		$form = $cont->append(new element("form",array("action"=>$this->url("save"),"method"=>"POST")));
 		$form->add(new text("new_msg", "Testo scritto alle ".date(app::conf()->format->time)));
 		$form->add(new submit("invia"));	
 		return $cont;

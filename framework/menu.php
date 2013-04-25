@@ -29,7 +29,7 @@ class menu extends element {
 	}
 	
 	function &createMenu($id, $class) {
-		$newmenu = new dotlist($class,["id"=>$id]);
+		$newmenu = new dotlist($class,array("id"=>$id));
 		$this->add($newmenu);
 		return $newmenu;
 	}
@@ -48,13 +48,13 @@ class menu extends element {
 		if ($checkpermission && app::Security()->getPermission($obj)->L != 1) return FALSE;
 		$link = $obj;
 		if ($checkpermission && (substr($obj,0,7) != 'http://')) $link = app::root().$obj;
-		$anc = new anchor($link, $text,[]);
-		$attr = ["id"=>$id];
+		$anc = new anchor($link, $text,array());
+		$attr = array("id"=>$id);
 		if ($checkpermission && $obj == app::Controller()->getPage()->name()) {
 			$attr["class"] = "active";
 		}
 		$menu->addItem($anc,$attr);
-		/*$submenu = new menu("submenu_$id","",["class"=>"dropdown"]);
+		/*$submenu = new menu("submenu_$id","",array("class"=>"dropdown"));
 		$this->menuitems[$id] = $submenu;
 		//$this->append(new icon("Lock"));*/
 		return TRUE;
@@ -79,8 +79,8 @@ class menu extends element {
 		if (!$submenu) {
 			$link = $emp->findTag("a");
 			$emp->html(NULL);
-			$openlink = new anchor("#",$link->getContents(),["class"=>"dropdown-toggle","data-toggle"=>"dropdown"]);
-			$openlink->add(new element("b",["class"=>"caret"],""));
+			$openlink = new anchor("#",$link->getContents(),array("class"=>"dropdown-toggle","data-toggle"=>"dropdown"));
+			$openlink->add(new element("b",array("class"=>"caret"),""));
 			$emp->append($openlink);
 			$emp->addAttr("class", "dropdown");
 			$link->html("Apri");
@@ -88,7 +88,7 @@ class menu extends element {
 			$submenu = $contsubmenu->createMenu("menu_items_".$parent, "dropdown-menu");
 			$emp->add($contsubmenu);
 			$submenu->addItem($link);
-			$submenu->addItem("",["class"=>"divider"]);
+			$submenu->addItem("",array("class"=>"divider"));
 		}
 		$submenu->addItem(new anchor($obj,$text));
 		return true;

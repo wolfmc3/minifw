@@ -33,7 +33,7 @@ class pdosessions implements \SessionHandlerInterface {
 	 * @see SessionHandlerInterface::gc()
 	 */
 	public function gc($maxlifetime ) {
-		$this->db->execute("DELETE FROM `sessions` WHERE TIMESTAMPDIFF(SECOND,`lasttime`,CURRENT_TIMESTAMP) > :time",[":time"=>$maxlifetime]);
+		$this->db->execute("DELETE FROM `sessions` WHERE TIMESTAMPDIFF(SECOND,`lasttime`,CURRENT_TIMESTAMP) > :time",array(":time"=>$maxlifetime));
 		return TRUE;
 	}
 
@@ -57,13 +57,13 @@ class pdosessions implements \SessionHandlerInterface {
 	 * @see SessionHandlerInterface::write()
 	 */
 	public function write($session_id , $session_data ) {
-			$row = [
+			$row = array(
 			":data"=>$session_data,
 			":id"=>$session_id
-			];
+			);
 			if (!$this->db->row("sessions",$session_id )) $session_id = NULL; 
 		
-			$this->db->write("sessions", $row, ["data"=>"data","id"=>"id"],$session_id);
+			$this->db->write("sessions", $row, array("data"=>"data","id"=>"id"),$session_id);
 		return TRUE;
 	}
 }

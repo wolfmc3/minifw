@@ -91,7 +91,7 @@ class viewdesign extends dbpage {
 		$idkey = implode(",", $_POST["id"]);
 		$DescriptionKeys = implode(",", $_POST["name"]);
 		
-		$settings = [];
+		$settings = array();
 		foreach ($_POST['settings'] as $column => $setting) {
 			$settings[$column] = array();
 			foreach ($setting as $key => $var) {
@@ -207,11 +207,11 @@ CODE;
 	 */
 	function action_viewinfo() {
 		$views = app::getViews();
-		$res = [];
+		$res = array();
 		foreach ($views as $value) {
 			$obj = app::Controller()->$value;
 			if (method_exists($obj, "fields")) {
-				$res[$value] = ["keys" => $obj->key(),"fields"=>$obj->fields()]; 
+				$res[$value] = array("keys" => $obj->key(),"fields"=>$obj->fields()); 
 			}
 		}
 		return $res;
@@ -286,7 +286,7 @@ CODE;
 		));
 		$views = app::getViews(); 
 		$views = array_combine($views, $views);
-		$views = array_merge([""=>"--"], $views );
+		$views = array_merge(array(""=>"--"), $views );
 		
 		$show->add(new jsondata("listviews",$views));
 		$show->add($template);

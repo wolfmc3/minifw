@@ -27,24 +27,24 @@ use framework\html\anchorbutton;
  */
 
 class admin_pdoauth_permissions extends page {
-	private $cols = [
-	"path"=>["name"=>"Percorso","ontable"=>1],
-	"group"=>["name"=>"Gruppo","ontable"=>1],
-	"permission"=>["name"=>"Permessi","ontable"=>1]
-	];
+	private $cols = array(
+	"path"=>array("name"=>"Percorso","ontable"=>1),
+	"group"=>array("name"=>"Gruppo","ontable"=>1),
+	"permission"=>array("name"=>"Permessi","ontable"=>1)
+	);
 	private $groups;
-	private $permitNames = [
+	private $permitNames = array(
 		"W"=>"Write+",
 		"R"=>"Read+",
 		"L"=>"List+",
 		"A"=>"Add+",
-	];
-	private $deniedNames = [
+	);
+	private $deniedNames = array(
 		"w"=>"Write-",
 		"r"=>"Read-",
 		"l"=>"List-",
 		"a"=>"Add-"
-	];
+	);
 	
 	/**
 	 * init()
@@ -60,7 +60,7 @@ class admin_pdoauth_permissions extends page {
 		$this->typeByAction("save", $this::TYPE_REDIRECT);
 		$db = new database("pdoauth");
 		$groupsret = $db->read("groups");
-		$this->groups = ["?"=>"Anonimi","*"=>"Qualsiasi utente"];
+		$this->groups = array("?"=>"Anonimi","*"=>"Qualsiasi utente");
 		foreach ($groupsret->rows as $row) {
 			$this->groups[$row['group']] = $row["name"];
 		} 
@@ -69,7 +69,7 @@ class admin_pdoauth_permissions extends page {
 
 	function action_edit() {
 		$div = new element("div");
-		$cont = $div->append(new element("form",["action"=>$this->url("save/$this->item"),"method"=>"post"]));
+		$cont = $div->append(new element("form",array("action"=>$this->url("save/$this->item"),"method"=>"post")));
 		$db = new database("pdoauth");
 		$row = $db->row("permissions",$this->item);
 		$table = $cont->append(new element("table"));
@@ -79,16 +79,16 @@ class admin_pdoauth_permissions extends page {
 			if ($key == "group") $el = new select($key, $this->groups, $row[$key]);
 			if ($key == "permission") {
 				$values = str_split($row[$key]); 
-				$el = [
-				new checkboxes($key, $this->permitNames, $values),
-				new br(),
-				new checkboxes($key, $this->deniedNames, $values),
-				];
+				$el = array(
+					new checkboxes($key, $this->permitNames, $values),
+					new br(),
+					new checkboxes($key, $this->deniedNames, $values)
+				);
 			}
 	
 			$tr = $table->append(new element("tr"));
-			$tr->append(new element("th",[],$value['name']));
-			$tr->append(new element("td",[],$el));
+			$tr->append(new element("th",array(),$value['name']));
+			$tr->append(new element("td",array(),$el));
 		}
 		$cont->append(new hidden("id", $this->item));
 		return $div;
@@ -98,22 +98,22 @@ class admin_pdoauth_permissions extends page {
 		$db = new database("pdoauth");
 		$ret = $db->read("permissions");
 		//print_r($ret->rows);
-		$permissions = new table($this->cols, $ret->rows,"id",["data-openurl" => app::root().$this->obj."/edit/"]);
+		$permissions = new table($this->cols, $ret->rows,"id",array("data-openurl" => app::root().$this->obj."/edit/"));
 		$cont = new element();
 		$cont->add($permissions);
 		$cont->addBR(2);
-		$cont->add(new anchorbutton($this->url("edit"), "Aggiungi",["class"=>"addperm"]));
+		$cont->add(new anchorbutton($this->url("edit"), "Aggiungi",array("class"=>"addperm")));
 		return $cont;
 	}
 	
 	function action_save() {
 		$row = NULL;
 		try {
-			$row = [
+			$row = array(
 				":path"=>$_POST["path"],
 				":group"=>$_POST["group"],
 				":permission"=>implode("", $_POST['permission'])
-			];
+			);
 			$db = new database("pdoauth");
 			$db->write("permissions", $row, $this->cols,$this->item);
 		} catch (Exception $e) {

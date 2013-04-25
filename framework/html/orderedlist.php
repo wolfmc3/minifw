@@ -25,7 +25,7 @@ class orderedlist extends element {
 	 * @param string $ulclass classe css per l'elemento UL
 	 * @param string[] $options Attributi opzionali del tag
 	 */
-	function __construct($ulclass = NULL,$options = []) {
+	function __construct($ulclass = NULL,$options = array()) {
 		parent::__construct("ol",$options);
 		if ($ulclass) $this->addAttr("class", $ulclass);
 	}

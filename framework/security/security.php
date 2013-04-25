@@ -107,7 +107,7 @@ class security {
 			}
 		}
 		
-		if ($perm != "") $perm = str_split($perm); else $perm = []; 
+		if ($perm != "") $perm = str_split($perm); else $perm = array(); 
 		$res = new \stdClass();
 		$res->A = $res->L = $res->W = $res->R = NULL;
 		foreach ($perm as $char) {
@@ -165,7 +165,7 @@ class user {
 	private $data;
 	function __construct($data = FALSE) {
 		//echo "New user istance:"; print_r($data);
-		if (!is_array($data)) $data = ["username"=>"anonimo","group"=>"?","isok"=>FALSE];
+		if (!is_array($data)) $data = array("username"=>"anonimo","group"=>"?","isok"=>FALSE);
 		$this->data = $data;
 	}
 	

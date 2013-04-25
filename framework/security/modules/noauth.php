@@ -15,7 +15,7 @@ use framework\app;
 class noauth implements securitymoduleinterface {
 	
 	function getUser($username, $password) {
-		return ["username"=>"system","group"=>"admin","isok"=>TRUE];
+		return array("username"=>"system","group"=>"admin","isok"=>TRUE);
 	}
 	
 	function setUser($userdata) {
@@ -23,7 +23,7 @@ class noauth implements securitymoduleinterface {
 	}
 	
 	function getUserAuthID($authid) {
-		return ["username"=>"system","group"=>"admin","isok"=>TRUE];
+		return array("username"=>"system","group"=>"admin","isok"=>TRUE);
 	}
 	
 	function setUserAuthID($user, $authid) {
@@ -31,9 +31,9 @@ class noauth implements securitymoduleinterface {
 	}
 	
 	function readPermissions() {
-		return [
-			["path"=>"/*/", "group"=>"?","perm"=>"RWLA"],
-		];
+		return array(
+			array("path"=>"/*/", "group"=>"?","perm"=>"RWLA"),
+		);
 	}
 	
 	function init() {

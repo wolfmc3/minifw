@@ -43,7 +43,7 @@ namespace framework\html;
 				} 
 					
 			}
-			$this->add( new element("thead",[],$head) );
+			$this->add( new element("thead",array(),$head) );
 			$tbody = new element("tbody");
 			foreach ($rows as $row) {
 				

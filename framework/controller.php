@@ -58,12 +58,12 @@ class controller {
 		//echo "$url\n";
 		//TODO: Controllo di sicurezza su oggetto e azione (html injection)
 		$querystring = trim($urlparts[1]);
-		$url = $url?explode("/", $url):[];
-		$def = [app::conf()->system->defaultobj,app::conf()->system->defaultaction,""];
+		$url = $url?explode("/", $url):array();
+		$def = array(app::conf()->system->defaultobj,app::conf()->system->defaultaction,"");
 		for ($i = count($url); $i < count($def); $i++) {
 			$url[$i] = $def[$i];
 		}
-		$querystring = $querystring?explode("&", str_replace("=", ",", $querystring)):[];
+		$querystring = $querystring?explode("&", str_replace("=", ",", $querystring)):array();
 		//print_r(array_merge($url,$querystring,$uriqs));
 		$uri = implode("/", array_merge($url,$querystring,$uriqs));
 		return $uri;
@@ -85,7 +85,7 @@ class controller {
 		$this->page->addJavascript("sysmsg.js");
 		$this->page->addJqueryUi();
 
-		if (!isset($_SESSION["ctrl_messages"])) $_SESSION["ctrl_messages"] = [];
+		if (!isset($_SESSION["ctrl_messages"])) $_SESSION["ctrl_messages"] = array();
 		$message = htmlspecialchars($msg);
 		if ($link1){
 			$link1->addAttr("class","btn btn-mini");
@@ -95,7 +95,7 @@ class controller {
 			$link2->addAttr("class","btn btn-mini");
 			$message .= " ".$link2;
 		}
-		if ($title) $message = (new element("strong",[],$title))." ".$message;
+		if ($title) $message = (new element("strong",array(),$title))." ".$message;
 		$_SESSION["ctrl_messages"][] = $message;
 	}
 
@@ -113,14 +113,15 @@ class controller {
 		if (!isset($_SESSION["ctrl_messages"])) return "";
 		$messages = $_SESSION["ctrl_messages"];
 		unset($_SESSION["ctrl_messages"]);
-		$msgcont = new element("div",[
-				"id"=>"controller_messages",
-				"style"=>"background-color: rgba(125,125,125,0.1); border-radius: 10px;display:block;position:absolute;text-align:right;margin-right:15px;"]);
-		$div = new div("icon-star", "",["style"=>"height: 12px;"]);
+		$msgcont = new element("div",array(
+			"id"=>"controller_messages",
+			"style"=>"background-color: rgba(125,125,125,0.1); border-radius: 10px;display:block;position:absolute;text-align:right;margin-right:15px;"
+		));
+		$div = new div("icon-star", "",array("style"=>"height: 12px;"));
 		$div->add(" ");
 		$msgcont->add($div);
 		foreach ($messages as $line) {
-			$msgcont->add(new element("div",["class"=>"alert alert-info"],$line,TRUE));
+			$msgcont->add(new element("div",array("class"=>"alert alert-info"),$line,TRUE));
 		}
 		return $msgcont;
 	}

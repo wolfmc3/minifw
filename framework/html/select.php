@@ -13,7 +13,7 @@ namespace framework\html;
  * sarà generato dal codice:<br>
  * <code>
  * use framework\html\select;
- * $options = ["val1"=>"Elemento","val2"=>"Elemento 2"];
+ * $options = array("val1"=>"Elemento","val2"=>"Elemento 2");
  * $select = new select("form_select",$options,"val1");
  * echo $select;
  * </code>

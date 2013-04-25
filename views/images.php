@@ -8,26 +8,28 @@ use framework\html\img;
 use framework\html\source;
 use framework\html\responsive\thumbnails;
 use framework\app;
+
 class images extends page {
 	protected $title = "Image show";
 	function action_def() {
-		$imagessize =[50,100,150,200,250];
-		$iconsize = [12,24,32,64,128,256];
-		$imagelist = [
-			"user/minifw.jpg"=>["T"=>"Mini fw","D"=>"Questo framework fà anche il caffè","S"=>3,"A"=>TRUE,"L"=>"#"],
-			"user/castle.jpg"=>["T"=>"Paesaggi","D"=>"Ho sempre gradito i paesaggi, sono rilassanti","S"=>3,"A"=>FALSE,"L"=>"#"],
-			"user/beach.jpg"=>["T"=>"Natura","D"=>"La natura è un miracolo che si perpetua ogni giorno davanti ai nostri occhi.","S"=>3,"A"=>FALSE,"L"=>"#"],
-			"user/animal.jpg/enh"=>["T"=>"Animali","D"=>"Non importa se sei leone o gazella... inizia a correre","S"=>3,"A"=>FALSE,"L"=>"#"],
-		];
-		$imageeffects = [
+		$imagessize =array(50,100,150,200,250);
+		$iconsize = array(12,24,32,64,128,256);
+		$imagelist = array(
+			"user/minifw.jpg"=>array("T"=>"Mini fw","D"=>"Questo framework fà anche il caffè","S"=>3,"A"=>TRUE,"L"=>"#"),
+			"user/castle.jpg"=>array("T"=>"Paesaggi","D"=>"Ho sempre gradito i paesaggi, sono rilassanti","S"=>3,"A"=>FALSE,"L"=>"#"),
+			"user/beach.jpg"=>array("T"=>"Natura","D"=>"La natura è un miracolo che si perpetua ogni giorno davanti ai nostri occhi.","S"=>3,"A"=>FALSE,"L"=>"#"),
+			"user/animal.jpg/enh"=>array("T"=>"Animali","D"=>"Non importa se sei leone o gazella... inizia a correre","S"=>3,"A"=>FALSE,"L"=>"#"),
+		);
+		
+		$imageeffects = array(
 			"user/animal.jpg"=>"Normale",
 			"user/animal.jpg/sepia"=>"Seppia",
 			"user/animal.jpg/bw"=>"Bianco e nero",
 			"user/animal.jpg/enh"=>"Migliorato",
-		];
+		);
 		
 		$cont = new element();
-		$carousel = new carousel("car1",["style"=>"margin-left:auto;margin-right:auto;","class"=>"center"],5000);
+		$carousel = new carousel("car1",array("style"=>"margin-left:auto;margin-right:auto;","class"=>"center"),5000);
 		foreach ($imagelist as $img => $data) {
 			$carousel->addSlide($img, $data["T"],$data["D"],$data["A"]);
 		}

@@ -150,7 +150,7 @@ use framework\html\anchorbutton;
 			$container = new element("");
 			$columns = $this->columns;
 			if ($this->deleteRecord) {
-				$columns = array_merge($columns,array(":DELETE:"=>["name"=>"Cancella","ontable"=>1]));
+				$columns = array_merge($columns,array(":DELETE:"=>array("name"=>"Cancella","ontable"=>1)));
 			} else {
 				unset($options["data-delurl"]);
 				unset($options["data-editurl"]);
@@ -344,7 +344,7 @@ use framework\html\anchorbutton;
 		 * @return string[]
 		 */
 		function fields() {
-			$cols = [];
+			$cols = array();
 			$db = new database($this->database);
 			$dbcol = $db->columnInfo($this->table);
 			foreach ($dbcol as $vals) {

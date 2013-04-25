@@ -28,7 +28,7 @@ class logincontrol extends template {
 	function __construct() {
 		app::Controller()->getPage()->addJqueryUi();
 		app::Controller()->getPage()->addJavascript("logincontrol.js");
-		$data = [];
+		$data = array();
 		$dropdown = new menu("dropdown_login","dropdown-menu");
 		$dropdown->createMenu("logincontrol_menu", "dropdown-menu");
 		if (app::Security()->user()->isok) {

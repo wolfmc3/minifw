@@ -60,7 +60,7 @@ class element {
 				$this->inner[] = $el;
 				return $el;
 			} else {
-				$this->inner[] = htmlentities($el);
+				$this->inner[] = htmlentities($el,ENT_COMPAT, "UTF-8");
 			}
 		}
 			
@@ -158,7 +158,7 @@ class element {
 		
 		if ($this->tag) $html .= "$fo<".$this->tag;
 		foreach ($this->attr as $key => $value) {
-			$html .= " ".$key."='".htmlspecialchars($value)."' ";
+			$html .= " ".$key."='".htmlspecialchars($value,ENT_COMPAT, "UTF-8")."' ";
 		}
 		if (!is_null($this->inner)) {
 			if ($this->tag) $html .= ">$fo";
@@ -170,7 +170,7 @@ class element {
 				if (is_a($this->inner, "framework\\html\\element") || $this->html) {
 					$html .= $this->inner;
 				} else {
-					$html .= htmlspecialchars($this->inner);
+					$html .= htmlspecialchars($this->inner,ENT_COMPAT, "UTF-8");
 				}
 			}
 			if ($this->tag) {

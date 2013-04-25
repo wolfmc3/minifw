@@ -142,7 +142,7 @@ class img extends page {
 		} elseif ($newwidth && $newheight) {
 			$ratiow = $newwidth/$width;
 			$ratioy = $newheight/$height;
-			$ratio = min([$ratiow,$ratioy]);
+			$ratio = min(array($ratiow,$ratioy));
 			$newwidth = intval($width * $ratio);
 			$newheight = intval($height * $ratio);
 			// ONLY FOR CHECK

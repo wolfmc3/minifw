@@ -5,6 +5,6 @@ class source extends element {
 	
 	function __construct($file) {
 		$cont = file_get_contents("views/$file.php");
-		parent::__construct("pre",[],$cont);
+		parent::__construct("pre",array(),$cont);
 	}
 }
