@@ -70,7 +70,10 @@ class images extends page {
 		foreach ($iconsize as $size) {
 			$cont->append(new img("icon.png/width/$size"));
 		}
-		
+		$cont->add(element::hr());
+		$imagesrequests = isset($_SESSION["cacheimgcount"])?$_SESSION["cacheimgcount"]:0; 
+		$cont->add(new element("small",array(),"Nuove immagini elaborate negli ultimi 60 secondi:".$imagesrequests));
+
 		$cont->addBR(2);
 		$cont->append(new source($this->name()));
 		return $cont;

@@ -26,12 +26,30 @@ class img extends page {
 		}
 		$finfo = finfo_open(FILEINFO_MIME_TYPE);
 		$type = finfo_file($finfo, $img);
-
+		$ext = str_replace("image/", "", $type);
+		//$_SESSION["test"] = "CIAAAAOOOOO";
 		if (next($uri)) {
 			$tmp = app::conf()->system->imagecache;
-			$tmpname = $tmp.urlencode(implode("_", $uri).".png");
+			$tmpname = $tmp.urlencode(implode("_", $uri).".$ext");
 			prev($uri);
-			if (!file_exists($tmpname)){ 
+			if (!file_exists($tmpname) || TRUE ){
+				//PREVENT TOO MANY REQUEST
+				if (isset($_SESSION["cacheimgcount"])) {
+					if ((time()-$_SESSION["cacheimglast"]) < 60 ) {
+						$_SESSION["cacheimgcount"] = $_SESSION["cacheimgcount"]+1; 
+						if ($_SESSION["cacheimgcount"] > app::conf()->system->maximgrequest) {
+							header("HTTP/1.1 429 Too Many Requests");
+							return;
+						}
+							
+					} else {
+						$_SESSION["cacheimgcount"] = 0;
+					}
+				} else {
+					$_SESSION["cacheimgcount"] = 0;
+				}
+				$_SESSION["cacheimglast"] = time();
+				
 				$source = $this->loadimage($img);
 				$i = 0;
 				while (($operation = next($uri)) !== FALSE) {
@@ -49,7 +67,7 @@ class img extends page {
 							$radius = intval(next($uri));
 							$source->blurimage($radius, $sigma);
 						} elseif (ctype_alpha($operation) && $operation == "sepia") {
-							$source->modulateimage(130, 100, 100);
+							$source->modulateimage(140, 100, 100);
 							$source->contrastImage( 1 );
 							$source->sepiatoneimage(80);
 							$source->adaptiveBlurImage( 1, 1 );
@@ -83,12 +101,14 @@ class img extends page {
 					}
 
 				}
+				//$source->setImageBackgroundColor(new \ImagickPixel('white'));
+				//$source->setimageformat("jpg");
 				$source->writeimage($tmpname);
+				
 				$img = $tmpname;
-				$type = "image/png";
+				$type = "image/".$source->getimageformat();
 			} else  {
 				$img = $tmpname;
-				$type = "image/png";
 			}
 		}
 		
@@ -117,7 +137,7 @@ class img extends page {
 	 */
 	private function loadimage($file) {
 		$source = new \Imagick($file);
-		$source->setimageformat("png");
+		//$source->setimageformat("png");
 		return $source;
 	}
 /**
@@ -169,8 +189,11 @@ class img extends page {
 			throw new \Exception("Required one dimension {$newheight}x{$newwidth}");
 		}
 		$box = new \Imagick();
-		$box->newImage($newwidth, $newheight, 'transparent', 'png' );
-		$box->compositeimage($source, \imagick::COMPOSITE_OVERLAY, -($width-$newwidth)/2, -($height-$newheight)/2);
+
+		$box->newImage($newwidth, $newheight, $source->getimagebackgroundcolor(), $source->getimageformat() );
+		$box->compositeimage($source, \imagick::COMPOSITE_OVER, -($width-$newwidth)/2, -($height-$newheight)/2);
+		//$box->setImageBackgroundColor(new \ImagickPixel('white'));
+		
 		//$source->cropimage($newwidth, $newheight, 0, 0);
 		//$source->extentimage($newwidth, $newheight, 0, 0);
 

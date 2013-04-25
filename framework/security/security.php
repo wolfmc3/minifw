@@ -30,7 +30,6 @@ class security {
 	 * 
 	 */
 	function __construct() {
-		session_start();
 		$modulename = "\\framework\\security\\modules\\".app::conf()->security->module;
 		$this->module = new $modulename();
 		

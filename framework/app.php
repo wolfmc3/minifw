@@ -39,6 +39,7 @@ final class app {
 		self::$root = str_replace("index.php", "", $_SERVER['SCRIPT_NAME']);
 		self::$config = new config(__DIR__."/../config/config.ini");
 		if (self::conf()->system->usesessiondb)	session_set_save_handler(new pdosessions());
+		session_start();
 		self::$security = new security();
 		self::$controller = new controller();
 		setlocale(LC_ALL, self::conf()->format->locale);
