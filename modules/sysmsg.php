@@ -18,13 +18,13 @@ class sysmsg extends module {
 		$messages = $_SESSION["ctrl_messages"];
 		$msgcont = new element("div",array(
 				"id"=>"controller_messages",
-				"style"=>"background-color: rgba(125,125,125,0.4); border-radius: 10px;display:block;position:absolute;text-align:right;margin-right:15px;"
+				"style"=>"display:block;position:absolute;text-align:right;margin-right:15px;"
 		));
-		$div = new div("icon-star", "",array("style"=>"height: 12px;"));
-		$div->add(" ");
-		$msgcont->add($div);
+		//$div = new div("icon-star", "",array("style"=>"height: 12px;"));
+		//$div->add(" ");
+		//$msgcont->add($div);
 		foreach ($messages as $line) {
-			$msgcont->add(new element("div",array("class"=>"alert alert-error"),$line,TRUE));
+			$msgcont->add(new element("div",array("class"=>"sysmsg alert alert-error"),$line,TRUE));
 		}
 		$this->add($msgcont);
 	}

@@ -14,3 +14,11 @@ body {
 	height: 100%;
 	margin: 0 auto -100px;
 }
+
+.sysmsg {
+box-shadow: 1px 5px 16px 0px #000000;
+  -webkit-box-shadow: 1px 5px 16px 0px #000000;
+  -moz-box-shadow: 1px 5px 16px 0px #000000;
+  -ms-box-shadow: 1px 5px 16px 0px #000000;
+  -o-box-shadow: 1px 5px 16px 0px #000000;	
+}
