@@ -18,7 +18,7 @@ class element {
 	/**
 	 * @var string[] attributi tag
 	 */
-	protected $attr;
+	protected $attr = array();
 	/**
 	 * @var string[]|\framework\html\element[] oggetti contenuti nel tag
 	 */

@@ -24,7 +24,9 @@ namespace framework\html;
 	 */
 		function __construct($url, $text, $options = array()) {
 			parent::__construct("div",array("class"=>"btn-group"));
-			$this->add(new anchor($url, $text,array("class"=>"btn")));
+			$btn = new anchor($url, $text,$options);
+			$btn->addAttr("class", "btn");
+			$this->add($btn);
 		}
 	}	
 

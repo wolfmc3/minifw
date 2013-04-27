@@ -4,6 +4,7 @@ use framework\html\element;
 use framework\html\responsive\div;
 use framework\views\HTTP404;
 use framework\html\img;
+use framework\html\module;
 /**
  * Controller
  *
@@ -32,7 +33,11 @@ class controller {
 	 * @var array[] $viewscalled Cache oggetti Views riutilizzabili già instanziati dal controller
 	*/
 	private $viewscalled = array();
-
+	/**
+	 * 
+	 * @var \framework\html\module[]
+	 */
+	private $modules = array();
 	/**
 	 * resolveUrl
 	 *
@@ -100,33 +105,6 @@ class controller {
 	}
 
 	/**
-	 * Messages()
-	 *
-	 * Utilizzato nel template HTML per reperire i messaggi destinati all'utente (conferme, notifiche, ecc)<br>
-	 * Genera un TAG DIV con id="controller_messages"<br>
-	 * $_SESSION["ctrl_messages"] viene azzerata automaticamente<br>
-	 * per aggiungere messaggi utilizzare il metodo <code>addMessage(...)</code>
-	 *
-	 * @return string|\framework\html\element
-	 */
-	function messages() {
-		if (!isset($_SESSION["ctrl_messages"])) return "";
-		$messages = $_SESSION["ctrl_messages"];
-		unset($_SESSION["ctrl_messages"]);
-		$msgcont = new element("div",array(
-			"id"=>"controller_messages",
-			"style"=>"background-color: rgba(125,125,125,0.1); border-radius: 10px;display:block;position:absolute;text-align:right;margin-right:15px;"
-		));
-		$div = new div("icon-star", "",array("style"=>"height: 12px;"));
-		$div->add(" ");
-		$msgcont->add($div);
-		foreach ($messages as $line) {
-			$msgcont->add(new element("div",array("class"=>"alert alert-info"),$line,TRUE));
-		}
-		return $msgcont;
-	}
-
-	/**
 	 * Costruttore
 	 *
 	 * Instanziato dalla classe application::init()
@@ -141,7 +119,6 @@ class controller {
 		//print_r($uri);
 		$obj = $uri[0];
 
-		$class = "\\views\\$obj";
 		//var_dump(app::Security()->getPermission($obj));
 		$perm = app::Security()->getPermission($obj);
 		if (!$perm->L && $obj != "login") {
@@ -152,6 +129,7 @@ class controller {
 				exit();
 			}
 		}
+		$class = "\\views\\$obj";
 		if (class_exists($class,true)) {
 			$this->page = new $class($this);
 			$this->page->setPermissions($perm->R, $perm->W, $perm->L, $perm->A);
@@ -167,6 +145,8 @@ class controller {
 			$this->page->addJavascript("sysmsg.js");
 			$this->page->addJqueryUi();
 		}
+		$this->addModule("sysmsg", "\\modules\\sysmsg");
+		
 	}
 
 	/**
@@ -213,6 +193,37 @@ class controller {
 		return $this->approot;
 	}
 
+	function addModule($module, $class) {
+		$moduleobj = new $class();
+		if (is_a($moduleobj, "framework\\module")) {
+			$this->modules[$module] = "Module $module not found";
+			return FALSE;
+		}
+		$this->modules[$module] = $moduleobj;
+	}
+	/**
+	 * 
+	 * @param string $module
+	 * @return \framework\html\module
+	 */
+	function &Module($module) {
+		if (!array_key_exists($module, $this->modules)) {
+			$res = "Module $module not found";
+			return $res;
+		}
+		return $this->modules[$module];
+	}
+	
+	function renderModules() {
+		foreach ($this->modules as $name => $obj) {
+			$obj->render(FALSE);
+		}
+	}
+	function resetModule($module) {
+		if (!array_key_exists($module, $this->modules)) return FALSE;
+		$this->modules[$module] = new module();
+		return TRUE;
+	}
 	/**
 	 * Richiama il rendering della pagina
 	 *
@@ -220,8 +231,10 @@ class controller {
 	 *
 	 * @see \framework\page
 	 */
-
+	
 	function render() {
+		$this->page->action();
+		$this->renderModules();
 		$this->page->render();
 	}
 }

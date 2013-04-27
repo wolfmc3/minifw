@@ -47,6 +47,7 @@ class config {
 			$this->config[$module] = $this->createClass($section);
 		}
 	}
+	
 	private function compile($config) {
 		$parsedconfig = array();
 		foreach ($config as $module => $section) {
@@ -58,6 +59,7 @@ class config {
 		}
 		return $parsedconfig;
 	}
+	
 	private function createClass($section) {
 		$sectionobj = new \stdClass();
 		foreach ($section as $key => $value) {
@@ -73,7 +75,7 @@ class config {
 	 * @param string $section
 	 * @return stdClass
 	 */
-	function __get($section) {
+	function &__get($section) {
 		//echo "Requested: $section";
 		if (array_key_exists($section, $this->config)) {
 			return $this->config[$section];
@@ -90,10 +92,16 @@ class config {
 		foreach ($this->config as $module => $object) {
 			$return .= "[$module]".PHP_EOL;
 			foreach ($object as $key => $value) {
+				if ($key == "password") $value = "XXXXXXXX";
 				$return .= $key ."=".$value.PHP_EOL;
 			}
 			$return .= PHP_EOL;
 		}
 		return $return;
 	}
+	
+}
+class section {
+	private $section = array();
+	
 }

@@ -15,8 +15,12 @@ namespace framework\html\form;
 		 * Costruttore
 		 * @param string $text Titolo del pulsante
 		 */
-		function __construct($text) {
-			parent::__construct("input",array("class"=>"btn", "type" => "submit","value"=> $text,"name" => "SAVE"));
+		function __construct($text,$attr = array()) {
+			parent::__construct("input",$attr);
+			$this->addAttr("class", "btn");
+			$this->addAttr("type", "submit");
+			$this->addAttr("value", $text);
+			$this->addAttr("name", "SAVE");
 		}
 	}	
 

@@ -24,7 +24,6 @@ class menu extends element {
 	 * @param string[] $options Attributi optionali del contenitore (div)
 	 */
 	function __construct() {
-		app::Controller()->getPage()->addJavascript("menu.js");
 		parent::__construct("");
 	}
 	
@@ -58,6 +57,12 @@ class menu extends element {
 		$this->menuitems[$id] = $submenu;
 		//$this->append(new icon("Lock"));*/
 		return TRUE;
+	}
+	function addCustomItem($menu,$class,$inner) {
+		$menu = $this->findId($menu);
+		if (!$menu) return;
+		$menu->addItem($inner,array("class"=>$class));
+		
 	}
 	/**
 	 * addSubMenuItem()

@@ -68,10 +68,15 @@ class template extends element {
 	 */
 	function __construct($file,$data, $folder = "") {
 		parent::__construct("");
+		chdir(__DIR__."/../..");
 		if ($folder == "") $folder = __DIR__."/../../templates/";
-		if (!file_exists("$folder$file.tmpl.htm")) $this->html = "TEMPLATE $folder$file.htm NOT FOUND!!";
+		if (!file_exists("$folder$file.tmpl.htm")) {
+			$this->html = "TEMPLATE $folder$file.htm NOT FOUND!!";
+			return;
+		}
 		$this->template = file_get_contents("$folder$file.tmpl.htm");
 		$this->data = $data;
+		//var_dump($this."");
 	}
 	
 	/**

@@ -25,6 +25,7 @@ class login extends page {
 		parent::init();
 		$this->addJavascript(app::conf()->jquery->ui);
 		$this->addCss(app::conf()->jquery->theme);
+		$this->addCss("login.css");
 	}
 	
 	function action_def() {

@@ -54,7 +54,7 @@ class page {
 	/**
 	 * @var string Template predefinito
 	*/
-	protected $template = "html";
+	protected $template = "";
 
 	/**
 	 * Risposta HTML
@@ -119,15 +119,6 @@ class page {
 	protected $controller;
 
 	/**
-	 * Template menu
-	 *
-	 * I template si trovano nella cartella /templates
-	 *
-	 * @var $menu
-	 */
-	protected $menu = FALSE;
-
-	/**
 	 * Titolo view
 	 *
 	 * @var $title
@@ -139,7 +130,7 @@ class page {
 	 *
 	 * @param void|\framework\controller $controller opzionale. Se non fornito verrà usato il controller dell'applicazione
 	 */
-	function __construct(&$controller = FALSE) {
+	final function __construct(&$controller = FALSE) {
 		$this->obj = preg_replace('/(.*)\\\\(.*)/', "\\2", get_called_class()) ;
 
 		if ($controller === FALSE) {
@@ -191,7 +182,7 @@ class page {
 	 * @return void
 	 */
 	function init() {
-		$this->addJavascript(app::conf()->jquery->core);
+		$this->template = &app::conf()->system->pagetemplate;
 		$this->addJavascript(app::conf()->jquery->core);
 		if (isset($_POST["resp_ajax"])) $this->type = self::TYPE_AJAX;
 	}
@@ -343,15 +334,18 @@ class page {
 	 * @see addCss($css)
 	 *
 	 */
-	function scripts() {
-		foreach ($this->javascripts as $script ) {
-			echo "<script src='$script'></script>".PHP_EOL;
-		}
+	function css() {
 		foreach ($this->css as $script ) {
 			echo "<link rel='stylesheet' type='text/css' href='$script' media='screen'>".PHP_EOL;
 		}
 	}
-
+	
+	function scripts() {
+		foreach ($this->javascripts as $script ) {
+			echo "<script src='$script'></script>".PHP_EOL;
+		}
+	}
+	
 	/**
 	 * Render
 	 *
@@ -362,11 +356,11 @@ class page {
 	 *
 	 */
 	function render() {
-		$this->action();
+		
 		switch ($this->type) {
 			case self::TYPE_HTML:
 				header('Content-type: text/html');
-				require __DIR__."/../templates/".$this->template.".php";
+				require __DIR__."/../themes/".$this->template."/page.php";
 				break;
 			case self::TYPE_AJAX:
 				header('Cache-Control: no-cache, must-revalidate');
@@ -390,30 +384,6 @@ class page {
 				break;
 		}
 
-	}
-
-	/**
-	 * Generazione menu
-	 *
-	 * Viene richiamato dal template per generare il menu
-	 *
-	 * @see $menu
-	 *
-	 */
-	function menu() {
-		if ($this->menu) {
-			return $this->menu ;
-		}
-	}
-	/**
-	 * setMenu()
-	 *
-	 * Imposta il menu
-	 *
-	 * @param string $menuModel
-	 */
-	function setMenu($menuModel) {
-		$this->menu = "".$menuModel;
 	}
 
 	/**

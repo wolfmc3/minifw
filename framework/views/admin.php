@@ -48,39 +48,15 @@ class admin extends page {
 		$list = explode("/", str_replace(".php", "", implode("/", $list))); 
 		 $list = array_combine($list,$list);
 		$cont = new div("row"); 
-		$secblock = $cont->append(new textblock(array("Moduli sicurezza: ", new select("sec_modules",$list,app::conf()->security->module,array("id"=>"sec_modules","data-info"=>$this->url("secinfo"), "style"=>"vertical-align: baseline;"))),4,1));
+		$secblock = $cont->append(new textblock(array("Moduli sicurezza: ", new select("sec_modules",$list,app::conf()->security->module,array("id"=>"sec_modules","data-info"=>$this->url("secinfo"), "style"=>"vertical-align: baseline;"))),3,1));
 		$secblock->add(new element("p",array("id"=>"secinfo"),"Scegli il modulo"));
 		
-		$opblock = $cont->append(new textblock("Menutenzione e test",4,2));
+		$opblock = $cont->append(new textblock("Menutenzione e test",3,1));
 		$opblock->append(new anchorbutton($this->url("permissiontest"),"Controllo permessi"));
 		$opblock->append(new anchorbutton(app::root()."admin_config","Vedi configurazione"));
+		$opblock->append(new anchorbutton(app::root()."admin_menu","Menu di sistema"));
 		$opblock->append(new anchorbutton($this->url("clearcache"),"Azzera cache immagini"));
 		
-		//$cont->add($secblock);
-		
-		/*
-		 * VECCHIO!!!
-		 * */
-		  
-		/*$cont = new dotlist("thumbnails");
-		$sec_cont = new element("div",array("class"=>"thumbnail"));
-		$sec_title = new element("h5",array("class"=>"title"));
-		$sec_title->add("Moduli sicurezza: ");
-		$sec_title->add(new select("sec_modules",$list,app::conf()->security->module,array("id"=>"sec_modules","data-info"=>$this->url("secinfo"), "style"=>"vertical-align: baseline;")));
-		$sec_cont->add($sec_title);
-		$sec_cont->add(new element("p",array("id"=>"secinfo"),"Scegli il modulo"));
-
-		$tests_cont = new element("div",array("class"=>"thumbnail"));
-		$tests_title = new element("h5",array("class"=>"title"));
-		$tests_title->add("Test di sistema: ");
-		$tests_cont->add($tests_title);
-		$tests_div = $tests_cont->append(new element("p",array("id"=>"secinfo"),""));
-		$tests_div->add(new anchor($this->url("permissiontest"),"Controllo permessi"));
-		$tests_div->addBR();
-		$tests_div->add(new anchor(app::root()."admin_config","Vedi configurazione"));
-		
-		$cont->addItem($sec_cont);
-		$cont->addItem($tests_cont);*/
 		return $cont;
 	}
 	

@@ -7,7 +7,11 @@ spl_autoload_register(function($className) {
 	if($className[0] == '\\') {
 		$className = substr($className, 1);
 	}
-	if(strpos($className, 'framework') !== 0 && strpos($className, 'views') !== 0 && strpos($className, 'menu') !== 0) return;
+	if(
+		strpos($className, 'framework') !== 0 && 
+		strpos($className, 'views') !== 0 && 
+		strpos($className, 'modules') !== 0
+	) return;
 	
 	$classPath = str_replace("\\", "/", $className) .'.php';
 
@@ -27,8 +31,13 @@ use menu\mainmenu;
 	
 app::init();
 $page = app::Controller()->getPage();
+
 $page->addCss(app::conf()->system->maincss);
 $page->addJavascript(app::conf()->system->mainjs);
-$page->setMenu(new mainmenu("menu"));
+app::Controller()->addModule("applink", "\\modules\\applink");
+app::Controller()->addModule("footer", "\\modules\\footer");
+app::Controller()->addModule("themeswitch", "\\modules\\themeswitch");
+app::Controller()->addModule("logincontrol", "\\modules\\logincontrol");
+app::Controller()->addModule("menu", "\\modules\\mainmenu");
 app::Controller()->render();
 

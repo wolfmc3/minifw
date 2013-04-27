@@ -1,6 +1,14 @@
 $(document).ready(function() {
 	$(".numeric").spinner();
-	$(".bool").buttonset();
+	$(".bool").each(function(){
+		$(this).find(".btn").click(function(){
+			$(this).parent().find("button").removeClass("active");
+			$(this).addClass("active");
+			var val = $(this).data("value"); 
+			$(this).parent().find("input").val(val);
+			return false;
+		});
+	});
 	$(".date,.time").change(function() {
 		var cur = "";
 		$("[data-ref='"+$(this).data("ref") +"']").each(function(){

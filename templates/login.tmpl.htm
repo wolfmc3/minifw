@@ -1,43 +1,10 @@
-<div id="login_form" title="Login">
-<form action="{loginurl}" method="POST">
-<table style="width: 100%;">
-	<tr>
-		<th>Nome utente</th>
-		<td><input name="username" type="text"></td>
-	</tr>
-	<tr>
-		<th>Password</th>
-		<td><input name="password" type="password"></td>
-	</tr>
-	<tr>
-		<td></td>
-		<td>
-			<input id="store" type="checkbox" name="remember">
-			<label for="remember">Memorizza i dati</label>
-		</td>
-	</tr>
-</table>
-<input name="returnurl" type="hidden" value="{returnurl}" />
+<form class="form-signin" action="{loginurl}" method="POST">
+        <h2 class="form-signin-heading">Login</h2>
+        <input name="username" type="text" class="input-block-level" placeholder="Nome utente">
+        <input name="password" type="password" class="input-block-level" placeholder="Password">
+        <label class="checkbox">
+          <input name="store" type="checkbox" value="1">Ricorda su questo computer
+        </label>
+        <button class="btn btn-large btn-primary" type="submit">Login</button>
+        <input name="returnurl" type="hidden" value="{returnurl}" />
 </form>
-</div>
-<script>
-	$(document).ready(function(){
-		$("#login_form").dialog({
-			height : 320,
-			width : 450,
-			show: "fade",
-    		hide: "fade",
-			resizable : false,
-			closeOnEscape: false,
-			open: function(event, ui) { 
-				$(this).parent().find('.ui-dialog-titlebar-close').hide();
-			},
-			buttons : {
-				"Login" : function() {
-					$(this).dialog("close");
-					$(this).find("form").submit();
-				},
-			}
-		});
-	});
-</script>

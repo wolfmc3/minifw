@@ -35,8 +35,6 @@ class home extends \framework\page {
 		$result = "".$cont;
 		$cont->append(new element("h3"))->add("Il codice necessario per questa pagina:");
 		$cont->add(new source($this->name()));
-		$cont->append(new element("h3"))->add("Codice HTML:");
-		$cont->append(new element("pre"))->add($result);
 		return $cont;
 	}
 

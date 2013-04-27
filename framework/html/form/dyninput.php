@@ -25,13 +25,14 @@ class dyninput extends element {
 		 * @param string[] $setting Impostazioni
 		 */
 		function __construct($key, $text, $setting = array()) {
+			app::Controller()->getPage()->addJqueryUi();
 			app::Controller()->getPage()->addJavascript("dyninput.js");
 				
 			parent::__construct("span");
 			if (count($setting) && array_key_exists("inputtype", $setting)) {
 				$input = NULL;
 				$dt = $setting['inputtype'];
-				$len = $setting['len'];
+				$len = isset($setting['len'])?$setting['len']:12;
 				if ($dt == "readonly" && $text === NULL) $dt = 'text';
 				if ($dt == "readonly") {
 					$this->add($text);
@@ -58,11 +59,10 @@ class dyninput extends element {
 					$input = $this->append(new element("textarea",array("name" => $key),$text.""));
 					$input->addAttr("style","width: 100%; height: 150px;");
 				} elseif ($dt == "bool") {
-					$input = $this->append(new element("div",array("id" => $key,"class"=>"bool")));
-					$input->add(new element("label",array("for"=>"{$key}1"),"Si"));
-					$input->add(new element("input",array("type"=>"radio","name"=>"$key","value"=>"1","id"=>"{$key}1")));
-					$input->add(new element("label",array("for"=>"{$key}2"),"No"));
-					$input->add(new element("input",array("type"=>"radio","name"=>"$key","value"=>"0","id"=>"{$key}2")));
+					$input = $this->append(new element("div",array("id" => $key,"data-toggle"=>"buttons-radio","class"=>"bool btn-group")));
+					$input->add(new element("button",array("class"=>"btn btn-primary".($text?" active":""),"data-name"=>"$key","data-value"=>"1","id"=>"{$key}1"),"Si"));
+					$input->add(new element("button",array("class"=>"btn btn-primary".((!$text)?" active":""),"data-name"=>"$key","data-value"=>"0","id"=>"{$key}2"),"No"));
+					$input->add(new hidden($key, ($text?"1":"0")));
 					$input = NULL;
 				} else {
 					$input = $this->append(new element("input",array("type" => "text","value"=> $text,"name" => $key)));
