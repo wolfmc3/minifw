@@ -1,5 +1,6 @@
 <?php 
 namespace framework\html;
+use framework\io\file;
 /**
  * template
  *
@@ -31,6 +32,7 @@ class template extends element {
 	 * @var boolean Indica che il tag utilizza codice html
 	 */
 	protected $html = TRUE;
+	protected $valid = FALSE;
 	/**
 	 * Costruttore
 	 * 
@@ -66,19 +68,24 @@ class template extends element {
 	 * @param string[] $data Array associativo contenente chiavi e valori da sostituire nel template
 	 * @param string $folder
 	 */
-	function __construct($file,$data, $folder = "") {
+	function __construct($filename,$data, $folder = "") {
 		parent::__construct("");
-		chdir(__DIR__."/../..");
-		if ($folder == "") $folder = __DIR__."/../../templates/";
-		if (!file_exists("$folder$file.tmpl.htm")) {
-			$this->html = "TEMPLATE $folder$file.htm NOT FOUND!!";
+
+		if ($folder == "") $folder = "templates/";
+		$file = new file("$filename.tmpl.htm",TRUE,$folder);
+		if (!$file->exist()) {
+			
+			$this->template = "TEMPLATE $folder$filename.htm NOT FOUND!!";
 			return;
 		}
-		$this->template = file_get_contents("$folder$file.tmpl.htm");
+		$this->valid = TRUE;
+		$this->template = $file->read();
 		$this->data = $data;
 		//var_dump($this."");
 	}
-	
+	function isValid() {
+		return $this->valid;
+	}
 	/**
 	 * @see \framework\html\element::__toString()
 	 */

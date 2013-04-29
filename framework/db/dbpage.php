@@ -10,7 +10,10 @@ namespace framework\db {
 	use framework\html\form\paging;
 	use framework\app;
 use framework\html\anchorbutton;
-		/**
+use framework\io\file;
+use framework\html\template;
+use framework\html\html;
+								/**
  * Classe dbpage
  * 
  * Estendere questa classe per ottenere oggetti instaziabili dalla classe controller per generare pagine collegate a database
@@ -163,6 +166,26 @@ use framework\html\anchorbutton;
 			if ($this->addRecord) $container->add(new anchorbutton(app::root().$this->obj."/add", array(new icon("Plus")," Nuovo"),array("class"=>"button")) );
 			return $container;
 		}
+		
+		function action_item() {
+			if (!$this->viewRecord) return "";
+			$cont = new element();
+			$db = new database($this->database);
+			$row = $db->row($this->table, $this->item,$this->idkey);
+			$template = new template("dbpages/$this->obj", $row);
+			if ($template->isValid()) {
+				$cont->add($template);
+			} else {
+				$data = $this->editRecord?"<h3>Campi disponibili<h3><pre>".print_r(array_keys($row),TRUE)."</pre>":"";  
+				$cont->append(element::h1())->append("Manca template per la visualizzazione");
+				$cont->append(new html($data));
+			}
+			if ($this->editRecord) {
+				$cont->add(element::hr());
+				$cont->add(new anchorbutton($this->url("edit/".$this->item), "Modifica",array("class"=>"btn-danger btn-mini")));
+			}
+			return $cont;
+		}
 		/**
 		 * Azione edit
 		 * 
@@ -214,7 +237,6 @@ use framework\html\anchorbutton;
 		 *
 		 * @return NULL
 		 */
-		
 		function action_remove() {
 			if (!$this->editRecord) return "";
 			$db = new database($this->database);
@@ -305,6 +327,11 @@ use framework\html\anchorbutton;
 		function link($id,$action = "table") {
 			if (!$id) return "-";
 			return new anchor($this->uri($id,"edit") , $this->label($id));
+		}
+		
+		function view($id,$action = "table") {
+			if (!$id) return "-";
+			return new anchor($this->uri($id,"item") , $this->label($id));
 		}
 		
 		

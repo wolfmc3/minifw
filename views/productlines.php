@@ -21,7 +21,7 @@ protected $columns = array(
   'textDescription' =>   array(
     'name' => 'textDescription',    'ontable' => 1,    'inputtype' => 'longtext',    'relation' => '',    'regexpr' => '',    'datatype' => 'varchar',    'len' => 4000,    'null' => 1,  ),
   'htmlDescription' =>   array(
-    'name' => 'htmlDescription',    'ontable' => 1,    'inputtype' => 'longtext',    'relation' => '',    'regexpr' => '',    'datatype' => 'mediumtext',    'len' => 0,    'null' => 1,  ),
+    'name' => 'htmlDescription',    'ontable' => 1,    'inputtype' => 'html',    'relation' => '',    'regexpr' => '',    'datatype' => 'mediumtext',    'len' => 0,    'null' => 1,  ),
 );
 	
 //CAMPO DESCRIZIONE

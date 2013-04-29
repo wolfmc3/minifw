@@ -22,7 +22,7 @@ namespace framework\html;
 		 * @param mixed $html Blocco HTML da inserire
 		 */
 		function __construct($html) {
-			$this->inner = $html;
+			$this->inner = "".$html;
 		}
 		/**
 		 * toString() Genera una stringa contenente il codice HTML generato

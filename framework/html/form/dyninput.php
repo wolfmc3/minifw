@@ -4,6 +4,7 @@ namespace framework\html\form;
 use framework\html\anchor;
 use framework\app;
 use framework\html\icon;
+use plugins\tinymce\tmcetextarea;
 /**
  * dyninput
  *
@@ -58,6 +59,9 @@ class dyninput extends element {
 				} elseif ($dt == "longtext") {
 					$input = $this->append(new element("textarea",array("name" => $key),$text.""));
 					$input->addAttr("style","width: 100%; height: 150px;");
+				} elseif ($dt == "html") {
+					$input = $this->append(new tmcetextarea("$key"));
+					$input->setContents($text);
 				} elseif ($dt == "bool") {
 					$input = $this->append(new element("div",array("id" => $key,"data-toggle"=>"buttons-radio","class"=>"bool btn-group")));
 					$input->add(new element("button",array("class"=>"btn btn-primary".($text?" active":""),"data-name"=>"$key","data-value"=>"1","id"=>"{$key}1"),"Si"));
@@ -68,7 +72,7 @@ class dyninput extends element {
 					$input = $this->append(new element("input",array("type" => "text","value"=> $text,"name" => $key)));
 				}
 				if ($input) {
-					$input->addAttr("class", "ui-widget ui-widget-content ui-corner-all");
+					//$input->addAttr("class", "ui-widget ui-widget-content ui-corner-all");
 					if (array_key_exists('relation', $setting) && $setting['relation']) {
 						$obj = $setting['relation'];
 						$input->addAttr("readonly","1");

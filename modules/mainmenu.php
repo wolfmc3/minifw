@@ -10,11 +10,12 @@ use framework\html\responsive\div;
 use framework\html\module;
 use framework\html\template;
 use framework\html\dotlist;
+use framework\io\file;
 class mainmenu extends module {
-	private $menufile = "lib/menu.dat";
+	private $menufile = "menu.dat";
 	
 	function render() {
-		$menuitems = unserialize(file_get_contents($this->menufile));
+		$menuitems = file::file($this->menufile)->getValues();
 		//var_dump($menuitems);
 		app::Controller()->getPage()->addJavascript("menu.js");
 		$data = array("homelink"=>app::Controller()->Module("applink"));

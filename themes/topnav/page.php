@@ -20,6 +20,7 @@ use framework\app;
 	<?= $this->title() ?>
 </title>
 <?php $this->css(); ?>
+<?php $this->scripts(); ?>
 <link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="<?php echo app::root() ?>css/navtop.css" media="screen">
 </head>
@@ -43,18 +44,15 @@ use framework\app;
 				</div>
 		</div>
 	</div>
-	<div class="container">
+	<div class="container" style="padding-top: 18px">
 		<?php echo $this->results; ?>
-		
+		<div style="height: 100px;"></div>
 	</div>
 </div>
 	<div class="footer muted" style="">
 	<?php echo app::Controller()->Module("footer"); ?>
-	<br>
 	</div>
 	<?php echo app::Controller()->Module("sysmsg"); ?>
-<?php $this->scripts(); ?>
-	
 	</body>
 </html>
 

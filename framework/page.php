@@ -34,7 +34,7 @@ class page {
 	 * @var mixed variabile contenente il risultato dell'operazione action_*
 	 */
 	protected $results = NULL;
-
+	
 	/**
 	 *
 	 * @var string[] Parametri extra passati nell'url
@@ -253,7 +253,7 @@ class page {
 	/**
 	 * addJqueryUi()
 	 *
-	 * Aggiunge automaticamente i riferimenti css e javascript per utilizzare jquery con jqueryui<br>
+	 * Aggiunge automaticamente i riferimenti css e javascript per utilizzare jquery con jquery-ui<br>
 	 * Questo metodo chiama automaticamente addJquery()
 	 *
 	 */
@@ -356,7 +356,6 @@ class page {
 	 *
 	 */
 	function render() {
-		
 		switch ($this->type) {
 			case self::TYPE_HTML:
 				header('Content-type: text/html');

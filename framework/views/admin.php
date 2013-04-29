@@ -56,6 +56,7 @@ class admin extends page {
 		$opblock->append(new anchorbutton(app::root()."admin_config","Vedi configurazione"));
 		$opblock->append(new anchorbutton(app::root()."admin_menu","Menu di sistema"));
 		$opblock->append(new anchorbutton($this->url("clearcache"),"Azzera cache immagini"));
+		$opblock->append(new anchorbutton(app::root()."admin_update","Manutenzione file"));
 		
 		return $cont;
 	}

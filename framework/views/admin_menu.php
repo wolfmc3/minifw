@@ -15,6 +15,7 @@ use framework\html\anchor;
 use framework\html\anchorbutton;
 use framework\html\form\edittable;
 use framework\html\responsive\textblock;
+use framework\io\file;
 /**
  *
  * admin_pdoauth_permissions
@@ -29,7 +30,7 @@ use framework\html\responsive\textblock;
  */
 
 class admin_menu extends page {
-	private $menufile = "lib/menu.dat";
+	private $menufile = "menu.dat";
 	protected $title = "Amministazione menu";
 	private $data = array();
 	private $cols = array(
@@ -48,8 +49,9 @@ class admin_menu extends page {
 	 */
 	function init() {
 		parent::init();
-		if (file_exists($this->menufile)) {
-			$this->data = unserialize(file_get_contents($this->menufile));
+		$file = file::file($this->menufile);
+		if ($file->exist()) {
+			$this->data = $file->getValues();
 		}
 		$this->typeByAction("save", $this::TYPE_REDIRECT);
 		$this->addJavascript("dbpages.js");
@@ -90,7 +92,7 @@ class admin_menu extends page {
 		if ($i == $newindex) {
 			$newdata[$id] = $element;
 		}
-		file_put_contents($this->menufile, serialize($newdata));
+		file::file($this->menufile)->setValues($newdata);
 		return $this->url();
 	}
 	
@@ -99,7 +101,7 @@ class admin_menu extends page {
 		$id = $this->item;
 		$data = $this->data;
 		unset($data[$id]);
-		file_put_contents($this->menufile, serialize($data));
+		file::file($this->menufile)->setValues($data);
 		return $this->url();
 	}
 	
@@ -134,7 +136,7 @@ class admin_menu extends page {
 			if (!$id) $id = count($this->data)+1;
 			$row['id'] = $id;
 			$this->data[$id] = $row;
-			file_put_contents($this->menufile, serialize($this->data));
+			file::file($this->menufile)->setValues($this->data);
 		}
 		return $this->url();
 	}

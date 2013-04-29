@@ -19,6 +19,7 @@ use framework\app;
 	<?= $this->title() ?>
 </title>
 <?php $this->css(); ?>
+<?php $this->scripts(); ?>
 
 <link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
 </head>
@@ -58,7 +59,6 @@ use framework\app;
 	</div>
 
 	<?php echo app::Controller()->Module("sysmsg"); ?>
-	<?php $this->scripts(); ?>
 </body>
 </html>
 

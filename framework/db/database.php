@@ -12,6 +12,7 @@ namespace framework\db {
 	 *
 	 */
 	class database {
+		//TODO. SEPARARE LA LOGICA DI ESTRAZIONE (interfaccia) DAL MODULO DATABASE
 		/**
 		 * Database di sistema instanziato da init()
 		 * @var \PDO
@@ -32,7 +33,7 @@ namespace framework\db {
 		/**
 		 * init()
 		 * 
-		 * inizializza se necessaria la connessione al database di sistema
+		 * inizializza, se necessario, la connessione al database di sistema
 		 */
 		function init() {
 			$module = $this->module;

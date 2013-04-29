@@ -1,0 +1,8 @@
+<h1><img style="float: right;" title="TinyMCE Logo" src="img/icon.png/width/64/" alt="Logo" width="64" height="64" />Mini_fw adesso incorpora TinyMCE 4.</h1>
+<p>Utilizzare questo componente al posto del tag <code>textarea</code> per generare testi html formattati dall'utente</p>
+<p>Questo componente &egrave; gi&agrave; integrato in:</p>
+<ul>
+<li>DBPAGE (utilizzando il tipo di colonna <code>"html")</code></li>
+<li>Utilizzando direttamente la classe <code>\plugin\tinymce\tmcetextarea</code></li>
+</ul>
+<p>Guarda l'esempio sotto per vedere come si utilizza</p>

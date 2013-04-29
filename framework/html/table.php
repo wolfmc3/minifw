@@ -78,6 +78,13 @@ namespace framework\html;
 							new anchor(app::root()."$obj/$action/0/0/$callkey,$id", new icon("Arrow2-Down"),array("class"=>"inlinedetail rotate"))
 						)); else $tr->add(new element("td",array("style"=>"text-align:center;"),"-"));
 							
+					} elseif (substr($colname,0,1) == ">") { //VIEW SINGLE
+						$colname = str_replace("?", "", $colname);
+						list($obj,$linkid) = explode("/", $colname);
+						$id = $row[$linkid];
+						$tr->add(new element("td",array(),
+							app::Controller()->$obj->view($id)		
+						));
 					} elseif (substr($colname,0,1) == "?") { //EDIT SINGLE
 						$colname = str_replace("?", "", $colname);
 						list($obj,$linkid) = explode("/", $colname);
@@ -103,7 +110,13 @@ namespace framework\html;
 							new element("b",NULL,$colname)		
 						));
 					} else {
-						$tr->add(new element("td",array(),$row[$colname]));						
+						$dt = isset($setting['inputtype'])?$setting['inputtype']:"text";
+						$len = isset($setting['len'])?$setting['len']:12;
+						$content = $row[$colname];
+						if ($dt == "html") {
+							$content = new html($content);
+						}
+						$tr->add(new element("td",array(),$content));						
 					}
 
 				}

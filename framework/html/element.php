@@ -63,7 +63,6 @@ class element {
 				$this->inner[] = htmlentities($el,ENT_COMPAT, "UTF-8");
 			}
 		}
-			
 	}
 
 	function addBR($count = 1) {
@@ -98,8 +97,9 @@ class element {
 	 *
 	 * aggiunge un attributo al tag, se l'attributo già esiste aggiunge $value all'attributo esistente
 	 *
-	 * @param unknown $key
-	 * @param unknown $value
+	 * @param string $key
+	 * @param string $value
+	 * @return \framework\html\element THIS element
 	 */
 	function addAttr($key,$value) {
 		if (array_key_exists($key,$this->attr)) {
@@ -107,6 +107,7 @@ class element {
 		} else {
 			$this->attr[$key] = $value;
 		}
+		return $this;
 	}
 	
 	function getContents() {

@@ -10,6 +10,7 @@ spl_autoload_register(function($className) {
 	if(
 		strpos($className, 'framework') !== 0 && 
 		strpos($className, 'views') !== 0 && 
+		strpos($className, 'plugins') !== 0 && 
 		strpos($className, 'modules') !== 0
 	) return;
 	
