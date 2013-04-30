@@ -1,4 +1,10 @@
 <?php 
+/**
+ * 
+ * mainmenu.php
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ */
 namespace modules;
 use framework\menu;
 use framework\html\img;
@@ -11,9 +17,29 @@ use framework\html\module;
 use framework\html\template;
 use framework\html\dotlist;
 use framework\io\file;
+/**
+ * 
+ * Modulo mainmenu
+ *
+ * Genera un tag ul -> li per ogni voce di menu
+ * il file compilato del menu si trova in /usr/menu.dat 
+ * il template si trova in /templates/menu.tmpl.htm
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ * @package modules
+ * 
+ */
 class mainmenu extends module {
+	/**
+	 * 
+	 * @var string Nome del file contenente la definizione del menu
+	 * 
+	 */
 	private $menufile = "menu.dat";
-	
+	/**
+	 * Esegue il rendering del menu
+	 * @see \framework\html\module::render()
+	 */
 	function render() {
 		$menuitems = file::file($this->menufile)->getValues();
 		//var_dump($menuitems);

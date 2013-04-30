@@ -1,4 +1,11 @@
-<?php 
+<?php
+/**
+ *
+ * admin_pdoauth_permissions.php
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ *
+ */
 namespace framework\views;
 use framework\page;
 use framework\html\table;
@@ -27,30 +34,46 @@ use framework\html\anchorbutton;
  */
 
 class admin_pdoauth_permissions extends page {
+	/**
+	 *
+	 * @var array Colonne
+	 */
 	private $cols = array(
-	"path"=>array("name"=>"Percorso","ontable"=>1),
-	"group"=>array("name"=>"Gruppo","ontable"=>1),
-	"permission"=>array("name"=>"Permessi","ontable"=>1)
+			"path"=>array("name"=>"Percorso","ontable"=>1),
+			"group"=>array("name"=>"Gruppo","ontable"=>1),
+			"permission"=>array("name"=>"Permessi","ontable"=>1)
 	);
+	/**
+	 *
+	 * @var string[] Gruppi
+	*/
 	private $groups;
+	/**
+	 *
+	 * @var string[] nomi per i permessi consentiti
+	 */
 	private $permitNames = array(
-		"W"=>"Write+",
-		"R"=>"Read+",
-		"L"=>"List+",
-		"A"=>"Add+",
+			"W"=>"Write+",
+			"R"=>"Read+",
+			"L"=>"List+",
+			"A"=>"Add+",
 	);
+	/**
+	 *
+	 * @var string[] Nomi per i permessi negati
+	*/
 	private $deniedNames = array(
-		"w"=>"Write-",
-		"r"=>"Read-",
-		"l"=>"List-",
-		"a"=>"Add-"
+			"w"=>"Write-",
+			"r"=>"Read-",
+			"l"=>"List-",
+			"a"=>"Add-"
 	);
-	
+
 	/**
 	 * init()
 	 *
 	 * @see \framework\page::init()
-	 */
+	*/
 	function init() {
 		parent::init();
 		$this->addJavascript("pdoauth.js");
@@ -62,10 +85,13 @@ class admin_pdoauth_permissions extends page {
 		$this->groups = array("?"=>"Anonimi","*"=>"Qualsiasi utente");
 		foreach ($groupsret->rows as $row) {
 			$this->groups[$row['group']] = $row["name"];
-		} 
-		
-	}
+		}
 
+	}
+	/**
+	 * Azione di modifica
+	 * @return \framework\html\element
+	 */
 	function action_edit() {
 		$div = new element("div");
 		$cont = $div->append(new element("form",array("action"=>$this->url("save/$this->item"),"method"=>"post")));
@@ -77,25 +103,28 @@ class admin_pdoauth_permissions extends page {
 			if ($key == "path") $el = new text($key, $row[$key]);
 			if ($key == "group") $el = new select($key, $this->groups, $row[$key]);
 			if ($key == "permission") {
-				$values = str_split($row[$key]); 
+				$values = str_split($row[$key]);
 				$el = array(
-					new checkboxes($key, $this->permitNames, $values),
-					new br(),
-					new checkboxes($key, $this->deniedNames, $values)
+						new checkboxes($key, $this->permitNames, $values),
+						new br(),
+						new checkboxes($key, $this->deniedNames, $values)
 				);
 			}
-	
+
 			$tr = $table->append(new element("tr"));
-			
+
 			$tr->append(new element("th",array(),$value['name']));
 			$tr->append(new element("td",array(),$el));
 		}
 		$table->append(new element("tr"))->append(element::td())->append(new submit("Salva"));
 		$cont->append(new hidden("id", $this->item));
-		
+
 		return $div;
 	}
-	
+	/**
+	 * Azione di default
+	 * @see \framework\page::action_def()
+	 */
 	function action_def() {
 		$db = new database("pdoauth");
 		$ret = $db->read("permissions");
@@ -107,14 +136,17 @@ class admin_pdoauth_permissions extends page {
 		$cont->add(new anchorbutton($this->url("edit"), "Aggiungi",array("class"=>"addperm")));
 		return $cont;
 	}
-	
+	/**
+	 * Azione di salvataggio
+	* @return string
+	*/
 	function action_save() {
 		$row = NULL;
 		try {
 			$row = array(
-				":path"=>$_POST["path"],
-				":group"=>$_POST["group"],
-				":permission"=>implode("", $_POST['permission'])
+					":path"=>$_POST["path"],
+					":group"=>$_POST["group"],
+					":permission"=>implode("", $_POST['permission'])
 			);
 			$db = new database("pdoauth");
 			$db->write("permissions", $row, $this->cols,$this->item);

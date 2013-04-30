@@ -1,5 +1,12 @@
 <?php
-namespace framework\html\form; 
+/**
+ *
+ * hidden.php
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ *
+ */
+namespace framework\html\form;
 	use framework\html\element;
 	/**
 	 * hidden
@@ -11,12 +18,14 @@ namespace framework\html\form;
 	 *
 	 *
 	 */
-	
+
 	class hidden extends element {
 		/**
-		 * Costruttore 
+		 * Costruttore
+		 *
 		 * @param string $key Nome campo (attributo name)
 		 * @param string $text Valore (attributo value)
+		 * @param string[] $options Attributi opzionali
 		 */
 		function __construct($key, $text, $options = array()) {
 			parent::__construct("input",$options);
@@ -26,5 +35,5 @@ namespace framework\html\form;
 				->addAttr("name", $key)
 			;
 		}
-	}	
+	}
 

@@ -1,9 +1,16 @@
-<?php 
+<?php
+/**
+ *
+ * config.php
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ *
+ */
 namespace framework;
 /**
- * Config 
+ * Config
  *
- * Gestisce il reperimento della configurazione 
+ * Gestisce il reperimento della configurazione
  * Combina le impostazioni di default (/framework/config) e quelle specifiche dell'applicazione (/config)
  * La classe config e normalmente inizializzata e gestita dalla classe app
  *
@@ -15,16 +22,16 @@ namespace framework;
 class config {
 	/**
 	 * Contenitore delle classi config
-	 * 
-	 * @var stdClass $config 
+	 *
+	 * @var stdClass $config
 	 */
 	private $config = array();
-	
+
 	/**
 	 * Construttore
-	 * 
+	 *
 	 * Recupera e combina le impostazioni di default e le impostazioni specificate nel file $file
-	 * 
+	 *
 	 * @param string $file percorso assoluto del file di configurazione
 	 */
 	function __construct($file) {
@@ -47,7 +54,12 @@ class config {
 			$this->config[$module] = $this->createClass($section);
 		}
 	}
-	
+	/**
+	 * Compile()
+	 * Espande i paramentri di configurazione
+	 * @param array $config
+	 * @return array
+	 */
 	private function compile($config) {
 		$parsedconfig = array();
 		foreach ($config as $module => $section) {
@@ -59,7 +71,13 @@ class config {
 		}
 		return $parsedconfig;
 	}
-	
+
+	/**
+	 * createClass()
+	 *
+	 * @param array $section
+	 * @return \stdClass
+	 */
 	private function createClass($section) {
 		$sectionobj = new \stdClass();
 		foreach ($section as $key => $value) {
@@ -69,9 +87,9 @@ class config {
 	}
 	/**
 	 * ->[section]
-	 * 
+	 *
 	 * Ritorna un oggetto stdClass con le impostazioni della sezione richiesta
-	 * 
+	 *
 	 * @param string $section
 	 * @return stdClass
 	 */
@@ -100,9 +118,5 @@ class config {
 		}
 		return $return;
 	}
-	
-}
-class section {
-	private $section = array();
-	
+
 }

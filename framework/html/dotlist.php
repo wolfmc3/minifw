@@ -1,5 +1,12 @@
-<?php 
-namespace framework\html; 
+<?php
+/**
+ *
+ * dotlist.php
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ *
+ */
+namespace framework\html;
 /**
  * dotlist
  *
@@ -21,7 +28,7 @@ namespace framework\html;
 class dotlist extends element {
 	/**
 	 * Costruttore
-	 * 
+	 *
 	 * @param string $ulclass classe css per l'elemento UL
 	 * @param string[] $options Attributi opzionali del tag
 	 */
@@ -29,12 +36,12 @@ class dotlist extends element {
 		parent::__construct("ul",$options);
 		if ($ulclass) $this->addAttr("class", $ulclass);
 	}
-	
+
 	/**
 	 * addItem()
-	 * 
+	 *
 	 * Aggiunge gli elementi in un tag LI
-	 * 
+	 *
 	 * @param string|\framework\html\element $el elemento da inserire nel tag LI
 	 * @param string[] $attr attributi del tag LI
 	 */
@@ -43,15 +50,15 @@ class dotlist extends element {
 		$ul->add($el);
 		parent::add($ul);
 	}
-	
+
 	/**
 	 * add
-	 * 
+	 *
 	 * aggiunge un tag li per ogni elemento specificato
-	 * 
+	 *
 	 * @param \framework\html\element $el Elemento da inserire
 	 * @param string[] $attr Attributi del tag LI da generare
-	 * 
+	 *
 	 * @see \framework\html\element::add()
 	 */
 	function add($el, $attr = array()) {
@@ -65,4 +72,4 @@ class dotlist extends element {
 			parent::add($ul);
 		}
 	}
-} 
+}

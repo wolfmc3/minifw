@@ -1,5 +1,12 @@
 <?php
-namespace framework\html; 
+/**
+ *
+ * img.php
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ *
+ */
+namespace framework\html;
 	use framework\app;
 	/**
 	 * img
@@ -21,11 +28,11 @@ namespace framework\html;
 	class img extends element {
 		/**
 		 * Costruttore
-		 * 
+		 *
 		 * @param string $img percorso immagine relativa alla cartella /img/*
 		 */
 		function __construct($img) {
 			parent::__construct("img",array("src" => app::root()."img/$img"));
 		}
-	}	
+	}
 

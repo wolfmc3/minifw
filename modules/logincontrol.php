@@ -1,11 +1,30 @@
 <?php 
+/**
+ * 
+ * logincontrol.php
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ */
 namespace modules;
 use framework\html\module;
 use framework\menu;
 use framework\html\template;
 use framework\app;
+/**
+ * 
+ * logincontrol
+ *
+ * Crea un bottone con menu contestuale per il login/logout 
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ * @package modules
+ */
 class logincontrol extends module {
-	function render($force) {
+	/**
+	 * Genera il blocco html completo
+	 * @see \framework\html\module::render()
+	 */
+	function render() {
 
 		app::Controller()->getPage()->addJqueryUi();
 		app::Controller()->getPage()->addJavascript("logincontrol.js");

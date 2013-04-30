@@ -1,4 +1,8 @@
 <?php 
+/**
+ * Tema DEFAULT
+ * Template di pagina
+ */
 use framework\app;
 ?>
 <!DOCTYPE HTML>

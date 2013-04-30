@@ -1,47 +1,63 @@
 <?php
+/**
+ *
+ * admin_pdoauth_groups.php
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ *
+ */
 namespace framework\views;
 use framework\db\dbpage;
 
 /**
- * 
+ *
  * admin_pdoauth_groups
  *
- * Pagina per la gestione dei gruppi per il modulo sicurezza pdoauth 
+ * Pagina per la gestione dei gruppi per il modulo sicurezza pdoauth
  *
  * @author Marco Camplese <info@wolfmc3.com>
  * @package minifw/security
- * 
+ *
  * @see \framework\security\modules\pdoauth
  *
  */
 class admin_pdoauth_groups extends dbpage {
-//TABELLA
-protected $table = 'groups';
+	/**
+	 *
+	 * @var string Tabella
+	 */
+	protected $table = 'groups';
+	/**
+	 *
+	 * @var string Database
+	 */
+	protected $database = 'pdoauth';
 
-protected $database = 'pdoauth';
+	/**
+	 *
+	 * @var string Chiave primaria
+	 */
+	protected $idkey = 'group';
 
-//CHIAVE PRIMARIA
-protected $idkey = 'group';
+	/**
+	 *
+	 * @var array Impostazioni colonne
+	 */
+	protected $columns = array(
+			'group' =>   array(
+					'name' => 'group',    'ontable' => 1,    'inputtype' => 'text',    'relation' => '',    'required' => 1,    'regexpr' => '',    'datatype' => 'varchar',    'len' => 12,    'null' => 0,  ),
+			'name' =>   array(
+					'name' => 'name',    'ontable' => 1,    'inputtype' => 'text',    'relation' => '',    'required' => 1,    'regexpr' => '',    'datatype' => 'varchar',    'len' => 15,    'null' => 0,  ),
+	);
 
-//PERMESSI
-protected $addRecord = TRUE;
-protected $editRecord = TRUE;
-protected $deleteRecord = TRUE;
-protected $viewRecord = TRUE;
-
-//LISTA COLONNE e IMPOSTAZIONI
-protected $columns = array(
-  'group' =>   array(
-    'name' => 'group',    'ontable' => 1,    'inputtype' => 'text',    'relation' => '',    'required' => 1,    'regexpr' => '',    'datatype' => 'varchar',    'len' => 12,    'null' => 0,  ),
-  'name' =>   array(
-    'name' => 'name',    'ontable' => 1,    'inputtype' => 'text',    'relation' => '',    'required' => 1,    'regexpr' => '',    'datatype' => 'varchar',    'len' => 15,    'null' => 0,  ),
-);
-	
-//CAMPO DESCRIZIONE
-protected $DescriptionKeys = 'group';
-				 	
-//TITOLO VISUALIZZATO NEL BROWSER
-function title() {
-	return 'PdoAuth Gruppi';
-}
+	/**
+	 *
+	 * @var string Campo descrizione
+	*/
+	protected $DescriptionKeys = 'group';
+	/**
+	 *
+	 * @var string Titolo Pagina
+	 */
+	protected $title = 'PdoAuth Gruppi';
 }

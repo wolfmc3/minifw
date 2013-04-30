@@ -1,5 +1,12 @@
 <?php
-namespace framework\html; 
+/**
+ *
+ * select.php
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ *
+ */
+namespace framework\html;
 /**
  * select
  *
@@ -27,22 +34,22 @@ namespace framework\html;
 class select extends element {
 	/**
 	 * Costruttore
-	 * 
+	 *
 	 * @param string $name Corrisponde all'attributo name="$name" del tag select
 	 * @param string $data Array contenente la coppia chiave=>valore della select
 	 * @param string $cur Valore da riportare come selezionato ""=nessuno
 	 * @param string $options attributi del tag select
 	 */
-		function __construct($name, $data, $cur, $options = array()) {
-			parent::__construct("select", array_merge(array("name" => $name),$options));
-			foreach ($data as $key => $value) {
-				$options = array("value" => $key);
-				if ($cur == $key) $options["selected"] = "1";
-				$el = new element("option",$options);
-				$el->add($value);
-				$this->add($el);
-			}
-			
+	function __construct($name, $data, $cur, $options = array()) {
+		parent::__construct("select", array_merge(array("name" => $name),$options));
+		foreach ($data as $key => $value) {
+			$options = array("value" => $key);
+			if ($cur == $key) $options["selected"] = "1";
+			$el = new element("option",$options);
+			$el->add($value);
+			$this->add($el);
 		}
-	}	
+
+	}
+}
 

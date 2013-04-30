@@ -1,17 +1,42 @@
-<?php 
+<?php
+/**
+ *
+ * img.php
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ *
+ */
 namespace framework\views;
 use framework\page;
 use framework\app;
+/**
+ *
+ * Vista per la visualizzazione delle immagini e gestione della cache
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ * @package minifw
+ *
+ */
 class img extends page {
+	/**
+	 *
+	 * @var int Tipo valore di ritorno
+	 */
 	protected $type = page::TYPE_CUSTOM;
+	/**
+	 * Azione di default sempre HTTP404
+	 * @see \framework\page::action_def()
+	 */
 	function action_def() {
 		header('HTTP/1.0 404 Not Found');
 	}
-
+	/**
+	 * Risposta a tutte le richieste
+	 */
 	function action_other() {
 		//echo "\n".__DIR__.app::root()."img/".$this->action.":\n";
 		//echo "\nimmagine:".app::Controller()->uri.PHP_EOL;
-		
+
 		$uri = array_slice(app::Controller()->parseduri, 0);
 		$img = "img";
 		reset($uri);
@@ -36,12 +61,12 @@ class img extends page {
 				//PREVENT TOO MANY REQUEST
 				if (isset($_SESSION["cacheimgcount"])) {
 					if ((time()-$_SESSION["cacheimglast"]) < 60 ) {
-						$_SESSION["cacheimgcount"] = $_SESSION["cacheimgcount"]+1; 
+						$_SESSION["cacheimgcount"] = $_SESSION["cacheimgcount"]+1;
 						if ($_SESSION["cacheimgcount"] > app::conf()->system->maximgrequest) {
 							header("HTTP/1.1 429 Too Many Requests");
 							return;
 						}
-							
+
 					} else {
 						$_SESSION["cacheimgcount"] = 0;
 					}
@@ -49,17 +74,17 @@ class img extends page {
 					$_SESSION["cacheimgcount"] = 0;
 				}
 				$_SESSION["cacheimglast"] = time();
-				
+
 				$source = $this->loadimage($img);
 				$i = 0;
 				while (($operation = next($uri)) !== FALSE) {
 					/*if (ctype_alpha($operation)) {
 						$draw = new \ImagickDraw();
-						$draw->setFillColor('white');
-						$draw->setFont('Arial');
-						$draw->setFontSize( 15 );
-						
-						$source->annotateimage($draw, 15, 15*$i++, 0, $operation);
+					$draw->setFillColor('white');
+					$draw->setFont('Arial');
+					$draw->setFontSize( 15 );
+
+					$source->annotateimage($draw, 15, 15*$i++, 0, $operation);
 					}*/
 					try {
 						if (ctype_alpha($operation) && $operation == "blur") {
@@ -104,36 +129,38 @@ class img extends page {
 				//$source->setImageBackgroundColor(new \ImagickPixel('white'));
 				//$source->setimageformat("jpg");
 				$source->writeimage($tmpname);
-				
+
 				$img = $tmpname;
 				$type = "image/".$source->getimageformat();
 			} else  {
 				$img = $tmpname;
 			}
 		}
-		
+
 		$last_modified_time = filemtime($img);
 		if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) == $last_modified_time) {
 			header("HTTP/1.1 304 Not Modified");
 			return;
 		}
-		
+
 		header('Content-Type:'.$type);
 		header('Content-Length: ' . filesize($img));
 		header('Cache-control: public, max-age='.(60*60*6).', pre-check='.(60*60*6).'');
 		header("Pragma: public");
 		header('Expires: '. date(DATE_RFC822,strtotime(" 2 day")));
 		header("Last-Modified: ".gmdate("D, d M Y H:i:s", $last_modified_time)." GMT");
-		
+
 		//header("Cache-Control: max-age=1, private, proxy-revalidate");
 		readfile($img);
 
 	}
 
 	/**
-	 * 
+	 * loadimage($file)
+	 *
+	 * Carica l'immagine
+	 *
 	 * @param string $file
-	 * @param string $type
 	 * @return \Imagick
 	 */
 	private function loadimage($file) {
@@ -141,14 +168,17 @@ class img extends page {
 		//$source->setimageformat("png");
 		return $source;
 	}
-/**
- * 
- * @param \Imagick $source
- * @param number $newwidth
- * @param number $newheight
- * @throws \Exception
- * @return \Imagick
- */
+	/**
+	 * resize()
+	 *
+	 * Ridimensiona l'immagine
+	 *
+	 * @param \Imagick $source
+	 * @param number $newwidth
+	 * @param number $newheight
+	 * @throws \Exception
+	 * @return \Imagick
+	 */
 	private function resize(&$source,$newwidth = 0,$newheight = 0) {
 		list($width,$height) = array_values($source->getimagegeometry());
 
@@ -175,7 +205,9 @@ class img extends page {
 	}
 
 	/**
-	 * 
+	 * box()
+	 *
+	 * Crea un box che include l'immagine centrata
 	 * @param \Imagick $source
 	 * @param number $newwidth
 	 * @param number $newheight
@@ -183,7 +215,7 @@ class img extends page {
 	 */
 	private function box(&$source,$newwidth = 0,$newheight = 0) {
 		list($width,$height) = array_values($source->getimagegeometry());
-		
+
 		if ($newwidth && $newheight) {
 			// ONLY FOR CHECK
 		} else {
@@ -194,7 +226,7 @@ class img extends page {
 		$box->newImage($newwidth, $newheight, $source->getimagebackgroundcolor(), $source->getimageformat() );
 		$box->compositeimage($source, \imagick::COMPOSITE_OVER, -($width-$newwidth)/2, -($height-$newheight)/2);
 		//$box->setImageBackgroundColor(new \ImagickPixel('white'));
-		
+
 		//$source->cropimage($newwidth, $newheight, 0, 0);
 		//$source->extentimage($newwidth, $newheight, 0, 0);
 

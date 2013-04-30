@@ -1,5 +1,12 @@
 <?php
-namespace framework\html\form; 
+/**
+ *
+ * dyninput.php
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ *
+ */
+namespace framework\html\form;
 	use framework\html\element;
 use framework\html\anchor;
 use framework\app;
@@ -20,7 +27,7 @@ use plugins\tinymce\tmcetextarea;
 
 class dyninput extends element {
 		/**
-		 * Costruttore 
+		 * Costruttore
 		 * @param string $key Nome del tag nel form (attributo name)
 		 * @param string $text Valore attuale (attributo value)
 		 * @param string[] $setting Impostazioni
@@ -28,7 +35,7 @@ class dyninput extends element {
 		function __construct($key, $text, $setting = array()) {
 			app::Controller()->getPage()->addJqueryUi();
 			app::Controller()->getPage()->addJavascript("dyninput.js");
-				
+
 			parent::__construct("span");
 			if (count($setting) && array_key_exists("inputtype", $setting)) {
 				$input = NULL;
@@ -45,10 +52,10 @@ class dyninput extends element {
 					$time = date(app::conf()->format->time, $objdate);
 					if (strpos($dt, "date") !== FALSE) {
 						$input = $this->append(new element("input",array("type" => "text","value"=>$date, "class" => "date","data-ref"=>$key)));
-					}					
+					}
 					if (strpos($dt, "time") !== FALSE) {
 						$input = $this->append(new element("input",array("type" => "time","value"=>$time, "class" => "time","data-ref"=>$key)));
-					}					
+					}
 					$input = $this->append(new element("input",array("type" => "hidden","value"=> $text,"id" => $key,"name" => $key)));
 				} elseif ($dt == "text" || $dt == "password") {
 					$input = $this->append(new element("input",array("type" => $dt,"value"=> $text,"name" => $key)));
@@ -93,6 +100,6 @@ class dyninput extends element {
 				parent::__construct("input",array("type" => "text","value"=> $text,"name" => $key));
 			}
 		}
-		
-	}	
+
+	}
 

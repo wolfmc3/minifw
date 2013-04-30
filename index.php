@@ -1,4 +1,11 @@
 <?php
+/**
+ * index.php
+ * 
+ * questa pagina e il frontcontroller dell'applicazione avvia le richieste di autoload delle classi e inizializza gli oggetti di sistema
+ * 
+ * @package minifw
+ */
 //error_reporting(E_ALL);
 //ini_set('error_reporting', E_ALL);
 

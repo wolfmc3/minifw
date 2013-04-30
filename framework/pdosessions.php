@@ -1,21 +1,38 @@
-<?php 
+<?php
+/**
+ *
+ * pdosessions.php
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ *
+ */
 namespace framework;
 use framework\db\database;
 /**
- * 
+ *
  * pdosessions
  *
- * Gestione sessione su database mysql 
+ * Gestione sessione su database mysql
  *
  * @author Marco Camplese <info@wolfmc3.com>
  * @package minifw/security
  *
  */
 class pdosessions implements \SessionHandlerInterface {
+	/**
+	 *
+	 * @var \framework\db\database Oggetto Database utilizzato per memorizzare le sessioni
+	 */
 	private $db;
+	/**
+	 *
+	 * @var array Dati della sessione utente
+	 */
 	private $data;
 
 	/**
+	 * Chiude la sessione
+	 *
 	 * @see SessionHandlerInterface::close()
 	 */
 	public function close(){
@@ -23,6 +40,8 @@ class pdosessions implements \SessionHandlerInterface {
 	}
 
 	/**
+	 * Distrugge la sessione
+	 * @param string $session_id ID sessione
 	 * @see SessionHandlerInterface::destroy()
 	 */
 	public function destroy ($session_id ) {
@@ -30,6 +49,8 @@ class pdosessions implements \SessionHandlerInterface {
 	}
 
 	/**
+	 * Garbage Collector
+	 * @param number $maxlifetime Scadenza sessione in secondi
 	 * @see SessionHandlerInterface::gc()
 	 */
 	public function gc($maxlifetime ) {
@@ -38,6 +59,11 @@ class pdosessions implements \SessionHandlerInterface {
 	}
 
 	/**
+	 * Apre la sessione
+	 *
+	 * @param string $save_path Non utilizzato
+	 * @param string $name 		Non utilizzato
+	 *
 	 * @see SessionHandlerInterface::open()
 	 */
 	public function open($save_path, $name ) {
@@ -46,6 +72,8 @@ class pdosessions implements \SessionHandlerInterface {
 	}
 
 	/**
+	 * Legge i dati dalla sessione
+	 * @param string $session_id ID sessione
 	 * @see SessionHandlerInterface::read()
 	 */
 	public function read($session_id ) {
@@ -54,6 +82,9 @@ class pdosessions implements \SessionHandlerInterface {
 	}
 
 	/**
+	 * Scrive i dati della sessione
+	 * @param string $session_id ID sessione
+	 * @param mixed $session_data Dati della sessione da scrivere
 	 * @see SessionHandlerInterface::write()
 	 */
 	public function write($session_id , $session_data ) {
@@ -61,8 +92,8 @@ class pdosessions implements \SessionHandlerInterface {
 			":data"=>$session_data,
 			":id"=>$session_id
 			);
-			if (!$this->db->row("sessions",$session_id )) $session_id = NULL; 
-		
+			if (!$this->db->row("sessions",$session_id )) $session_id = NULL;
+
 			$this->db->write("sessions", $row, array("data"=>"data","id"=>"id"),$session_id);
 		return TRUE;
 	}

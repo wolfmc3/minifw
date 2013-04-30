@@ -1,5 +1,12 @@
 <?php
-namespace framework\html\form; 
+/**
+ *
+ * text.php
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ *
+ */
+namespace framework\html\form;
 	use framework\html\element;
 /**
  * text
@@ -12,12 +19,13 @@ namespace framework\html\form;
  */
 	class text extends element {
 		/**
-		 * 
+		 * Costruttore
+		 *
 		 * @param string $key Nome del campo input (attributo name)
 		 * @param string $text Valore del campo (attributo value)
 		 */
 		function __construct($key, $text) {
 			parent::__construct("input",array("type" => "text","value"=> $text,"name" => $key));
 		}
-	}	
+	}
 

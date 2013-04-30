@@ -1,7 +1,14 @@
 <?php
-namespace framework\html; 
+/**
+ *
+ * html.php
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ *
+ */
+namespace framework\html;
 	/**
-	 * anchor 
+	 * anchor
 	 *
 	 * Genera un blocco html
 	 *
@@ -18,7 +25,7 @@ namespace framework\html;
 		protected $html = TRUE;
 		/**
 		 * Costruttore
-		 * 
+		 *
 		 * @param mixed $html Blocco HTML da inserire
 		 */
 		function __construct($html) {
@@ -26,12 +33,12 @@ namespace framework\html;
 		}
 		/**
 		 * toString() Genera una stringa contenente il codice HTML generato
-		 * 
+		 *
 		 * @see \framework\html\element::__toString()
 		 */
 		function __toString() {
 			return $this->inner;
 		}
-		
-	}	
+
+	}
 

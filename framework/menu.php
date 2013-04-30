@@ -1,4 +1,11 @@
-<?php 
+<?php
+/**
+ *
+ * menu.php
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ *
+ */
 namespace framework;
 use framework\html\element;
 use framework\html\anchor;
@@ -6,10 +13,10 @@ use framework\html\dotlist;
 use framework\html\icon;
 use framework\html\responsive\div;
 /**
- * 
+ *
  * menu
  *
- * Crea un blocco html compatibile con i menu ul->li (page->setMenu) 
+ * Crea un blocco html compatibile con i menu ul->li (page->setMenu)
  *
  * @author Marco Camplese <info@wolfmc3.com>
  * @package minifw
@@ -18,15 +25,21 @@ use framework\html\responsive\div;
 class menu extends element {
 	/**
 	 * Costruttore
-	 * 
-	 * @param string $id attributo id del contenitore del menu (div)
-	 * @param string $ulclass Attributo class della lista dei menu (ul)
-	 * @param string[] $options Attributi optionali del contenitore (div)
+	 *
 	 */
 	function __construct() {
 		parent::__construct("");
 	}
-	
+
+	/**
+	 * createMenu()
+	 *
+	 * Crea un nuovo menu
+	 *
+	 * @param string $id Id menu
+	 * @param string $class Class del menu
+	 * @return \framework\html\dotlist
+	 */
 	function &createMenu($id, $class) {
 		$newmenu = new dotlist($class,array("id"=>$id));
 		$this->add($newmenu);
@@ -34,12 +47,13 @@ class menu extends element {
 	}
 	/**
 	 * addMenuItem()
-	 * 
+	 *
+	 * @param string $menu Id del menu
 	 * @param string $id id del tag a (anchor)
-	 * @param string $obj url o oggetto da visulizzare 
+	 * @param string $obj url o oggetto da visulizzare
 	 * @param string $text testo del link generato
 	 * @param string $checkpermission se TRUE verifica e decide se visulizzare il link, tramite l'oggetto security
-	 * @return boolean Ritorna TRUE se la voce è stata inserita, FALSE se i permessi dell'utente non permettono di vilualizzare l'oggetto
+	 * @return boolean Ritorna TRUE se la voce è stata inserita, FALSE se i permessi dell'utente non permettono di visualizzare l'oggetto
 	 */
 	function addMenuItem($menu,$id, $obj, $text, $checkpermission = FALSE) {
 		$menu = $this->findId($menu);
@@ -58,20 +72,29 @@ class menu extends element {
 		//$this->append(new icon("Lock"));*/
 		return TRUE;
 	}
+	/**
+	 * addCustomItem()
+	 *
+	 * Aggiunge una voce personalizzata
+	 *
+	 * @param string $menu Id del menu
+	 * @param string $class Classe del menu
+	 * @param \framework\html\element $inner Contenuto
+	 */
 	function addCustomItem($menu,$class,$inner) {
 		$menu = $this->findId($menu);
 		if (!$menu) return;
 		$menu->addItem($inner,array("class"=>$class));
-		
+
 	}
 	/**
 	 * addSubMenuItem()
-	 * 
+	 *
 	 * Aggiunge alla voce di menù già creata un sottomenu
-	 * 
+	 *
 	 * @param string $parent Id della voce del menu dove aggiungere l'oggetto
 	 * @param string $id id del tag a (anchor) da inserire
-	 * @param string $obj url o oggetto da visulizzare 
+	 * @param string $obj url o oggetto da visulizzare
 	 * @param string $text testo del link generato
 	 * @return boolean Ritorna TRUE se la voce $parent esiste e il menu è stato inserito
 	 */
@@ -98,4 +121,4 @@ class menu extends element {
 		$submenu->addItem(new anchor($obj,$text));
 		return true;
 	}
-} 
+}

@@ -1,13 +1,10 @@
 <?php
-use framework\app;
 /**
- * Template pagina html
- *
- * Template necessario per le pagine standard
- *
- *
+ * Tema LEFTNAV
+ * Template di pagina responsivo con menu a sinistra
  */
 
+use framework\app;
 ?>
 <!DOCTYPE html>
 <html lang="it">

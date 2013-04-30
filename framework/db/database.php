@@ -1,4 +1,11 @@
-<?php 
+<?php
+/**
+ *
+ * database.php
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ *
+ */
 namespace framework\db {
 	use framework\app;
 	/**
@@ -12,7 +19,7 @@ namespace framework\db {
 	 *
 	 */
 	class database {
-		//TODO. SEPARARE LA LOGICA DI ESTRAZIONE (interfaccia) DAL MODULO DATABASE
+		//TODO. SEPARARE LA LOGICA DI ESTRAZIONE (interfaccia) DAL MODULO DATABASE per creare moduli
 		/**
 		 * Database di sistema instanziato da init()
 		 * @var \PDO
@@ -22,12 +29,24 @@ namespace framework\db {
 		 * @var string Modulo di configurazione che contiene le impostazioni del database
 		 */
 		private $module;
+		/**
+		 *
+		 * @var string Chiave che identifica la connessione
+		 */
 		private $hostkey;
+		/**
+		 *
+		 * @var string Nome del database prelevato dalla configurazione
+		 */
 		private $database;
+		/**
+		 *
+		 * @var string Prefisso tabelle
+		 */
 		private $prefix;
 		/**
 		 * Costruttore
-		 * 
+		 *
 		 * @param string $module optional Modulo di configurazione che contiene le impostazioni del database
 		 */
 		function __construct($module = "database") {
@@ -35,13 +54,13 @@ namespace framework\db {
 		}
 		/**
 		 * init()
-		 * 
+		 *
 		 * inizializza, se necessario, la connessione al database di sistema
 		 */
 		function init() {
 			$module = $this->module;
 			if (!$this->hostkey) {
-				
+
 				try {
 					$config = app::conf()->$module;
 					if (!$config) throw new \Exception("Error: Not find config section $module");
@@ -52,7 +71,7 @@ namespace framework\db {
 					//$dsn .= "dbname=".$config->database;
 					if (!$config->database) throw new \Exception("Error: Database not specified $module");
 					$this->database = $config->database;
-					if (array_key_exists($this->hostkey, $this::$db)) return; 
+					if (array_key_exists($this->hostkey, $this::$db)) return;
 					$this::$db[$this->hostkey] = new \PDO($dsn, $config->user, $config->password,array(\PDO::ERRMODE_EXCEPTION));
 					$this::$db[$this->hostkey]->exec("set names utf8 /* $this->hostkey ".$_SERVER["REQUEST_URI"]." */");
 				} catch (\Exception $e) {
@@ -60,15 +79,15 @@ namespace framework\db {
 				}
 			}
 		}
-		
+
 		/**
 		 * compileid
-		 * 
+		 *
 		 * Se la stringa $id contiene nomi separati da virgole li combina per richiedere al database un unico dato.
 		 * Necessario per tabelle che hanno chiavi primarie multiple.
 		 * esempio:
 		 * <code>"customerNumber,orderNumber" --> "CONCAT(customerNumber,'~',orderNumber)"</code>
-		 * 
+		 *
 		 * @param string $id Campo id (di solito specificato nel campi idkey di dbpages)
 		 * @return string
 		 */
@@ -79,14 +98,14 @@ namespace framework\db {
 				return "CONCAT(`".str_replace(",", "`, '~' ,`", $id)."`)";
 			}
 		}
-		
+
 		/* function setdb() {
 			$this::$db[$this->hostkey]->exec("use $this->database;");
 		}*/
-		
+
 		/**
 		 * Ritorna le informazioni sulle colonne della tabella specificata ($table)
-		 * 
+		 *
 		 * @param string $table Tabella del database
 		 * @return array[]
 		 */
@@ -103,14 +122,14 @@ namespace framework\db {
 
 		/**
 		 * read
-		 * 
+		 *
 		 * Legge dal database tutte le righe
-		 * 
+		 *
 		 * @param string $table Tabella del database
 		 * @param number $start Record iniziale (primo record=0)
 		 * @param number $count Blocco di record da leggere (0=tutti)
 		 * @param string $filter Filtro WHERE nel formato t-sql. esempio:
-		 * <code>"customerNumber > ? AND customerNumber < ?"</code> 
+		 * <code>"customerNumber > ? AND customerNumber < ?"</code>
 		 * @param string[] $filterargs Array associativo con i dati del filtro
 		 * @return \framework\db\resultset
 		 */
@@ -122,25 +141,25 @@ namespace framework\db {
 			}
 			$sql = "SELECT * FROM `{$this->database}`.`{$this->prefix}{$table}` $where";
 			$ret = new resultset();
-			
+
 			if ($count) {
 				$sqlcount = "SELECT count(*) FROM `{$this->database}`.`{$this->prefix}{$table}` $where";
-				
+
 				$sth = $this::$db[$this->hostkey]->prepare($sqlcount);
-				$sth->execute($filterargs);				
+				$sth->execute($filterargs);
 				$row = $sth->fetch(\PDO::FETCH_NUM);
 				$ret->count = $row[0]-$start;
 				$ret->start = $start;
 				$ret->block = $count;
-				$sql .= " LIMIT $start,$count"; 
+				$sql .= " LIMIT $start,$count";
 			}
 			$res = array();
-			
+
 			$sth = $this::$db[$this->hostkey]->prepare($sql);
 			$sth->execute($filterargs);
 			//$sth->debugDumpParams();
 			while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
-				$res[] = $row;	
+				$res[] = $row;
 			}
 			$ret->rows = $res;
 			return $ret;
@@ -148,12 +167,12 @@ namespace framework\db {
 
 		/**
 		 * row
-		 * 
+		 *
 		 * Ritorna una singola riga di database corrispondente a $idkey=$id
-		 * 
+		 *
 		 * @param string $table Tabella del database
 		 * @param string $id valore univoco del campo id
-		 * @param string $idkey nome del campo id (di solito la chiave primaria) 
+		 * @param string $idkey nome del campo id (di solito la chiave primaria)
 		 * @return mixed[]
 		 */
 		function row($table,$id,$idkey = "id") {
@@ -162,7 +181,7 @@ namespace framework\db {
 			//echo "IDKEY:".$idkey." ID:$id";
 			$sql = "SELECT * FROM `{$this->database}`.`{$this->prefix}{$table}` WHERE $idkey = ?";
 			$id = array($id);
-			
+
 			$sth = $this::$db[$this->hostkey]->prepare($sql);
 			$sth->execute($id);
 			//$sth->debugDumpParams();
@@ -170,15 +189,15 @@ namespace framework\db {
 			//print_r($row);
 			return $row;
 		}
-		
+
 		/**
 		 * delete
-		 * 
+		 *
 		 * Cancella una singola riga di database corrispondente a $idkey=$id
-		 * 
+		 *
 		 * @param string $table Tabella del database
 		 * @param string $id valore univoco del campo id
-		 * @param string $idkey nome del campo id (di solito la chiave primaria) 
+		 * @param string $idkey nome del campo id (di solito la chiave primaria)
 		 * @return boolean TRUE se la cancellazione è avvenuta con successo
 		 */
 		function delete($table,$id,$idkey = "id") {
@@ -186,14 +205,15 @@ namespace framework\db {
 			$idkey = $this->compileid($idkey);
 			$sql = "DELETE FROM `{$this->database}`.`{$this->prefix}{$table}` WHERE $idkey = ?";
 			$id = array($id);
-				
+
 			$sth = $this::$db[$this->hostkey]->prepare($sql);
 			return $sth->execute($id);
 		}
 		/**
 		 * execute()
-		 * 
+		 *
 		 * @param string $sql Query SQL i valori devono essere inseriti come parametri nominati es: <code>`id` = :id</code>
+		 * @param string $table Nome della tabella oggetto della query
 		 * @param string[] $args Array associativo contenete i dati per i parametri della query le chiavi devono iniziare con ":"
 		 * @return boolean TRUE se eseguita correttamente
 		 */
@@ -205,11 +225,11 @@ namespace framework\db {
 		}
 		/**
 		 * Aggiunge o aggiorna una riga della tabella $table
-		 * 
+		 *
 		 * @param string $table Tabella del database
-		 * @param mixed[] $data Array associativo che contiene i dati da scrivere nel database. esempio: 
+		 * @param mixed[] $data Array associativo che contiene i dati da scrivere nel database. esempio:
 		 * <code>$data[":customerName"] = "Pallino spa"</code>
-		 * I nomi di colonna devono essere preceduti da ":" 
+		 * I nomi di colonna devono essere preceduti da ":"
 		 * @param string[] optional $fields Array associativo che contiene i nomi di colonna (protezione contro la scrittura di dati erreti)
 		 * @param string optional $id Valore della chiave primaria se NULL o non specificato la riga verrà aggiunta e non aggiornata
 		 * @param string optional $idkey Nome della colonna id. Se non specificato verrà usato "id"
@@ -245,7 +265,7 @@ namespace framework\db {
 			if (!$res) app::Controller()->addMessage("Errore durante il salvataggio: ".print_r($sth->errorInfo(),TRUE));
 			return $res;
 		}
-		
+
 	}
 	/**
 	 * resultset
@@ -269,8 +289,8 @@ namespace framework\db {
 		 */
 		public $count;
 		/**
-		 * 
-		 * 
+		 *
+		 *
 		 * @var number Indice progressivo numerico del primo record rispetto al totale
 		 */
 		public $start;
@@ -278,10 +298,10 @@ namespace framework\db {
 		 * @var number Quantità di righe del blocco (numero di righe della pagina)
 		 */
 		public $block;
-		
+
 		/**
 		 * page()
-		 * 
+		 *
 		 * Ritorna il numero di pagina corrente
 		 * @return number
 		 */
@@ -299,17 +319,17 @@ namespace framework\db {
 		}
 		/**
 		 * next()
-		 * 
+		 *
 		 * Ritorna un array contentente:
 		 * <code>
 		 * array(
 		 * [0] //numero di riga del prossimo blocco
 		 * [1] //il totale dei record del prossimo blocco
 		 * )
-		 * 
-		 * FALSE = Ultimo blocco  
+		 *
+		 * FALSE = Ultimo blocco
 		 * </code>
-		 * @return boolean|number[] 
+		 * @return boolean|number[]
 		 */
 		public function next() {
 			if ($this->start+$this->block > $this->count) {

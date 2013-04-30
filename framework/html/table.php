@@ -1,5 +1,12 @@
 <?php
-namespace framework\html; 
+/**
+ *
+ * table.php
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ *
+ */
+namespace framework\html;
 	use framework\app;
 	/**
 	 * table
@@ -16,8 +23,8 @@ namespace framework\html;
 	 */
 	class table extends element {
 		/**
-		 * Costruttore 
-		 * 
+		 * Costruttore
+		 *
 		 * @param string[] $cols Array associativo contenente le chiavi e i nomi di colonna
 		 * @param string[] $rows Array associativo contenente le righe
 		 * @param string $useidkey Riservato per l'utilizzo come tabella associata a dati
@@ -29,7 +36,7 @@ namespace framework\html;
 			parent::__construct("table",$options,array());
 			$this->addAttr("class", "rtable table table-striped table-hover");
 			$this->addAttr("style", "width: 100%;");
-				
+
 			$head = new element("tr",array(),array());
 
 			foreach ($cols as $colname => $setting) {
@@ -40,13 +47,13 @@ namespace framework\html;
 			foreach ($cols as $colname => $setting) {
 				if ($setting['ontable']) {
 					$head->add(new element("th",NULL,$setting['name']));
-				} 
-					
+				}
+
 			}
 			$this->add( new element("thead",array(),$head) );
 			$tbody = new element("tbody");
 			foreach ($rows as $row) {
-				
+
 				$tr = new element("tr");
 				if ($useidkey !== FALSE) {
 					$useidkey = str_replace(",", "~", $useidkey);
@@ -64,8 +71,8 @@ namespace framework\html;
 						}
 					} elseif (substr($colname,0,1) == "/") { //OPEN LIST
 						list($null,$obj,$action,$item,$idtarget) = explode("/", $colname);
-						$id = $row[$item]; 
-						$callkey = $idtarget; 
+						$id = $row[$item];
+						$callkey = $idtarget;
 						if ($id) $tr->add(new element("td",array("style"=>"text-align:center;"),
 							new anchor(app::root()."$obj/$action/0/0/$callkey,$id", new icon("Search"))
 						)); else $tr->add(new element("td",array("style"=>"text-align:center;"),"-"));
@@ -73,31 +80,31 @@ namespace framework\html;
 						$colname = str_replace("+", "/", $colname);
 						list($null,$obj,$action,$item,$idtarget) = explode("/", $colname);
 						$id = $row[$item];
-						$callkey = $idtarget; 
+						$callkey = $idtarget;
 						if ($id) $tr->add(new element("td",array("style"=>"text-align:center;"),
 							new anchor(app::root()."$obj/$action/0/0/$callkey,$id", new icon("Arrow2-Down"),array("class"=>"inlinedetail rotate"))
 						)); else $tr->add(new element("td",array("style"=>"text-align:center;"),"-"));
-							
+
 					} elseif (substr($colname,0,1) == ">") { //VIEW SINGLE
 						$colname = str_replace("?", "", $colname);
 						list($obj,$linkid) = explode("/", $colname);
 						$id = $row[$linkid];
 						$tr->add(new element("td",array(),
-							app::Controller()->$obj->view($id)		
+							app::Controller()->$obj->view($id)
 						));
 					} elseif (substr($colname,0,1) == "?") { //EDIT SINGLE
 						$colname = str_replace("?", "", $colname);
 						list($obj,$linkid) = explode("/", $colname);
 						$id = $row[$linkid];
 						$tr->add(new element("td",array(),
-							app::Controller()->$obj->link($id)		
+							app::Controller()->$obj->link($id)
 						));
 					} elseif (substr($colname,0,1) == "!") { //Label OTHER VIEW
 						$colname = str_replace("!", "", $colname);
 						list($obj,$linkid) = explode("/", $colname) ;
 						$id = $row[$linkid];
 						$tr->add(new element("td",array(),
-							new element("span",NULL,app::Controller()->$obj->label($id))		
+							new element("span",NULL,app::Controller()->$obj->label($id))
 						));
 					} elseif (substr($colname,0,1) == "=") { //Calculated view
 						$colname = str_replace("=", "", $colname);
@@ -107,7 +114,7 @@ namespace framework\html;
 						//echo $colname;
 						$colname = eval("return $colname;");
 						$tr->add(new element("td",array(),
-							new element("b",NULL,$colname)		
+							new element("b",NULL,$colname)
 						));
 					} else {
 						$dt = isset($setting['inputtype'])?$setting['inputtype']:"text";
@@ -116,7 +123,7 @@ namespace framework\html;
 						if ($dt == "html") {
 							$content = new html($content);
 						}
-						$tr->add(new element("td",array(),$content));						
+						$tr->add(new element("td",array(),$content));
 					}
 
 				}
@@ -124,5 +131,5 @@ namespace framework\html;
 			}
 			$this->add($tbody);
 		}
-	}	
+	}
 

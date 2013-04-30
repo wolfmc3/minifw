@@ -1,13 +1,10 @@
 <?php
-use framework\app;
 /**
- * Template pagina html
- *
- * Template necessario per le pagine standard
- *
- *
+ * Tema TOPNAV
+ * Template di pagina responsivo con menu in alto
  */
 
+use framework\app;
 ?>
 <!DOCTYPE html>
 <html

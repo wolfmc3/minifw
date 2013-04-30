@@ -1,5 +1,12 @@
 <?php
-namespace framework\html; 
+/**
+ *
+ * icon.php
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ *
+ */
+namespace framework\html;
 	use framework\app;
 	/**
 	 * icon
@@ -18,11 +25,11 @@ namespace framework\html;
 	 * @see element
 	 *
 	 */
-	
+
 	class icon extends element {
 		/**
 		 * Costruttore
-		 * 
+		 *
 		 * @param string $icon Nome immagine senza percorso ed estensione
 		 */
 		function __construct($icon) {
@@ -30,5 +37,5 @@ namespace framework\html;
 			$this->attr = array("src" => app::root()."img/icons/$icon.png");
 			$this->addAttr("style", "vertical-align: sub;");
 		}
-	}	
+	}
 

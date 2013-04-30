@@ -1,4 +1,11 @@
 <?php
+/**
+ *
+ * controller.php
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ *
+ */
 namespace framework;
 use framework\html\element;
 use framework\html\responsive\div;
@@ -34,10 +41,57 @@ class controller {
 	*/
 	private $viewscalled = array();
 	/**
-	 * 
-	 * @var \framework\html\module[]
-	 */
+	 *
+	 * @var \framework\html\module[] Moduli caricati
+	*/
 	private $modules = array();
+
+	/**
+	 * Costruttore
+	 *
+	 * Instanziato dalla classe application::init()
+	 * Inizializza la classe page
+	 *
+	*/
+	function __construct() {
+		$uri = self::resolveUrl($_SERVER['REQUEST_URI']);
+		$this->uri = $uri;
+		$uri = explode("/", $uri);
+		$this->parseduri = $uri;
+		//print_r($uri);
+		$obj = $uri[0];
+
+		//var_dump(app::Security()->getPermission($obj));
+		$perm = app::Security()->getPermission($obj);
+		if (!$perm->L && $obj != "login") {
+			if (app::Security()->user()->isok) { //Loggato ma non autorizzato
+				$obj = "HTTP401";
+			} else {
+				header("location:".app::root()."login?redirect=".urlencode(app::root().$this->uri));
+				exit();
+			}
+		}
+		$class = "\\views\\$obj";
+		if (class_exists($class,true)) {
+			$this->page = new $class($this);
+			$this->page->setPermissions($perm->R, $perm->W, $perm->L, $perm->A);
+		} else {
+			$class = "\\framework\\views\\$obj";
+			if (class_exists($class,true)) {
+				$this->page = new $class($this);
+			} else {
+				$this->page = new HTTP404($this);
+			}
+		}
+		if (isset($_SESSION["ctrl_messages"])) {
+			$this->page->addJavascript("sysmsg.js");
+			$this->page->addJqueryUi();
+		}
+		$this->addModule("sysmsg", "\\modules\\sysmsg");
+
+	}
+
+
 	/**
 	 * resolveUrl
 	 *
@@ -46,7 +100,7 @@ class controller {
 	 *
 	 * @param string $req
 	 * @return string
-	*/
+	 */
 	static function resolveUrl($req) {
 		$req = str_replace(app::root(), "", $req);
 		$req = str_replace("//", "/", $req);
@@ -84,6 +138,8 @@ class controller {
 	 * @param string $msg Messaggio sotto forma di testo (tag HTML saranno convertiti)
 	 * @param \framework\html\anchor $link1 optional Link 1 da visualizzare nel messaggio
 	 * @param \framework\html\anchor $link2 optional Link 2 da visualizzare nel messaggio
+	 * @param string $title Titolo del messaggio
+	 *
 	 */
 	function addMessage($msg,$link1 = NULL,$link2 = NULL,$title=NULL) {
 		if (isset($_SESSION["ctrl_messages"]) && array_search($msg, $_SESSION["ctrl_messages"]) !== FALSE) return;
@@ -104,50 +160,6 @@ class controller {
 		$_SESSION["ctrl_messages"][] = $message;
 	}
 
-	/**
-	 * Costruttore
-	 *
-	 * Instanziato dalla classe application::init()
-	 * Inizializza la classe page
-	 *
-	 */
-	function __construct() {
-		$uri = self::resolveUrl($_SERVER['REQUEST_URI']);
-		$this->uri = $uri;
-		$uri = explode("/", $uri);
-		$this->parseduri = $uri;
-		//print_r($uri);
-		$obj = $uri[0];
-
-		//var_dump(app::Security()->getPermission($obj));
-		$perm = app::Security()->getPermission($obj);
-		if (!$perm->L && $obj != "login") {
-			if (app::Security()->user()->isok) { //Loggato ma non autorizzato
-				$obj = "HTTP401";
-			} else {
-				header("location:".app::root()."login?redirect=".urlencode(app::root().$this->uri));
-				exit();
-			}
-		}
-		$class = "\\views\\$obj";
-		if (class_exists($class,true)) {
-			$this->page = new $class($this);
-			$this->page->setPermissions($perm->R, $perm->W, $perm->L, $perm->A);
-		} else {
-			$class = "\\framework\\views\\$obj";
-			if (class_exists($class,true)) {
-				$this->page = new $class($this);
-			} else {
-				$this->page = new HTTP404($this);
-			}
-		}
-		if (isset($_SESSION["ctrl_messages"])) {
-			$this->page->addJavascript("sysmsg.js");
-			$this->page->addJqueryUi();
-		}
-		$this->addModule("sysmsg", "\\modules\\sysmsg");
-		
-	}
 
 	/**
 	 * [controller]->[view]
@@ -192,7 +204,12 @@ class controller {
 	function getAppRoot() {
 		return $this->approot;
 	}
-
+	/**
+	 * addModule()
+	 * @param string $module nome del modulo
+	 * @param string $class classe del modulo
+	 * @return boolean TRUE se inizializzato correttamente
+	 */
 	function addModule($module, $class) {
 		$moduleobj = new $class();
 		if (is_a($moduleobj, "framework\\module")) {
@@ -200,9 +217,13 @@ class controller {
 			return FALSE;
 		}
 		$this->modules[$module] = $moduleobj;
+		return TRUE;
 	}
 	/**
-	 * 
+	 * Module()
+	 *
+	 * Ritorna il modulo richiesto
+	 *
 	 * @param string $module
 	 * @return \framework\html\module
 	 */
@@ -213,18 +234,36 @@ class controller {
 		}
 		return $this->modules[$module];
 	}
-	
+	/**
+	 * Modules(&$array)
+	 *
+	 * Ritorna tramite $array un riferimento all'array dei moduli
+	 *
+	 * @param \framework\html\module $array
+	 */
 	function Modules(&$array = array()) {
 		foreach ($this->modules as $module => $obj) {
 			$array[$module] = &$this->modules[$module];
 		}
 	}
-	
+	/**
+	 *  renderModules()
+	 *  Invia il comendo di render a tutti i moduli
+	 */
 	function renderModules() {
 		foreach ($this->modules as $name => $obj) {
 			$obj->render(FALSE);
 		}
 	}
+
+	/**
+	 * resetModule()
+	 *
+	 * Cancella un modulo e lo sostituisce con uno vuoto (= "")
+	 * @param string $module
+	 * @return boolean Risultato dell'operazione
+	 */
+
 	function resetModule($module) {
 		if (!array_key_exists($module, $this->modules)) return FALSE;
 		$this->modules[$module] = new module();
@@ -237,7 +276,7 @@ class controller {
 	 *
 	 * @see \framework\page
 	 */
-	
+
 	function render() {
 		$this->page->action();
 		$this->renderModules();

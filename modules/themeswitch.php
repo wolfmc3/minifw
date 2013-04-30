@@ -1,4 +1,10 @@
 <?php 
+/**
+ * themeswitch.php
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ */
+
 namespace modules;
 use framework\html\module;
 use framework\html\select;
@@ -6,7 +12,21 @@ use framework\html\element;
 use framework\app;
 use framework\html\form\submit;
 use framework\html\responsive\div;
+/**
+ * 
+ * Modulo themeswitch
+ *
+ * Crea un mini form che permette di selezionare uno dei temi nella cartella /templates 
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ * @package modules
+ * 
+ */
 class themeswitch extends module {
+	/**
+	 * Genera il blocco HTML 
+	 * @see \framework\html\module::render()
+	 */
 	function render() {
 		$cont = new div("row-fluid text-center");
 		$form = new element("form",array("action"=>app::root()."themeswitcher","method"=>"POST","class"=>"form-inline"));

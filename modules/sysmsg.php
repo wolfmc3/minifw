@@ -1,4 +1,10 @@
 <?php 
+/**
+ * Modulo per la visulizzazione dei messaggi di stato
+ * 
+ * @author Marco Camplese <info@wolfmc3.com>
+ * @package modules
+ */
 namespace modules;
 use framework\html\module;
 use framework\html\element;
@@ -10,9 +16,15 @@ use framework\html\responsive\div;
  * Genera un TAG DIV con id="controller_messages"<br>
  * $_SESSION["ctrl_messages"] viene azzerata automaticamente<br>
  * per aggiungere messaggi utilizzare il metodo <code>addMessage(...)</code>
+ * 
+ * @package modules
  *
  */
 class sysmsg extends module {
+	/**
+	 * Genera il codice html per visulizzare i messaggi
+	 * @see \framework\html\module::render()
+	 */
 	function render() {
 		if (!isset($_SESSION["ctrl_messages"])) return;
 		$messages = $_SESSION["ctrl_messages"];
@@ -28,7 +40,10 @@ class sysmsg extends module {
 		}
 		$this->add($msgcont);
 	}
-	
+	/**
+	 * Genera HTML e azzera la variabile di sessione
+	 * @see \framework\html\element::__toString()
+	 */
 	function __toString() {
 		if (isset($_SESSION["ctrl_messages"])) unset($_SESSION["ctrl_messages"]);
 		return parent::__toString();

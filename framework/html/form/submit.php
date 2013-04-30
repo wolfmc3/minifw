@@ -1,5 +1,12 @@
 <?php
-namespace framework\html\form; 
+/**
+ *
+ * submit.php
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ *
+ */
+namespace framework\html\form;
 	use framework\html\element;
 	/**
 	 * submit
@@ -14,6 +21,7 @@ namespace framework\html\form;
 		/**
 		 * Costruttore
 		 * @param string $text Titolo del pulsante
+		 * @param string[] $attr Attributi opzionali del bottone
 		 */
 		function __construct($text,$attr = array()) {
 			parent::__construct("input",$attr);
@@ -22,5 +30,5 @@ namespace framework\html\form;
 			$this->addAttr("value", $text);
 			$this->addAttr("name", "SAVE");
 		}
-	}	
+	}
 

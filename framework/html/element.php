@@ -1,4 +1,11 @@
 <?php
+/**
+ *
+ * element.php
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ *
+ */
 namespace framework\html;
 /**
  * element
@@ -21,7 +28,7 @@ class element {
 	protected $attr = array();
 	/**
 	 * @var string[]|\framework\html\element[] oggetti contenuti nel tag
-	 */
+	*/
 	protected $inner;
 	/**
 	 * @var boolean indica se il contenuto deve essere trattato come html o come testo
@@ -33,6 +40,7 @@ class element {
 	 * @param string $tag Nome tag html (se vuoto l'oggeto non avrà nessun tag)
 	 * @param string[] $attr Attributi del tag (class, name, id)
 	 * @param string|\framework\html\element $inner Contenuto del tag
+	 * @param boolean $html Indica se l'elemento è codice html già formato
 	 */
 	function __construct($tag="", $attr = array(), $inner = NULL,$html = FALSE) {
 		$this->html = $html;
@@ -64,7 +72,12 @@ class element {
 			}
 		}
 	}
-
+	/**
+	 * addBR()
+	 * Aggiunge come oggetto figlio n tag BR
+	 *
+	 * @param number $count numero di tag BR da inserire
+	 */
 	function addBR($count = 1) {
 		for ($i = 0; $i < $count; $i++) {
 			$this->add(new br());
@@ -109,12 +122,21 @@ class element {
 		}
 		return $this;
 	}
-	
+	/**
+	 * getContents()
+	 * Ritorna il contenuto grezzo del tag
+	 * @return string|multitype:\framework\html\element
+	 */
 	function getContents() {
 		return $this->inner;
 	}
-	
 
+	/**
+	 * findTag()
+	 * Ritorna un riferimento al primo elemento figlio che corrisponde al tag specificato
+	 * @param string $tag
+	 * @return \framework\html\element|NULL Ritorna l'elemento o NULL se non trovato
+	 */
 	function &findTag($tag) {
 		if ($this->tag == $tag) {
 			return $this;
@@ -128,9 +150,15 @@ class element {
 			}
 		}
 		return $inner;
-			
+
 	}
-	
+	/**
+	 * findId()
+	 * Ritorna un riferimento al primo elemento figlio che contiene l'attributo id specificato
+	 * @param string $id
+	 * @return \framework\html\element|NULL Ritorna l'elemento o NULL se non trovato
+	 */
+
 	function &findId($id) {
 		if (array_key_exists("id", $this->attr ) && $this->attr["id"] == $id) {
 			return $this;
@@ -144,7 +172,7 @@ class element {
 			}
 		}
 		return $inner;
-			
+
 	}
 	/**
 	 * __toString()
@@ -156,7 +184,7 @@ class element {
 	function __toString() {
 		$html = "";
 		$fo = (is_array($this->inner) && count($this->inner) > 1)?PHP_EOL:"";
-		
+
 		if ($this->tag) $html .= "$fo<".$this->tag;
 		foreach ($this->attr as $key => $value) {
 			$html .= " ".$key."='".htmlspecialchars($value,ENT_COMPAT, "UTF-8")."' ";
@@ -184,10 +212,27 @@ class element {
 				$html .= "/>$fo";
 			}
 		}
-			
+
 		return $html;
 	}
-	
+	/**
+	 * element::<TAG>()
+	 *
+	 * Ritorna un nuovo elemento corrispondente al TAG specificato<br>
+	 * Esempio:<br>
+	 * <code>
+	 * $grassetto = <b>element::strong()</b>->add("Ciao");
+	 *
+	 * oppure
+	 *
+	 * $grassetto = new element("strong");
+	 * $grassetto->add("Ciao");
+	 * </code>
+	 *
+	 * @param string $el
+	 * @param mixed $args
+	 * @return \framework\html\element
+	 */
 	public static function __callstatic($el,$args) {
 		return new element($el,$args);
 	}

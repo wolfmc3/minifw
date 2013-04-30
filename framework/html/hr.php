@@ -1,10 +1,17 @@
 <?php
-namespace framework\html; 
+/**
+ *
+ * hr.php
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ *
+ */
+namespace framework\html;
 /**
  * hr
  *
  * Genera un tag per una riga orizzontale
- * 
+ *
  *
  * @author Marco Camplese <info@wolfmc3.com>
  * @package minifw/html
@@ -14,10 +21,10 @@ namespace framework\html;
  */
 class hr extends element {
 		/**
-		 * Costruttore 
+		 * Costruttore
 		 */
 		function __construct() {
 			parent::__construct("hr");
 		}
-	}	
+	}
 

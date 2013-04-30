@@ -1,38 +1,49 @@
-<?php 
-namespace framework\security;
-	use framework\app;
+<?php
 /**
-	 * Security
-	 *
-	 * Inzializza il controller per la sicurezza 
-	 * Questa classe è inizializzata dalla classe application
-	 *
-	 * @author Marco Camplese <info@wolfmc3.com>
-	 * @package minifw/security
-	 *
-	 * @see \framework\app Applicazione
-	 * 
-	 */
+ * Gestisce i moduli di sicurezza
+ *
+ */
+namespace framework\security;
+use framework\app;
+/**
+ * Security
+ *
+ * Inzializza il controller per la sicurezza
+ * Questa classe è inizializzata dalla classe application
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ * @package minifw/security
+ *
+ * @see \framework\app Applicazione
+ *
+ */
 class security {
 	/**
 	 * @var \framework\security\securitymoduleinterface Modulo utilizzato
 	 */
 	private $module = "";
+	/**
+	 *
+	 * @var array Permessi utente
+	 */
 	private $permissions;
+	/**
+	 * @var user Ritorna l'utente corrente
+	 */
 	private $currentuser = FALSE;
-	
+
 	/**
 	 * Construttore
-	 * 
+	 *
 	 * Inizializza la classe sicurezza e carica il modulo specificato nella configurazione (security->module)
-	 * 
+	 *
 	 * @see \framework\config
-	 * 
+	 *
 	 */
 	function __construct() {
 		$modulename = "\\framework\\security\\modules\\".app::conf()->security->module;
 		$this->module = new $modulename();
-		
+
 		if (!$this->module->ready()) {
 			if (!$this->module->init()) {
 				exit("Security Module not ready");
@@ -42,18 +53,19 @@ class security {
 		if (isset($_COOKIE['AUTHID'])) {
 			$authid = $_COOKIE['AUTHID'];
 			$this->currentuser = new user($this->module->getUserAuthID($authid));
-		} 
+		}
 		if (!$this->currentuser) {
 			$this->currentuser = new user();
 		}
 		//var_dump($this);
 	}
-	
+
 	/**
-	 * 
-	 * @param string $user
+	 * Login
+	 *
+	 * @param string $username
 	 * @param string $password
-	 * @param string $store
+	 * @param boolean $store
 	 * @return boolean
 	 */
 	function login($username,$password,$store = TRUE) {
@@ -72,16 +84,31 @@ class security {
 			return TRUE;
 		}
 	}
-	
+	/**
+	 * Richiede al modulo di autenticazione di disconnettere l'utente
+	 */
 	function logout() {
 		unset($_SESSION["AUTHID"]);
 		setcookie("AUTHID", NULL, 0,app::root());
 	}
-	
+
+	/**
+	 * Chiede al modulo dati la lista degli utenti
+	 *
+	 * @return array
+	 */
 	function getUsersInfo() {
 		return $this->module->getUsersInfo();
 	}
-	
+	/**
+	 * getPermission()
+	 *
+	 * Ritorna i permessi sulla view specificata ($view) per l'utente specificato ($username)
+	 *
+	 * @param string $view View di cui controllare i permessi, se omesso usa la view attualmente richiesta
+	 * @param string $username Utente al quale sono riferiti i permessi, se omesso usa l'utente corrente
+	 * @return \stdClass
+	 */
 	function getPermission($view = "",$username = "") {
 		if ($view == "") $view = app::Controller()->getPage()->name();
 		$user = $this->user();
@@ -105,12 +132,12 @@ class security {
 				//echo $data["group"]."@$path:".$data['perm']."-\n";
 			}
 		}
-		
-		if ($perm != "") $perm = str_split($perm); else $perm = array(); 
+
+		if ($perm != "") $perm = str_split($perm); else $perm = array();
 		$res = new \stdClass();
 		$res->A = $res->L = $res->W = $res->R = NULL;
 		foreach ($perm as $char) {
-			$curperm = strtoupper($char); 
+			$curperm = strtoupper($char);
 			if ($curperm == $char) { //Consenti
 				if ($res->$curperm == NULL) {
 					$res->$curperm = 1;
@@ -122,11 +149,18 @@ class security {
 		//print_r($res);
 		return $res;
 	}
-	
+
+	/**
+	 * user()
+	 *
+	 * Ritorna l'utente corrente
+	 *
+	 * @return \framework\security\user Ritorna l'utente attualmente autenticato
+	 */
 	function user() {
 		return $this->currentuser;
 	}
-	
+
 }
 
 /**
@@ -139,35 +173,80 @@ interface securitymoduleinterface {
 	 * Legge dalla fonte l'utente richiesto
 	 * @param string $username
 	 * @param string $password
-	 * 
+	 *
 	 * @return FALSE|string[] FALSE se l'utente non corrisponde, ritorna i dati dell'utente
 	 */
 	function getUser($username, $password);
+	/**
+	 * getUserAuthID()
+	 * @param string $authid
+	*/
 	function getUserAuthID($authid);
+	/**
+	 * getUsersInfo
+	*/
 	function getUsersInfo();
+	/**
+	 * setUserAuthID
+	 * @param unknown $user
+	 * @param unknown $authid
+	*/
 	function setUserAuthID($user,$authid);
+	/**
+	 * readPermissions
+	*/
 	function readPermissions();
+	/**
+	 * init
+	*/
 	function init();
+	/**
+	 * ready
+	*/
 	function ready();
+	/**
+	 * usersPage
+	*/
 	function usersPage();
+	/**
+	 * groupsPage
+	*/
 	function groupsPage();
+	/**
+	 * permissionsPage
+	*/
 	function permissionsPage();
 }
 
 /**
  *  user
- * 
- *  Classe utilizzata dal modulo security per riportare i dettagli utente 
+ *
+ *  Classe utilizzata dal modulo security per riportare i dettagli utente
+ *
+ *  @package minifw/security
  *
  */
 class user {
+	/**
+	 *
+	 * @var string[] Dati Utente
+	 */
 	private $data;
+	/**
+	 * Costruttore
+	 *
+	 * @param string[] $data Dati Utente
+	 */
 	function __construct($data = FALSE) {
 		//echo "New user istance:"; print_r($data);
 		if (!is_array($data)) $data = array("username"=>"anonimo","group"=>"?","isok"=>FALSE);
 		$this->data = $data;
 	}
-	
+	/**
+	 * $this->$key
+	 * @param string $key Proprietà
+	 * @return string
+	 */
 	function __get($key) {
 		if (array_key_exists($key, $this->data)) {
 			return $this->data[$key];

@@ -1,4 +1,11 @@
-<?php 
+<?php
+/**
+ *
+ * logincontrol.php
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ *
+ */
 namespace framework\html;
 
 use framework\html\element;
@@ -9,10 +16,10 @@ use framework\html\form\jsondata;
 use framework\menu;
 use framework\html\responsive\div;
 /**
- * 
+ *
  * logincontrol
  *
- * Crea i rifermenti alla views e gestisce le richieste di dati 
+ * Crea i rifermenti alla views e gestisce le richieste di dati
  *
  * @author Marco Camplese <info@wolfmc3.com>
  * @package minifw/html
@@ -21,9 +28,9 @@ use framework\html\responsive\div;
 class logincontrol extends template {
 	/**
 	 * Costruttore
-	 * 
+	 *
 	 * Genera un blocco dinamico che contiene i dati utente e il link per il login/logout
-	 * 
+	 *
 	 */
 	function __construct() {
 		app::Controller()->getPage()->addJqueryUi();
@@ -36,7 +43,7 @@ class logincontrol extends template {
 			$dropdown->addMenuItem("logincontrol_menu","drp_login", app::root()."login/exit", "Esci");
 		} else {
 			$dropdown->addMenuItem("logincontrol_menu","drp_login", app::root()."login", "Accedi");
-		} 
+		}
 		if (app::Security()->user()->isok) {
 			$data["lock"] = "LockOpen";
 		} else {
@@ -49,6 +56,6 @@ class logincontrol extends template {
 		}*/
 		$this->addAttr("id", "logincontrol_template");
 		parent::__construct("logincontrol", $data);
-		
+
 	}
 }

@@ -1,4 +1,11 @@
-<?php 
+<?php
+/**
+ *
+ * page.php
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ *
+ */
 namespace framework;
 
 /**
@@ -34,7 +41,7 @@ class page {
 	 * @var mixed variabile contenente il risultato dell'operazione action_*
 	 */
 	protected $results = NULL;
-	
+
 	/**
 	 *
 	 * @var string[] Parametri extra passati nell'url
@@ -246,7 +253,7 @@ class page {
 			if (array_search($curjs, $this->javascripts) === FALSE) {
 				$this->javascripts[] = $curjs;
 			}
-				
+
 		}
 	}
 
@@ -326,11 +333,10 @@ class page {
 		return app::root().$this->obj."/".$action;
 	}
 	/**
-	 * Generatore script (javascript e css)
+	 * Generatore script (css)
 	 *
-	 * Ritorna tramite echo il codice HTML per generare i riferimenti a file css e javascript
+	 * Ritorna tramite echo il codice HTML per generare i riferimenti ai file css
 	 *
-	 * @see addJavascript($script)
 	 * @see addCss($css)
 	 *
 	 */
@@ -339,13 +345,21 @@ class page {
 			echo "<link rel='stylesheet' type='text/css' href='$script' media='screen'>".PHP_EOL;
 		}
 	}
-	
+
+	/**
+	 * Generatore script (javascript)
+	 *
+	 * Ritorna tramite echo il codice HTML per generare i riferimenti ai file javascript
+	 *
+	 * @see addJavascript($script)
+	 *
+	 */
 	function scripts() {
 		foreach ($this->javascripts as $script ) {
 			echo "<script src='$script'></script>".PHP_EOL;
 		}
 	}
-	
+
 	/**
 	 * Render
 	 *

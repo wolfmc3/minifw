@@ -1,4 +1,11 @@
 <?php
+/**
+ *
+ * edittable.php
+ *
+ * @author Marco Camplese <info@wolfmc3.com>
+ *
+ */
 namespace framework\html\form;
 use framework\html\element;
 /**
@@ -16,7 +23,8 @@ use framework\html\element;
 
 class edittable extends element {
 /**
- * 
+ * Costruttore
+ *
  * @param mixed[] $row Array associativo contenente i dati
  * @param array[] $cols Colonne
  * @param string[] $options attributi oggetto table generato
