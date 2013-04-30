@@ -20,8 +20,6 @@ use framework\app;
 </title>
 <?php $this->css(); ?>
 <?php $this->scripts(); ?>
-
-<link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
 </head>
 <body>
 	<div class="container-fluid" style="margin-top: 20px;">
@@ -48,7 +46,7 @@ use framework\app;
 				</div>
 
 			</div>
-			<div class="span9">
+			<div class="span10">
 				<div class="well">
 					<?php echo $this->results; ?>
 				</div>

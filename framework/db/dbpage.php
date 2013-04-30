@@ -78,6 +78,8 @@ use framework\html\html;
 		 * @var boolean Indica se la view può aggiungere dati
 		 */
 		protected $addRecord = TRUE;
+		
+		protected $defaultTableAction = "edit";
 		/**
 		 * @var boolean Indica se la view può modificare dati
 		 */
@@ -102,6 +104,8 @@ use framework\html\html;
 		 * @var string campi che offrono un breve descrizione del record (se le colonne sono multiple separare con la virgola)
 		 */
 		protected $DescriptionKeys = "";
+		
+		protected $customTable = FALSE;
 
 		/**
 		 * init()
@@ -141,29 +145,44 @@ use framework\html\html;
 					$whereArgs[] = $this->extra[$key];
 				}
 			}
-
+			if (!$this->editRecord) {
+				$this->defaultTableAction = "view";
+			}
 			$ret = $db->read($this->table,$this->item*$this->defaultBlock,$this->defaultBlock,$where,$whereArgs);
 			$rows = $ret->rows;
 			$options = array(
-					"data-editurl" => app::root().$this->obj."/edit/",
+					"data-editurl" => app::root().$this->obj."/{$this->defaultTableAction}/",
 					"data-delurl" => app::root().$this->obj."/remove/",
 					"id" => $this->table,
 					"class" => "datatable"
 			);
 			$container = new element("");
-			$columns = $this->columns;
-			if ($this->deleteRecord) {
-				$columns = array_merge($columns,array(":DELETE:"=>array("name"=>"Cancella","ontable"=>1)));
-			} else {
-				unset($options["data-delurl"]);
-				unset($options["data-editurl"]);
-			}
-			$container->add(new paging($this->obj, "table", $ret->page(), $ret->pages(), $ret->block));
-			$table = new table($columns, $rows, $this->idkey,$options);
-			$container->add($table);
+			if (!$this->customTable) {
+				$columns = $this->columns;
+				if ($this->deleteRecord) {
+					$columns = array_merge($columns,array(":DELETE:"=>array("name"=>"Cancella","ontable"=>1)));
+				} else {
+					unset($options["data-delurl"]);
+				}
+				$container->add(new paging($this->obj, "table", $ret->page(), $ret->pages(), $ret->block));
+				$table = new table($columns, $rows, $this->idkey,$options);
+				$container->add($table);
 				
-			$container->add(new paging($this->obj, "table", $ret->page(), $ret->pages(), $ret->block));
-			if ($this->addRecord) $container->add(new anchorbutton(app::root().$this->obj."/add", array(new icon("Plus")," Nuovo"),array("class"=>"button")) );
+				$container->add(new paging($this->obj, "table", $ret->page(), $ret->pages(), $ret->block));
+				if ($this->addRecord) $container->add(new anchorbutton(app::root().$this->obj."/add", array(new icon("Plus")," Nuovo"),array("class"=>"button")) );
+			} else {
+				$data = array();
+				foreach ($rows as $key => &$value) {
+					$id = $value[$this->idkey];
+					if ($this->viewRecord) $value['ancopen'] = new anchorbutton($this->url("item/$id"),"Leggi",array("class"=>"btn-mini btn-primary"));
+					if ($this->deleteRecord) $value['ancdel'] = new anchorbutton($this->url("remove/$id"),"Cancella",array("class"=>"btn-mini btn-danger","onclick"=>"return confirm(\"Vuoi cancellare?\");"));
+					if ($this->editRecord) $value['ancedit'] = new anchorbutton($this->url("edit/$id"),"Modifica",array("class"=>"btn-mini btn-info"));
+				}
+				$data['rows'] = $rows;
+				if ($this->addRecord) $data["ancadd"] = new anchorbutton($this->url("add"), "Aggiungi nuovo");
+				$template = new template("dbpages/table_{$this->obj}",$data);
+				$container->add($template);
+			}
 			return $container;
 		}
 		
@@ -176,7 +195,7 @@ use framework\html\html;
 			if ($template->isValid()) {
 				$cont->add($template);
 			} else {
-				$data = $this->editRecord?"<h3>Campi disponibili<h3><pre>".print_r(array_keys($row),TRUE)."</pre>":"";  
+				$data = $this->editRecord?"<h3>Campi disponibili<h3><pre>".print_r(array_keys($row),TRUE)."</pre><p>Template file: templates/dbpages/{$this->obj}.tmpl.htm":"";  
 				$cont->append(element::h1())->append("Manca template per la visualizzazione");
 				$cont->append(new html($data));
 			}
@@ -262,6 +281,7 @@ use framework\html\html;
 		 *  
 		 */
 		function action_save() {
+			$this->type = page::TYPE_REDIRECT;
 			if (!$this->editRecord) {
 				app::Controller()->addMessage("Non sei autorizzato a modificare il record");
 				return "";
@@ -282,8 +302,7 @@ use framework\html\html;
 			$db = new database($this->database);
 			$db->write($this->table, $data, $realcolumns,$this->item,$this->idkey);
 			app::Controller()->addMessage("Modifiche salvate",new anchor($this->url("edit/".$this->item), "Modifica di nuovo"));
-			header("location: ". app::root().$this->obj."/");
-			exit();
+			return $this->url();
 		}
 		
 		/**

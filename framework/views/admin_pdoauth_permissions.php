@@ -56,7 +56,6 @@ class admin_pdoauth_permissions extends page {
 		$this->addJavascript("pdoauth.js");
 		$this->addJavascript(app::conf()->jquery->ui);
 		$this->addCss(app::conf()->jquery->theme);
-		$this->typeByAction("edit", $this::TYPE_AJAX);
 		$this->typeByAction("save", $this::TYPE_REDIRECT);
 		$db = new database("pdoauth");
 		$groupsret = $db->read("groups");
@@ -87,10 +86,13 @@ class admin_pdoauth_permissions extends page {
 			}
 	
 			$tr = $table->append(new element("tr"));
+			
 			$tr->append(new element("th",array(),$value['name']));
 			$tr->append(new element("td",array(),$el));
 		}
+		$table->append(new element("tr"))->append(element::td())->append(new submit("Salva"));
 		$cont->append(new hidden("id", $this->item));
+		
 		return $div;
 	}
 	

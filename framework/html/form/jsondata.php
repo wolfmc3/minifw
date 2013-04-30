@@ -1,7 +1,8 @@
 <?php
 namespace framework\html\form; 
 	use framework\html\element;
-	/**
+use framework\html\html;
+		/**
 	 * jsondata
 	 *
 	 * Genera uno script javascript contenente la dichiarazione di una variabile da PHP
@@ -27,7 +28,7 @@ namespace framework\html\form;
 		function __construct($var, $data) {
 			parent::__construct("script");
 			$script = "var $var = ". json_encode($data) .";";
-			$this->add($script);
+			$this->add(new html($script));
 		}
 	}	
 

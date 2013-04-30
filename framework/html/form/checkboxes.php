@@ -30,12 +30,18 @@ class checkboxes extends element {
 	 */
 	
 		function __construct($name, $data, $cur, $options = array()) {
-			parent::__construct("div", array("id" => $name,"class"=>"checkboxes" ),"");
+			app::Controller()->getPage()->addJquery();
+			app::Controller()->getPage()->addJavascript("checkboxes.js");
+			$control =  new element("div", array("id" => $name,"data-toggle"=>"buttons-radio","class"=>"checkboxes btn-group" ),"");
 			foreach ($data as $key => $value) {
-				$selected = (array_search($key, $cur) !== FALSE)?"checked":"unchecked";
-				$this->add(new element("input",array($selected=>"1", "type"=>"checkbox","name"=>"{$name}[]","value"=>"$key","id"=>"{$name}_{$key}")));
-				$this->add(new element("label",array("for"=>"{$name}_{$key}"),$value));
+				$selected = (array_search($key, $cur) !== FALSE)?"active":"";
+				$control->add(new element("button",array("class"=>"btn btn-primary".($selected?" active":""),"data-name"=>"#{$name}_{$key}","data-value"=>"$key","id"=>"btn_{$name}_{$key}"),$value));
+				$this->append(new hidden($name."[]", ((array_search($key, $cur) !== FALSE)?$key:""),array("id"=>"{$name}_{$key}")));
+				
+				/*$this->add(new element("input",array($selected=>"1", "type"=>"checkbox","name"=>"{$name}[]","value"=>"$key","id"=>"{$name}_{$key}")));
+				$this->add(new element("label",array("for"=>"{$name}_{$key}"),$value));*/
 			}
+			$this->append($control);
 			
 		}
 	}	

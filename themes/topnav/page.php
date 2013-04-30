@@ -21,7 +21,6 @@ use framework\app;
 </title>
 <?php $this->css(); ?>
 <?php $this->scripts(); ?>
-<link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="<?php echo app::root() ?>css/navtop.css" media="screen">
 </head>
 <body>

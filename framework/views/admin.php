@@ -48,10 +48,10 @@ class admin extends page {
 		$list = explode("/", str_replace(".php", "", implode("/", $list))); 
 		 $list = array_combine($list,$list);
 		$cont = new div("row"); 
-		$secblock = $cont->append(new textblock(array("Moduli sicurezza: ", new select("sec_modules",$list,app::conf()->security->module,array("id"=>"sec_modules","data-info"=>$this->url("secinfo"), "style"=>"vertical-align: baseline;"))),3,1));
+		$secblock = $cont->append(new textblock(array("Moduli sicurezza: ", new select("sec_modules",$list,app::conf()->security->module,array("id"=>"sec_modules","data-info"=>$this->url("secinfo"), "style"=>"vertical-align: baseline;"))),3,0,"well"));
 		$secblock->add(new element("p",array("id"=>"secinfo"),"Scegli il modulo"));
 		
-		$opblock = $cont->append(new textblock("Menutenzione e test",3,1));
+		$opblock = $cont->append(new textblock("Menutenzione e test",3,0,"well"));
 		$opblock->append(new anchorbutton($this->url("permissiontest"),"Controllo permessi"));
 		$opblock->append(new anchorbutton(app::root()."admin_config","Vedi configurazione"));
 		$opblock->append(new anchorbutton(app::root()."admin_menu","Menu di sistema"));

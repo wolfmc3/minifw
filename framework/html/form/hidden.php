@@ -18,8 +18,13 @@ namespace framework\html\form;
 		 * @param string $key Nome campo (attributo name)
 		 * @param string $text Valore (attributo value)
 		 */
-		function __construct($key, $text) {
-			parent::__construct("input",array("type" => "hidden", "value"=> $text, "name" => $key));
+		function __construct($key, $text, $options = array()) {
+			parent::__construct("input",$options);
+			$this
+				->addAttr("type", "hidden")
+				->addAttr("value", $text)
+				->addAttr("name", $key)
+			;
 		}
 	}	
 

@@ -80,7 +80,8 @@ class config {
 		if (array_key_exists($section, $this->config)) {
 			return $this->config[$section];
 		} else {
-			return FALSE;
+			$ret = FALSE;
+			return $ret;
 		}
 	}
 	/**

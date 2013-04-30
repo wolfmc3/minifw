@@ -214,6 +214,12 @@ class controller {
 		return $this->modules[$module];
 	}
 	
+	function Modules(&$array = array()) {
+		foreach ($this->modules as $module => $obj) {
+			$array[$module] = &$this->modules[$module];
+		}
+	}
+	
 	function renderModules() {
 		foreach ($this->modules as $name => $obj) {
 			$obj->render(FALSE);

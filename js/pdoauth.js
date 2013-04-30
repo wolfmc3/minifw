@@ -26,20 +26,6 @@ $(document).ready(
 		});
 function openEdit() {
 	var url = ($(this).prop("tagName")=="A")?$(this).attr("href"):$(this).parents("table").data("openurl") + $(this).data("id");
-	$("<div title='Modifica permessi'></div>").load(url, function() {
-		$(this).find(".checkboxes").buttonset();
-		$(this).dialog({
-			modal : true,
-			width : 550,
-			height : 350,
-			show : "fade",
-			buttons : {
-				"Salva" : function() {
-					$(this).find("form").submit();
-					$(this).dialog("close").dialog("destroy").remove();
-				}
-			}
-		});
-	});
+	document.location.href = url;
 	return false;
 }

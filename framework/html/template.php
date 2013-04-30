@@ -1,6 +1,7 @@
 <?php 
 namespace framework\html;
 use framework\io\file;
+use framework\app;
 /**
  * template
  *
@@ -75,12 +76,13 @@ class template extends element {
 		$file = new file("$filename.tmpl.htm",TRUE,$folder);
 		if (!$file->exist()) {
 			
-			$this->template = "TEMPLATE $folder$filename.htm NOT FOUND!!";
+			$this->template = "TEMPLATE $folder$filename.tmpl.htm NOT FOUND!!";
 			return;
 		}
 		$this->valid = TRUE;
 		$this->template = $file->read();
 		$this->data = $data;
+		app::Controller()->Modules($this->data);
 		//var_dump($this."");
 	}
 	function isValid() {

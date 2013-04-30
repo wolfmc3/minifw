@@ -120,8 +120,9 @@ class img extends page {
 		
 		header('Content-Type:'.$type);
 		header('Content-Length: ' . filesize($img));
-		header('Cache-control: max-age='.(60*60*6).', private');
-		header('Expires: '.gmdate(DATE_RFC1123,time()+60*60*6));
+		header('Cache-control: public, max-age='.(60*60*6).', pre-check='.(60*60*6).'');
+		header("Pragma: public");
+		header('Expires: '. date(DATE_RFC822,strtotime(" 2 day")));
 		header("Last-Modified: ".gmdate("D, d M Y H:i:s", $last_modified_time)." GMT");
 		
 		//header("Cache-Control: max-age=1, private, proxy-revalidate");

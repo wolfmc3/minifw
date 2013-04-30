@@ -17,7 +17,7 @@ class home extends \framework\page {
 		$cont = new element("");
 		
 		$cont->addBR();
-		$row = $cont->append(new div("row",""));
+		$row = $cont->append(new div("row-fluid",""));
 		
 		$row->append(new textblock("Demo accesso ai dati",3))
 			->append(new html(file::cache("dbpages.txt")->read()))

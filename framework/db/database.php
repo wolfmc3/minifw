@@ -22,6 +22,9 @@ namespace framework\db {
 		 * @var string Modulo di configurazione che contiene le impostazioni del database
 		 */
 		private $module;
+		private $hostkey;
+		private $database;
+		private $prefix;
 		/**
 		 * Costruttore
 		 * 
@@ -37,15 +40,21 @@ namespace framework\db {
 		 */
 		function init() {
 			$module = $this->module;
-			if (!array_key_exists($module, $this::$db)) {
+			if (!$this->hostkey) {
+				
 				try {
 					$config = app::conf()->$module;
 					if (!$config) throw new \Exception("Error: Not find config section $module");
+					$this->hostkey = $config->driver.":".$config->host."@".$config->user;
 					$dsn = $config->driver.":";
 					$dsn .= "host=".$config->host.";";
-					$dsn .= "dbname=".$config->database;
-					$this::$db[$module] = new \PDO($dsn, $config->user, $config->password,array(\PDO::ERRMODE_EXCEPTION));
-					$this::$db[$module]->exec("set names utf8");
+					$this->prefix = isset($config->prefix)?$config->prefix:"";
+					//$dsn .= "dbname=".$config->database;
+					if (!$config->database) throw new \Exception("Error: Database not specified $module");
+					$this->database = $config->database;
+					if (array_key_exists($this->hostkey, $this::$db)) return; 
+					$this::$db[$this->hostkey] = new \PDO($dsn, $config->user, $config->password,array(\PDO::ERRMODE_EXCEPTION));
+					$this::$db[$this->hostkey]->exec("set names utf8 /* $this->hostkey ".$_SERVER["REQUEST_URI"]." */");
 				} catch (\Exception $e) {
 					exit("Errore durante l'accesso al database $module: ".$e->getMessage());
 				}
@@ -71,6 +80,10 @@ namespace framework\db {
 			}
 		}
 		
+		/* function setdb() {
+			$this::$db[$this->hostkey]->exec("use $this->database;");
+		}*/
+		
 		/**
 		 * Ritorna le informazioni sulle colonne della tabella specificata ($table)
 		 * 
@@ -79,9 +92,9 @@ namespace framework\db {
 		 */
 		function columnInfo($table) {
 			$this->init();
-			$sql = "SHOW COLUMNS FROM $table";
+			$sql = "SHOW COLUMNS FROM `{$this->database}`.`{$this->prefix}{$table}`";
 			$res = array();
-			$ret = $this::$db[$this->module]->query($sql);
+			$ret = $this::$db[$this->hostkey]->query($sql);
 			while ($row = $ret->fetch(\PDO::FETCH_ASSOC)) {
 				$res[] = $row;
 			}
@@ -107,12 +120,13 @@ namespace framework\db {
 			if ($filter) {
 				$where = " WHERE $filter";
 			}
-			$sql = "SELECT * FROM `$table` $where";
+			$sql = "SELECT * FROM `{$this->database}`.`{$this->prefix}{$table}` $where";
 			$ret = new resultset();
 			
 			if ($count) {
-				$sqlcount = "SELECT count(*) FROM `$table` $where";
-				$sth = $this::$db[$this->module]->prepare($sqlcount);
+				$sqlcount = "SELECT count(*) FROM `{$this->database}`.`{$this->prefix}{$table}` $where";
+				
+				$sth = $this::$db[$this->hostkey]->prepare($sqlcount);
 				$sth->execute($filterargs);				
 				$row = $sth->fetch(\PDO::FETCH_NUM);
 				$ret->count = $row[0]-$start;
@@ -121,7 +135,8 @@ namespace framework\db {
 				$sql .= " LIMIT $start,$count"; 
 			}
 			$res = array();
-			$sth = $this::$db[$this->module]->prepare($sql);
+			
+			$sth = $this::$db[$this->hostkey]->prepare($sql);
 			$sth->execute($filterargs);
 			//$sth->debugDumpParams();
 			while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
@@ -145,9 +160,10 @@ namespace framework\db {
 			$this->init();
 			$idkey = $this->compileid($idkey);
 			//echo "IDKEY:".$idkey." ID:$id";
-			$sql = "SELECT * FROM `$table` WHERE $idkey = ?";
+			$sql = "SELECT * FROM `{$this->database}`.`{$this->prefix}{$table}` WHERE $idkey = ?";
 			$id = array($id);
-			$sth = $this::$db[$this->module]->prepare($sql);
+			
+			$sth = $this::$db[$this->hostkey]->prepare($sql);
 			$sth->execute($id);
 			//$sth->debugDumpParams();
 			$row = $sth->fetch(\PDO::FETCH_ASSOC);
@@ -168,9 +184,10 @@ namespace framework\db {
 		function delete($table,$id,$idkey = "id") {
 			$this->init();
 			$idkey = $this->compileid($idkey);
-			$sql = "DELETE FROM `$table` WHERE $idkey = ?";
+			$sql = "DELETE FROM `{$this->database}`.`{$this->prefix}{$table}` WHERE $idkey = ?";
 			$id = array($id);
-			$sth = $this::$db[$this->module]->prepare($sql);
+				
+			$sth = $this::$db[$this->hostkey]->prepare($sql);
 			return $sth->execute($id);
 		}
 		/**
@@ -180,9 +197,10 @@ namespace framework\db {
 		 * @param string[] $args Array associativo contenete i dati per i parametri della query le chiavi devono iniziare con ":"
 		 * @return boolean TRUE se eseguita correttamente
 		 */
-		function execute($sql,$args) {
+		function execute($sql,$table,$args) {
 		 	$this->init();
-		 	$sth = $this::$db[$this->module]->prepare($sql);
+			$sql = str_replace($table,"`{$this->database}`.`{$this->prefix}{$table}`" , $sql);
+		 	$sth = $this::$db[$this->hostkey]->prepare($sql);
 		 	return $sth->execute($args);
 		}
 		/**
@@ -198,6 +216,7 @@ namespace framework\db {
 		 * @return boolean TRUE se l'aggiornamento/inserimento è avvenuto con successo
 		 */
 		function write($table,$data,$fields = NULL,$id = NULL,$idkey = "id") {
+			$this->init();
 			if ($fields === NULL) {
 				foreach ($data as $key => $value) {
 					$key = substr($key, 1);
@@ -205,7 +224,7 @@ namespace framework\db {
 				}
 			}
 			if ($id) { //aggiornamento
-				$sql = "UPDATE `$table` SET ";
+				$sql = "UPDATE `{$this->database}`.`{$this->prefix}{$table}` SET ";
 				foreach ($fields as $key => $value) {
 					$sql .= "`$key` = :$key ,";
 				}
@@ -214,20 +233,16 @@ namespace framework\db {
 				$where = $this->compileid($idkey) . " = :tempid";
 				$sql .= " WHERE $where";
 			} else {
-				$sql = "INSERT INTO `$table` SET ";
+				$sql = "INSERT INTO `{$this->database}`.`{$this->prefix}{$table}` SET ";
 				foreach ($fields as $key => $value) {
 					$sql .= "`$key` = :$key ,";
 				}
 				$sql = substr($sql, 0, -1);
 			}
-			//echo $sql.PHP_EOL;
-			//echo print_r($data,TRUE).PHP_EOL;
-			$this->init();
-			$sth = $this::$db[$this->module]->prepare($sql);
-			//var_dump($sth);
+			$sth = $this::$db[$this->hostkey]->prepare($sql);
 			$res = $sth->execute($data);
 			//$sth->debugDumpParams();
-			if (!$res) app::Controller()->addMessage("Errore durante il salvataggio: ".$sth->errorInfo());
+			if (!$res) app::Controller()->addMessage("Errore durante il salvataggio: ".print_r($sth->errorInfo(),TRUE));
 			return $res;
 		}
 		
