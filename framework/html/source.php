@@ -25,7 +25,12 @@ class source extends element {
 	 * @param string $view Oggetto view
 	 */
 	function __construct($view) {
+		app::Controller()->getPage()->addJavascript("source.js");
+		$pre = new element("pre");
 		$cont = file_get_contents("views/$view.php");
-		parent::__construct("pre",array(),$cont);
+		$cont = preg_replace("%/\*(?:(?!\*/).)*\*/%s", "", $cont);
+		$pre->add($cont);
+
+		parent::__construct("div",array("class"=>"source"),$pre);
 	}
 }

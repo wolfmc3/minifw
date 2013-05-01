@@ -22,3 +22,23 @@ box-shadow: 1px 5px 16px 0px #000000;
   -ms-box-shadow: 1px 5px 16px 0px #000000;
   -o-box-shadow: 1px 5px 16px 0px #000000;	
 }
+.source {
+	position: relative;
+	overflow: hidden;
+}
+.source:after {
+content: "Source";
+position: absolute;
+top: -1px;
+left: -1px;
+padding: 3px 7px;
+font-size: 12px;
+opacity: 0.9;
+font-weight: bold;
+background-color: #f5f5f5;
+border: 1px solid #ddd;
+color: #9da0a4;
+-webkit-border-radius: 4px 0 4px 0;
+-moz-border-radius: 4px 0 4px 0;
+border-radius: 4px 0 4px 0;
+}
