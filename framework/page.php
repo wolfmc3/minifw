@@ -310,7 +310,7 @@ class page {
 		$fullpath = "";
 		if (substr($file, 0,1) == "/") { //root app
 			$fullpath = app::root().substr($file, 1);
-		} elseif (substr($file, 0,7) == "http://") { //external
+		} elseif (substr($file, 0,7) == "http://" || substr($file, 0,8) == "https://") { //external
 			$fullpath = $file;
 		} else { //relative to $basedir
 			if (substr($basedir, -1) != "/") $basedir .= "/";
@@ -341,8 +341,12 @@ class page {
 	 *
 	 */
 	function css() {
+		$sitefolder = app::root();
+		echo "<link rel='apple-touch-icon' href='{$sitefolder}img/icon.png/width/128' />".PHP_EOL;
+		echo "<link rel='shortcut icon' href='{$sitefolder}img/favicon.ico' />".PHP_EOL;
+		echo "<link rel='icon' type='image/png' href='{$sitefolder}img/icon.png/width/128' />".PHP_EOL;
 		foreach ($this->css as $script ) {
-			echo "<link rel='stylesheet' type='text/css' href='$script' media='screen'>".PHP_EOL;
+			echo "<link rel='stylesheet' type='text/css' href='$script' media='screen' />".PHP_EOL;
 		}
 	}
 

@@ -65,7 +65,10 @@ class config {
 		foreach ($config as $module => $section) {
 			if (is_array($section)) {
 				list($module,$parent) = explode(":", $module.":");
-				if ($parent) $section = array_merge($config[$parent],$section);
+				if ($parent) {
+					$section["_PARENT_"] = $parent;
+					$section = array_merge($config[$parent],$section);
+				}
 				$parsedconfig[$module] = $section;
 			}
 		}

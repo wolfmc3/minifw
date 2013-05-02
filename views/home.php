@@ -55,7 +55,6 @@ class home extends \framework\page {
 		->append(file::cache("home.txt")->read())
 		->append(new anchorbutton("functions", "Funzioni di notifica"));
 
-		$result = "".$cont;
 		$cont->append(new element("h3"))->add("Il codice necessario per questa pagina:");
 		$cont->add(new source($this->name()));
 		return $cont;

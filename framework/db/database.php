@@ -219,9 +219,20 @@ namespace framework\db {
 		 */
 		function execute($sql,$table,$args) {
 		 	$this->init();
-			$sql = str_replace($table,"`{$this->database}`.`{$this->prefix}{$table}`" , $sql);
+
+		 	$tablename = preg_replace("/\W(\w+)\W/", "`".$this->database."`.`".$this->prefix."\\1`", $table);
+			$sql = str_replace($table,"$tablename" , $sql);
 		 	$sth = $this::$db[$this->hostkey]->prepare($sql);
-		 	return $sth->execute($args);
+		 	$res = array();
+		 	if ($sth->execute($args)) {
+		 		while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
+		 			$res[] = $row;
+		 		}
+		 	} else {
+		 		$res = FALSE;
+		 	}
+		 	return $res;
+
 		}
 		/**
 		 * Aggiunge o aggiorna una riga della tabella $table

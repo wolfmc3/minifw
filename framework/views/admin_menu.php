@@ -171,10 +171,10 @@ class admin_menu extends page {
 					'parent' => $_POST["parent"],
 					'permission' => $_POST["permission"]
 			);
-			if (!$id) $id = count($this->data)+1;
+			if (!$id) $id = max(array_keys($this->data))+1;
 			$row['id'] = $id;
 			$this->data[$id] = $row;
-			file::file($this->menufile)->setValues($this->data);
+			if (file::file($this->menufile)->setValues($this->data) === FALSE) app::Controller()->addMessage("Errore nel salvataggio");
 		}
 		return $this->url();
 	}
