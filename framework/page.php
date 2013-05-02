@@ -387,9 +387,10 @@ class page {
 				break;
 			case self::TYPE_REDIRECT:
 				$url = $this->results;
-				//REMOVE HTTP OR HTTPS REDIRECT (ONLY INTERNALS)
-				$url = str_replace("http://", "", $url);
-				$url = str_replace("https://", "", $url);
+				$url = str_replace("//", "", $url);
+				$url = substr($url, strpos($url, "/")) ;
+				var_dump($url);
+				app::Controller()->addMessage("Redirect to: $url");
 				if ($url) header("location: $url");
 				break;
 			case self::TYPE_JSON:
