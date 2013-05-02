@@ -1,4 +1,4 @@
-$(window).load(function() {
+$(document).ready(function() {
 	$(".menu").children("li").each(function() {
 		var submenu = $(this).children('.submenu');
 		

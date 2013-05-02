@@ -41,7 +41,7 @@ class file {
 	/**
 	 *
 	 * @var number Dimensione a scalare della cache
-	 */
+	*/
 	public static $cachelen = 100000;
 
 	/**
@@ -151,7 +151,17 @@ class file {
 	function write($string) {
 		return file_put_contents($this->filepath, $string);
 	}
-
+	/**
+	 * append()
+	 *
+	 * Aggiunge alla fine del file il contenuto di $string
+	 *
+	 * @param string $string
+	 * @return number
+	 */
+	function append($string) {
+		return file_put_contents($this->filepath, $string, FILE_APPEND);
+	}
 	/**
 	 * setValues()
 	 *
@@ -173,7 +183,9 @@ class file {
 		//var_dump(unserialize($this->read()));
 		return unserialize($this->read());
 	}
-
+	function iniRead() {
+		return parse_ini_string($this->read());
+	}
 	/**
 	 * get_absolute_path($path)
 	 *

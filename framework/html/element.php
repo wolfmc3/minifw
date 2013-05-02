@@ -68,7 +68,7 @@ class element {
 				$this->inner[] = $el;
 				return $el;
 			} else {
-				$this->inner[] = htmlentities($el,ENT_COMPAT, "UTF-8");
+				$this->inner[] = htmlentities($el ,ENT_COMPAT, "UTF-8");
 			}
 		}
 	}

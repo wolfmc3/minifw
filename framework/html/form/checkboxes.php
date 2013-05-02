@@ -18,7 +18,6 @@ use framework\app;
  * use framework\html\select;
  * $options = array("val1"=>"Elemento","val2"=>"Elemento 2");
  * $checkboxes = new checkboxes("type_select",$options,"val1");
- * echo $checkboxes;
  * </code>
  *
  * @author Marco Camplese <info@wolfmc3.com>

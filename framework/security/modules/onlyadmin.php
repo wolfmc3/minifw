@@ -121,6 +121,18 @@ class onlyadmin implements securitymoduleinterface {
 		return session_status() == PHP_SESSION_ACTIVE;
 	}
 	/**
+	 * getUsersInfo()
+	 *
+	 * @see \framework\security\securitymoduleinterface::getUsersInfo()
+	 */
+	function getUsersInfo() {
+		$users = array();
+		$users["admin"] = array("username"=>"admin","group"=>"admin","isok"=>TRUE);
+		$users["anonimo"] = array("username"=>"anonimo","group"=>"?","isok"=>FALSE);
+		return $users;
+	}
+
+	/**
 	 * groupsPage
 	 * @see \framework\security\securitymoduleinterface::groupsPage()
 	 */

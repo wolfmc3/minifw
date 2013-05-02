@@ -241,8 +241,6 @@ class page {
 	 *
 	 * <code>$this->addCss("/percorso/tuoscript.js)</code>
 	 *
-	 * @todo supporto javascript in base al percorso (http:// | /sdfhk/script)
-	 *
 	 * @param string $script
 	 * @return void
 	 */
@@ -285,7 +283,6 @@ class page {
 	 *
 	 * <code>$this->addCss("/percorso/tuostile.css)</code>
 	 *
-	 * @todo supporto javascript esterni
 	 *
 	 * @param string $css
 	 * @return void
@@ -390,7 +387,9 @@ class page {
 				break;
 			case self::TYPE_REDIRECT:
 				$url = $this->results;
-				//TODO: Controllo solo url locali
+				//REMOVE HTTP OR HTTPS REDIRECT (ONLY INTERNALS)
+				$url = str_replace("http://", "", $url);
+				$url = str_replace("https://", "", $url);
 				if ($url) header("location: $url");
 				break;
 			case self::TYPE_JSON:

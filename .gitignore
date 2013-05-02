@@ -1,3 +1,5 @@
 config/*.ini
 !config/sample_*.ini
 docs/
+.*
+!.htaccess

@@ -165,10 +165,10 @@ class admin_menu extends page {
 		if (isset($_POST["SAVE"])) {
 			$id = intval($_POST["id"]);
 			$row = array (
-					'url' => $_POST["url"],
-					'text' => $_POST["text"],
-					'class' => $_POST["class"],
-					'parent' => $_POST["parent"],
+					'url' => 		$_POST["url"],
+					'text' => 		$_POST["text"],
+					'class' => 		$_POST["class"],
+					'parent' => 	$_POST["parent"],
 					'permission' => $_POST["permission"]
 			);
 			if (!$id) $id = max(array_keys($this->data))+1;

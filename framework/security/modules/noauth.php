@@ -80,6 +80,14 @@ class noauth implements securitymoduleinterface {
 		return true;
 	}
 	/**
+	 * NON USATO RITORNA SOLO ADMIN
+	 * @see \framework\security\securitymoduleinterface::getUsersInfo()
+	 */
+	function getUsersInfo() {
+		$users = array();
+		$users["admin"] = array("username"=>"admin","group"=>"admin","isok"=>TRUE);
+	}
+	/**
 	 * Non usato ritorna sempre true
 	 * @see \framework\security\securitymoduleinterface::ready()
 	 */

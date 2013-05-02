@@ -314,8 +314,6 @@ namespace framework\db {
 			//print_r($_POST);
 			$data = array();
 			$realcolumns = array();
-			//TODO: Controlli di sicurazza lato server
-			//TODO: Indicazione in caso di errore
 			foreach ($this->columns as $key => $value) {
 				if (isset($_POST[$key])) {
 					$data[":".$key] = $_POST[$key];
@@ -324,9 +322,13 @@ namespace framework\db {
 			}
 			//print_r($data);
 			$db = new database($this->database);
-			$db->write($this->table, $data, $realcolumns,$this->item,$this->idkey);
-			app::Controller()->addMessage("Modifiche salvate",new anchor($this->url("edit/".$this->item), "Modifica di nuovo"));
-			return $this->url();
+			if ($db->write($this->table, $data, $realcolumns,$this->item,$this->idkey)) {
+				app::Controller()->addMessage("Modifiche salvate",new anchor($this->url("edit/".$this->item), "Modifica di nuovo"));
+				return $this->url();
+			} else {
+				app::Controller()->addMessage("Errore nella scrittura delle modifiche");
+				return $this->url("edit/".$this->item);
+			}
 		}
 
 		/**
