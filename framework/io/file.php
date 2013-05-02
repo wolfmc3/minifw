@@ -183,6 +183,13 @@ class file {
 		//var_dump(unserialize($this->read()));
 		return unserialize($this->read());
 	}
+	/**
+	 * iniRead()
+	 *
+	 * Legge il contenuto del file ini e lo converte in array
+	 *
+	 * @return string[]
+	 */
 	function iniRead() {
 		return parse_ini_string($this->read());
 	}
