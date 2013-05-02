@@ -389,8 +389,6 @@ class page {
 				$url = $this->results;
 				$url = str_replace("//", "", $url);
 				$url = substr($url, strpos($url, "/")) ;
-				var_dump($url);
-				app::Controller()->addMessage("Redirect to: $url");
 				if ($url) header("location: $url");
 				break;
 			case self::TYPE_JSON:
