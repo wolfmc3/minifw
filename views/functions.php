@@ -55,7 +55,8 @@ class functions extends page {
 	function action_save() {
 		$this->type = $this::TYPE_REDIRECT;
 		if (isset($_POST['new_msg'])) {
-			app::Controller()->addMessage($_POST['new_msg'],new anchor("#test", "Bottone di prova"),NULL,"Messaggio che hai scritto");
+			$msg = strip_tags($_POST['new_msg']);
+			app::Controller()->addMessage($msg,new anchor("#test", "Bottone di prova"),NULL,"Hai scritto:");
 		}
 		return $this->url();
 	}

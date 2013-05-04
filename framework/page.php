@@ -222,7 +222,7 @@ class page {
 	 * @return $this->title
 	 */
 	function title() {
-		return $this->title." - ".app::conf()->system->appname;
+		return strip_tags($this->title." - ".app::conf()->system->appname);
 	}
 
 	/**
